@@ -23,7 +23,7 @@ const Newsletter = () => {
   };
 
   return (
-    <div className="bg-white w-full flex justify-center py-10 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white w-full flex justify-center  px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row w-full max-w-[1200px] gap-6 md:gap-12">
         
         {/* Image Banner */}
@@ -36,9 +36,10 @@ const Newsletter = () => {
           >
             <img
               className="w-full h-auto object-cover rounded-md"
-              src="https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/PxDkkgi0ODy/09_26_25/HOME_SETTEMBRE_2_UOMO-DONNA"
+              src="https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/PxDkkgi0ODy/FOLLOW%20US/BANNER_IG_HOME_SET_2025_ENG_NEW"
               alt="Banner"
             />
+          
           </a>
         </div>
 

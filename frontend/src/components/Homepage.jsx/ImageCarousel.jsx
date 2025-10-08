@@ -3,28 +3,54 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { useParams } from "react-router-dom";
 
 const ImageCarousel = () => {
+  const {gender = 'woman'} = useParams()
   const swiperData = [
     {
       id: 1,
       title: "OUR BRANDS // DISCOVER NOW",
       image:
         "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_01_WOMAN_3",
+        gender:"woman"
     },
     {
       id: 2,
       title: "OUR MAGAZINE // DISCOVER NOW TCZ",
       image:
-        "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_02_WOMAN_3",
+      "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_02_WOMAN_3",
+      gender:'woman'
     },
+
     {
       id: 3,
       title: "OUR BOUTIQUES // DISCOVER NOW",
       image:
         "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/BANNER%20BOUTIQUE/Footer_03_WOMAN_BOUTIQUE",
+        gender:"woman"
     },
+    {
+      id: 4,
+      title: "OUR BRANDS // DISCOVER NOW",
+      image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_01_MAN_3",
+      gender:"man"
+    },
+    {
+      id: 5,
+      title: "OUR MAGAZINE // DISCOVER NOW TCZ",
+      image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_02_MAN_3",
+      gender:"man"
+    },
+    {
+      id: 6,
+      title: "OUR BOUTIQUES // DISCOVER NOW",
+      image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/BANNER%20BOUTIQUE/Footer_03_MAN_BOUTIQUE",
+      gender:"man"
+    }
   ];
+
+  const slides = swiperData.filter(item => item.gender === gender)
 
   return (
     <div className="w-full bg-white py-8">
@@ -45,7 +71,7 @@ const ImageCarousel = () => {
           }}
           className="w-full"
         >
-          {swiperData.map((item) => (
+          {slides.map((item) => (
             <SwiperSlide key={item.id}>
               <div className="w-full px-4">
                 <div className="relative w-full">
@@ -85,7 +111,7 @@ const ImageCarousel = () => {
           }}
           className="w-full"
         >
-          {swiperData.map((item) => (
+          {slides.map((item) => (
             <SwiperSlide key={item.id}>
               <div className="w-full">
                 <div className="relative w-full">

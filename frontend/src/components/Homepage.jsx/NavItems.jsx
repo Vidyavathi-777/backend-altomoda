@@ -1,14 +1,36 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { Search, ShoppingBag, Menu, X, User, ChevronRight, ChevronLeft } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
+const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderChange }) => {
     const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
     const [mobileGender, setMobileGender] = useState('woman');
     const [activeDesktopMenu, setActiveDesktopMenu] = useState(null);
     const [itemCount] = useState(0);
     const [menuTimeout, setMenuTimeout] = useState(null);
     const [mobileSubView, setMobileSubView] = useState(null);
+
+    const navigate = useNavigate()
+    const location = useLocation()
+
+
+    useEffect(() => {
+        setMobileGender(currentGender);
+    }, [currentGender]);
+
+    const handleGenderSwitch = (gender) => {
+        setMobileGender(gender);
+        if (onGenderChange) {
+            onGenderChange(gender);
+        }
+        // Update URL
+        if (gender === 'man') {
+            navigate('/man');
+        } else {
+            navigate('/woman');
+        }
+    };
 
     const handleMenuEnter = (menu) => {
         if (menuTimeout) {
@@ -60,297 +82,302 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     };
 
     return (
-        <div>
-            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4 border-t border-gray-200">
+        <>
+            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4 border-t border-gray-200 bg-white relative">
+                {/* Designers */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('designers')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                    <button className="text-lg font-medium tracking-wider hover:opacity-70 transition h-full flex items-center">
                         Designers
                     </button>
-                    {activeDesktopMenu === 'designers' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0 bg-white border-t border-b border-gray-200 shadow-lg z-50"
-                            onMouseEnter={() => handleMenuEnter('designers')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className="max-w-7xl mx-auto grid grid-cols-3 gap-8 p-8">
-                                <div>
-                                    <div className="space-y-2">
-                                        <a href="#" className="block text-sm hover:underline">DESIGNERS Woman</a>
-                                        <a href="#" className="block text-sm hover:underline">DESIGNERS Man</a>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Top brands woman</h4>
-                                    <div className="space-y-2">
-                                        {designerBrands.woman.slice(0, 10).map(brand => (
-                                            <a key={brand} href="#" className="block text-sm hover:underline">{brand}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Top brands man</h4>
-                                    <div className="space-y-2">
-                                        {designerBrands.man.slice(0, 10).map(brand => (
-                                            <a key={brand} href="#" className="block text-sm hover:underline">{brand}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
+                {/* New Arrivals */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('newarrivals')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                    <button className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         New Arrivals
                     </button>
-                    {activeDesktopMenu === 'newarrivals' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0  bg-white border border-gray-200 shadow-lg  z-50"
-                            onMouseEnter={() => handleMenuEnter('newarrivals')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className=" max-w-7xl mx-auto grid grid-cols-5 gap-6 p-8">
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Clothing</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.clothing.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Bags</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.bags.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Shoes</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.shoes.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Accessories</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.accessories.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Lifestyle</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.lifestyle.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
+                {/* Woman */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('woman')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                    <button
+                        onClick={() => handleGenderSwitch('woman')}
+                        className={`text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center ${currentGender === 'woman' ? 'border-b-2 border-black font-bold' : ''
+                            }`}
+                    >
                         Woman
                     </button>
-                    {activeDesktopMenu === 'woman' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0  bg-white border border-gray-200 shadow-lg  z-50"
-                            onMouseEnter={() => handleMenuEnter('woman')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className="max-w-7xl mx-auto grid grid-cols-5 gap-6 p-8">
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">
-                                        <a href="#" className="hover:underline">Woman</a>
-                                    </h4>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Clothing</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.clothing.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Bags</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.bags.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Shoes</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.shoes.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                    <h4 className="font-bold mb-4 mt-6 text-xs uppercase tracking-wider">Lifestyle</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.lifestyle.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Accessories</h4>
-                                    <div className="space-y-2">
-                                        {womanCategories.accessories.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
+                {/* Man */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('man')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                    <button
+                        onClick={() => handleGenderSwitch('man')}
+                        className={`text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center ${currentGender === 'man' ? 'border-b-2 border-black font-bold' : ''
+                            }`}
+                    >
                         Man
                     </button>
-                    {activeDesktopMenu === 'man' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0  bg-white border border-gray-200 shadow-lg  z-50"
-                            onMouseEnter={() => handleMenuEnter('man')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className="max-w-7xl mx-auto grid grid-cols-5 gap-6 p-8">
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">
-                                        <a href="#" className="hover:underline">Man</a>
-                                    </h4>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Clothing</h4>
-                                    <div className="space-y-2">
-                                        {manCategories.clothing.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Bags</h4>
-                                    <div className="space-y-2">
-                                        {manCategories.bags.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Shoes</h4>
-                                    <div className="space-y-2">
-                                        {manCategories.shoes.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Accessories</h4>
-                                    <div className="space-y-2">
-                                        {manCategories.accessories.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                    <h4 className="font-bold mb-4 mt-6 text-xs uppercase tracking-wider">Lifestyle</h4>
-                                    <div className="space-y-2">
-                                        {manCategories.lifestyle.map(item => (
-                                            <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
-                <a href="#" className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                {/* Boutiques */}
+                <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                     Boutiques
                 </a>
 
+                {/* Up To 50% Off */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('upto50%off')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium text-red-600 tracking-wider hover:opacity-70 transition uppercase">
+                    <button className="text-lg font-medium text-red-600 tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         Up To 50% Off
                     </button>
-                    {activeDesktopMenu === 'upto50%off' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0  bg-white border border-gray-200 shadow-lg  z-50"
-                            onMouseEnter={() => handleMenuEnter('upto50%off')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className="max-w-sm mx-auto p-8">
-                                <div className="block text-sm hover:underline">
-                                    man
-                                </div>
-                                <div className='block text-sm hover:underline'>
-                                    woman
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
+                {/* Magazine */}
                 <div
-                    className="relative"
+                    className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('magazine')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
+                    <button className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         TCZ_TheCornerZine
                     </button>
-                    {activeDesktopMenu === 'magazine' && (
-                        <div
-                            className="fixed top-[180px] left-0 right-0  bg-white border border-gray-200 shadow-lg  z-50"
-                            onMouseEnter={() => handleMenuEnter('magazine')}
-                            onMouseLeave={handleMenuLeave}
-                        >
-                            <div className="max-w-sm mx-auto p-8">
-                                <h4 className="font-bold mb-4 text-xs uppercase tracking-wider">Magazine</h4>
-                                <div className="space-y-2">
-                                    {magazineItems.map(item => (
-                                        <a key={item} href="#" className="block text-sm hover:underline">{item}</a>
+                </div>
+
+                {/* Product Finder */}
+                <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
+                    Product Finder
+                </a>
+            </nav>
+
+            {/* Mega Menu Dropdowns - Portal Style */}
+            {activeDesktopMenu && (
+                <div
+                    className="hidden text-xl lg:block fixed left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-[60]"
+
+                    onMouseEnter={() => {
+                        if (menuTimeout) clearTimeout(menuTimeout);
+                    }}
+                    onMouseLeave={handleMenuLeave}
+                >
+                    {activeDesktopMenu === 'designers' && (
+                        <div className="max-w-7xl mx-auto grid grid-cols-3 gap-12 px-8 py-12">
+                            <div>
+                                <div className="space-y-3">
+                                    <a href="#" className="block  font-medium hover:underline">DESIGNERS Woman</a>
+                                    <a href="#" className="block  font-medium hover:underline">DESIGNERS Man</a>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands woman</h4>
+                                <div className="space-y-3">
+                                    {designerBrands.woman.slice(0, 10).map(brand => (
+                                        <a key={brand} href="#" className="block text-lg hover:underline">{brand}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands man</h4>
+                                <div className="space-y-3">
+                                    {designerBrands.man.slice(0, 10).map(brand => (
+                                        <a key={brand} href="#" className="block text-lg hover:underline">{brand}</a>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     )}
+
+                    {activeDesktopMenu === 'newarrivals' && (
+                        <div className="max-w-7xl mx-auto grid grid-cols-5 gap-12 px-8 py-12">
+                            <div>
+                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">CLOTHING</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.clothing.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">BAGS</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.bags.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">SHOES</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.shoes.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">ACCESSORIES</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.accessories.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">LIFESTYLE</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.lifestyle.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeDesktopMenu === 'woman' && (
+                        <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">
+                                    <a href="#" className="hover:underline">WOMAN</a>
+                                </h4>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">CLOTHING</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.clothing.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">BAGS</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.bags.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">SHOES</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.shoes.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.accessories.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</h4>
+                                <div className="space-y-3">
+                                    {womanCategories.lifestyle.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeDesktopMenu === 'man' && (
+                        <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">
+                                    <a href="#" className="hover:underline">MAN</a>
+                                </h4>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">CLOTHING</h4>
+                                <div className="space-y-3">
+                                    {manCategories.clothing.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">BAGS</h4>
+                                <div className="space-y-3">
+                                    {manCategories.bags.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">SHOES</h4>
+                                <div className="space-y-3">
+                                    {manCategories.shoes.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</h4>
+                                <div className="space-y-3">
+                                    {manCategories.accessories.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+
+                            </div>
+                            <div>
+                                <h4 className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</h4>
+                                <div className="space-y-3">
+                                    {manCategories.lifestyle.map(item => (
+                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeDesktopMenu === 'upto50%off' && (
+                        <div className="max-w-sm mx-auto px-8 py-12">
+                            <a href="#" className="block text-lg hover:underline py-1">
+                                Man
+                            </a>
+                            <a href="#" className="block text-lg hover:underline py-1">
+                                Woman
+                            </a>
+                        </div>
+                    )}
+
+                    {activeDesktopMenu === 'magazine' && (
+                        <div className="max-w-sm mx-auto px-8 py-12">
+                            <h4 className="font-bold mb-4 text-xl uppercase tracking-wider">Magazine</h4>
+                            <div className="space-y-2">
+                                {magazineItems.map(item => (
+                                    <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
+            )}
 
-                <a href="#" className="text-sm font-medium tracking-wider hover:opacity-70 transition uppercase">
-                    Product Finder
-                </a>
-            </nav>
-
+            {/* Mobile menu */}
             {mobileMenuOpen && (
                 <div className="fixed inset-0 z-50 lg:hidden">
                     <div className="fixed inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
@@ -360,13 +387,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                 <div className="border-b border-gray-200 p-4 flex items-center justify-between">
                                     <div className="flex gap-6">
                                         <button
-                                            onClick={() => setMobileGender('woman')}
+                                            onClick={() => handleGenderSwitch('woman')}
                                             className={`text-sm uppercase tracking-wider pb-1 ${mobileGender === 'woman' ? 'border-b-2 border-black font-bold' : 'text-gray-500'}`}
                                         >
                                             Woman
                                         </button>
                                         <button
-                                            onClick={() => setMobileGender('man')}
+                                            onClick={() => handleGenderSwitch('man')}
                                             className={`text-sm uppercase tracking-wider pb-1 ${mobileGender === 'man' ? 'border-b-2 border-black font-bold' : 'text-gray-500'}`}
                                         >
                                             Man
@@ -475,13 +502,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                 <div className="border-b border-gray-200 p-4 flex items-center justify-between">
                                     <div className="flex gap-6">
                                         <button
-                                            onClick={() => setMobileGender('woman')}
+                                            onClick={() => handleGenderSwitch('woman')}
                                             className={`text-sm uppercase tracking-wider pb-1 ${mobileGender === 'woman' ? 'border-b-2 border-black font-bold' : 'text-gray-500'}`}
                                         >
                                             Woman
                                         </button>
                                         <button
-                                            onClick={() => setMobileGender('man')}
+                                            onClick={() => handleGenderSwitch('man')}
                                             className={`text-sm uppercase tracking-wider pb-1 ${mobileGender === 'man' ? 'border-b-2 border-black font-bold' : 'text-gray-500'}`}
                                         >
                                             Man
@@ -525,7 +552,8 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                     </div>
                 </div>
             )}
-        </div>
+
+        </>
     );
 };
 

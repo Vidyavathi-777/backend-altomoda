@@ -1,37 +1,60 @@
 import React from 'react';
 
 const BrandsSection = () => {
-  const brandsData = {
-    title: "TOP BRANDS",
-    brands: [
-      "ALEXANDER WANG", "AMIRI", "BALENCIAGA", "BALMAIN", "BURBERRY",
-      "DOLCE&GABBANA", "DSQUARED2", "ETRO", "FENDI", "FERRAGAMO",
-      "GOLDEN GOOSE", "GUCCI", "JACQUEMUS", "JIL SANDER", "JIMMY CHOO",
-      "KENZO", "MAISON MARGIELA", "MAX MARA", "MCQUEEN", "MONCLER",
-      "OFF WHITE", "PUCCI", "STELLA MCCARTNEY", "THOM BROWNE",
-      "VALENTINO GARAVANI", "VERSACE"
-    ]
-  };
+  const brands = [
+    "ALEXANDER MCQUEEN",
+    "ALEXANDER WANG",
+    "AMIRI",
+    "BALENCIAGA",
+    "BALMAIN",
+    "BURBERRY",
+    "DOLCE&GABBANA",
+    "DSQUARED2",
+    "ETRO",
+    "FENDI",
+    "FERRAGAMO",
+    "GOLDEN GOOSE",
+    "GUCCI",
+    "JACQUEMUS",
+    "JIL SANDER",
+    "JIMMY CHOO",
+    "KENZO",
+    "MAISON MARGIELA",
+    "MAX MARA",
+    "MONCLER",
+    "OFF WHITE",
+    "PUCCI",
+    "STELLA MCCARTNEY",
+    "THOM BROWNE",
+    "VERSACE"
+  ];
 
   return (
-    <div className="w-full bg-gray-200 py-12 border-b border-gray-200">
-      {/* Title */}
-      <div className="max-w-7xl mx-auto text-center text-2xl sm:text-3xl md:text-4xl font-semibold tracking-wide text-gray-800 mb-8">
-        {brandsData.title}.
+    <section className="w-full bg-gray-100 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Title */}
+        <h2 className="text-2xl  mb-6 text-gray-900">
+          TOP BRANDS
+        </h2>
+        
+        {/* Brands List */}
+        <div className="text-sm text-gray-700 leading-relaxed">
+          {brands.map((brand, index) => (
+            <span key={brand}>
+              <a 
+                href="#" 
+                className="hover:underline transition-all"
+              >
+                {brand}
+              </a>
+              {index < brands.length - 1 && (
+                <span className="mx-1">-</span>
+              )}
+            </span>
+          ))}
+        </div>
       </div>
-      
-      {/* Brands List */}
-      <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-x-4 gap-y-3">
-        {brandsData.brands.map((brand, index) => (
-          <span key={brand} className="text-sm sm:text-base md:text-lg font-medium text-gray-600">
-            {brand}
-            {index < brandsData.brands.length - 1 && (
-              <span className="text-gray-400 mx-2">-</span>
-            )}
-          </span>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 };
 

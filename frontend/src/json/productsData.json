@@ -10,22 +10,26 @@
         "subcategory": "Blazers & Suits",
         "price": 1995,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_450x.jpg?v=1759150430",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_450x.jpg?v=1759150430 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_450x@2x.jpg?v=1759150430 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_350x.jpg?v=1759150430",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_350x.jpg?v=1759150430 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_350x@2x.jpg?v=1759150430 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x.jpg?v=1759150430",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x@2x.jpg?v=1759150430 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x.jpg?v=1759150430",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x@2x.jpg?v=1759150430 2x"
         },
         "link": "/ww-en/blazer-in-wool-2520104402193_509-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x.jpg?v=1759150430",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-2_650x.jpg?v=1759150430"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 2,
@@ -35,22 +39,26 @@
         "subcategory": "Skirts",
         "price": 590,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_450x.jpg?v=1759322364",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_450x.jpg?v=1759322364 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_450x@2x.jpg?v=1759322364 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_350x.jpg?v=1759322364",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_350x.jpg?v=1759322364 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_350x@2x.jpg?v=1759322364 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_200x.jpg?v=1759322364",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_200x@2x.jpg?v=1759322364 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_200x.jpg?v=1759322364",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_200x@2x.jpg?v=1759322364 2x"
         },
         "link": "/ww-en/gonna-pareo-in-platinum-gnd225f801d910_8070-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_650x.jpg?v=1759322364",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-2_650x.jpg?v=1759322364"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 3,
@@ -60,22 +68,26 @@
         "subcategory": "Boots",
         "price": 950,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_450x.jpg?v=1758797999",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_450x.jpg?v=1758797999 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_450x@2x.jpg?v=1758797999 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_350x.jpg?v=1758797999",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_350x.jpg?v=1758797999 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_350x@2x.jpg?v=1758797999 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x.jpg?v=1758797999",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x@2x.jpg?v=1758797999 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x.jpg?v=1758797999",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x@2x.jpg?v=1758797999 2x"
         },
         "link": "/ww-en/iman-boots-in-leather-l26w7007n10443011044301_bordeaux-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x.jpg?v=1758797999",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-2_200x.jpg?v=1758797999"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 4,
@@ -85,22 +97,26 @@
         "subcategory": "Shoulder Bags",
         "price": 2200,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_450x.jpg?v=1759322578",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_450x.jpg?v=1759322578 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_450x@2x.jpg?v=1759322578 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_350x.jpg?v=1759322578",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_350x.jpg?v=1759322578 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_350x@2x.jpg?v=1759322578 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x@2x.jpg?v=1759322578 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x@2x.jpg?v=1759322578 2x"
         },
         "link": "/ww-en/shoulder-bag-gucci-diana-size-small-799865aae3w_3125-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-2_200x.jpg?v=1759322578"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 5,
@@ -110,22 +126,26 @@
         "subcategory": "Knitwear",
         "price": 1200,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_450x.jpg?v=1759231692",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_450x.jpg?v=1759231692 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_450x@2x.jpg?v=1759231692 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_350x.jpg?v=1759231692",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_350x.jpg?v=1759231692 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_350x@2x.jpg?v=1759231692 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x.jpg?v=1759231692",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x@2x.jpg?v=1759231692 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x.jpg?v=1759231692",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x@2x.jpg?v=1759231692 2x"
         },
         "link": "/ww-en/sweater-in-wool-and-mohair-fs8287aq3h_f1t6g-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x.jpg?v=1759231692",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-2_200x.jpg?v=1759231692"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 6,
@@ -135,22 +155,26 @@
         "subcategory": "Pants",
         "price": 1200,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_450x.jpg?v=1759231956",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_450x.jpg?v=1759231956 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_450x@2x.jpg?v=1759231956 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_350x.jpg?v=1759231956",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_350x.jpg?v=1759231956 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_350x@2x.jpg?v=1759231956 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x.jpg?v=1759231956",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x@2x.jpg?v=1759231956 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x.jpg?v=1759231956",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x@2x.jpg?v=1759231956 2x"
         },
         "link": "/ww-en/wool-and-mohair-trousers-fr6658aq3h_f1t6g-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x.jpg?v=1759231956",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-2_200x.jpg?v=1759231956"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 7,
@@ -160,22 +184,26 @@
         "subcategory": "Heels",
         "price": 870,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_450x.jpg?v=1758707800",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_450x.jpg?v=1758707800 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_450x@2x.jpg?v=1758707800 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_350x.jpg?v=1758707800",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_350x.jpg?v=1758707800 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_350x@2x.jpg?v=1758707800 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x.jpg?v=1758707800",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x@2x.jpg?v=1758707800 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x.jpg?v=1758707800",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x@2x.jpg?v=1758707800 2x"
         },
         "link": "/ww-en/decollete-slingback-with-clip-835976faetg_5042-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x.jpg?v=1758707800",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-2_200x.jpg?v=1758707800"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
       },
       {
         "id": 8,
@@ -185,23 +213,329 @@
         "subcategory": "Shoulder Bags",
         "price": 950,
         "currency": "€",
-        "images": {
-          "desktop": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_450x.jpg?v=1759150404",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_450x.jpg?v=1759150404 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_450x@2x.jpg?v=1759150404 2x"
-          },
-          "tablet": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_350x.jpg?v=1759150404",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_350x.jpg?v=1759150404 1x, https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_350x@2x.jpg?v=1759150404 2x"
-          },
-          "mobile": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x.jpg?v=1759150404",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x@2x.jpg?v=1759150404 2x"
-          }
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x.jpg?v=1759150404",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x@2x.jpg?v=1759150404 2x"
         },
         "link": "/ww-en/borsa-le-petit-turismo-in-scamosciato-leather-25ebaw00416ac07a09_120-p",
-        "gender": "Women"
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x.jpg?v=1759150404",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-2_200x.jpg?v=1759150404"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
+      },
+      {
+        "id": 9,
+        "name": "Shoulder bag Gucci Diana size small",
+        "brand": "Gucci",
+        "category": "Bags",
+        "subcategory": "Shoulder Bags",
+        "price": 2200,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x@2x.jpg?v=1759322578 2x"
+        },
+        "link": "/ww-en/shoulder-bag-gucci-diana-size-small-799865aae3w_3125-p",
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-2_200x.jpg?v=1759322578"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
+      },
+      {
+        "id": 10,
+        "name": "Shoulder bag Gucci Diana size small",
+        "brand": "Gucci",
+        "category": "Bags",
+        "subcategory": "Shoulder Bags",
+        "price": 2200,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x@2x.jpg?v=1759322578 2x"
+        },
+        "link": "/ww-en/shoulder-bag-gucci-diana-size-small-799865aae3w_3125-p",
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-2_200x.jpg?v=1759322578"
+        ],
+        "tag": "new season",
+        "sku": "GND225F801D910_8070",
+        "care": "Refer to the manufacturer's instructions",
+        "madeIn": "Italy",
+        "sizes": [
+          "40 - IT",
+          "42 - IT",
+          "44 - IT"
+        ],
+        "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere"
+      },
+      {
+        "id": 11,
+        "name": "Crew neck sweater in mixed wool",
+        "brand": "Dries Van Noten",
+        "category": "Clothing",
+        "subcategory": "Sweaters",
+        "price": 895,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-1_200x.jpg?v=1758560123",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-1_200x@2x.jpg?v=1758560123 2x"
+        },
+        "link": "/ww-en/crew-neck-sweater-in-mixed-wool-2520212222729_103-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-1_200x.jpg?v=1758560123",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-2_350x.jpg?v=1758560123"
+        ],
+        "tag": "new arrival",
+        "sku": "2520212222729_103",
+        "care": "Dry clean only",
+        "madeIn": "Italy",
+        "sizes": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "description": "Crew neck sweater crafted from premium mixed wool blend. Features a classic crew neckline and comfortable fit, perfect for layering or wearing on its own. The high-quality wool blend provides warmth and durability while maintaining a soft hand feel."
+      },
+      {
+        "id": 12,
+        "name": "Jeans regolare fit",
+        "brand": "Slowear",
+        "category": "Clothing",
+        "subcategory": "Jeans",
+        "price": 325,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x@2x.jpg?v=1759150979 2x"
+        },
+        "link": "/ww-en/jeans-regolare-fit-s003lj0003_001-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_350x.jpg?v=1759150979"
+        ],
+        "tag": "new arrival",
+        "sku": "S003LJ0003_001",
+        "care": "Machine wash cold",
+        "madeIn": "Italy",
+        "sizes": [
+          "30",
+          "32",
+          "34",
+          "36",
+          "38"
+        ],
+        "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort."
+      },
+      {
+        "id": 13,
+        "name": "Sneakers low-top 3XL",
+        "brand": "Balenciaga",
+        "category": "Shoes",
+        "subcategory": "Sneakers",
+        "price": 990,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_200x.jpg?v=1759150115",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_200x@2x.jpg?v=1759150115 2x"
+        },
+        "link": "/ww-en/sneakers-low-top-3xl-734734w3xl1_1010-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_200x.jpg?v=1759150115",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_350x.jpg?v=1759150115",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_450x.jpg?v=1759150115"
+        ],
+        "tag": "new arrival",
+        "sku": "734734W3XL1_1010",
+        "care": "Wipe clean with damp cloth",
+        "madeIn": "Italy",
+        "sizes": [
+          "40",
+          "41",
+          "42",
+          "43",
+          "44",
+          "45"
+        ],
+        "description": "3XL low-top sneakers featuring an exaggerated, chunky silhouette. Made from premium materials with distinctive branding details. Combines comfort with avant-garde design."
+      },
+      {
+        "id": 14,
+        "name": "Tech Technical fabric backpack",
+        "brand": "Moncler",
+        "category": "Accessories",
+        "subcategory": "Bags",
+        "price": 1250,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x@2x.jpg?v=1756461659 2x"
+        },
+        "link": "/ww-en/tech-technical-fabric-backpack-k209a5a00010m7835_999-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_350x.jpg?v=1756461659",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_450x.jpg?v=1756461659"
+        ],
+        "tag": "new arrival",
+        "sku": "K209A5A00010M7835_999",
+        "care": "Wipe clean with damp cloth",
+        "madeIn": "Italy",
+        "sizes": [
+          "One Size"
+        ],
+        "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics."
+      },
+        {
+          "id": 15,
+          "name": "Tech Technical fabric backpack",
+          "brand": "Moncler",
+          "category": "Accessories",
+          "subcategory": "Bags",
+          "price": 1250,
+          "currency": "€",
+          "coverImage": {
+            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x@2x.jpg?v=1756461659 2x"
+          },
+          "link": "/ww-en/tech-technical-fabric-backpack-k209a5a00010m7835_999-p",
+          "gender": "man",
+          "images": [
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_350x.jpg?v=1756461659",
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_450x.jpg?v=1756461659"
+          ],
+          "tag": "new arrival",
+          "sku": "K209A5A00010M7835_999",
+          "care": "Wipe clean with damp cloth",
+          "madeIn": "Italy",
+          "sizes": [
+            "One Size"
+          ],
+          "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics."
+        },
+        {
+          "id": 16,
+          "name": "Tank top in cotton",
+          "brand": "Rick Owens",
+          "category": "Clothing",
+          "subcategory": "Tops",
+          "price": 355,
+          "currency": "€",
+          "coverImage": {
+            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
+            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x@2x.jpg?v=1759231913 2x"
+          },
+          "link": "/ww-en/tank-top-in-cotton-rr02e1108rig_09-p",
+          "gender": "man",
+          "images": [
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_350x.jpg?v=1759231913",
+            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_450x.jpg?v=1759231913"
+          ],
+          "tag": "new arrival",
+          "sku": "RR02E1108RIG_09",
+          "care": "Machine wash cold, gentle cycle",
+          "madeIn": "Italy",
+          "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "description": "Classic cotton tank top with relaxed fit, designed for layering or casual wear. Soft, breathable fabric ensures comfort while maintaining a modern, minimalist look."
+        },
+              {
+        "id": 17,
+        "name": "Jeans regolare fit",
+        "brand": "Slowear",
+        "category": "Clothing",
+        "subcategory": "Jeans",
+        "price": 325,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x@2x.jpg?v=1759150979 2x"
+        },
+        "link": "/ww-en/jeans-regolare-fit-s003lj0003_001-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-1_350x.jpg?v=1759150979"
+        ],
+        "tag": "new arrival",
+        "sku": "S003LJ0003_001",
+        "care": "Machine wash cold",
+        "madeIn": "Italy",
+        "sizes": [
+          "30",
+          "32",
+          "34",
+          "36",
+          "38"
+        ],
+        "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort."
+      },
+            {
+        "id": 18,
+        "name": "Jeans regolare fit",
+        "brand": "Slowear",
+        "category": "Clothing",
+        "subcategory": "Jeans",
+        "price": 325,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x@2x.jpg?v=1759150979 2x"
+        },
+        "link": "/ww-en/jeans-regolare-fit-s003lj0003_001-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-1_350x.jpg?v=1759150979"
+        ],
+        "tag": "new arrival",
+        "sku": "S003LJ0003_001",
+        "care": "Machine wash cold",
+        "madeIn": "Italy",
+        "sizes": [
+          "30",
+          "32",
+          "34",
+          "36",
+          "38"
+        ],
+        "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort."
       }
+      
     ]
   }
 }

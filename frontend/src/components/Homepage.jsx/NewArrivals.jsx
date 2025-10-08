@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import productsData from "../../json/productsData.json"
+import { Link, useParams } from 'react-router-dom';
 
 const NewArrivals = () => {
+   const {gender = 'woman'} = useParams()
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const sliderRef = useRef(null);
   const { title, products } = productsData.productSlider;
+  const filteredProducts = productsData.productSlider.products.filter(item => item.gender === gender )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -82,10 +85,11 @@ const NewArrivals = () => {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <div className="flex space-x-4 md:space-x-6 lg:space-x-8 pb-4">
-              {products.map((product) => (
-                <div
+              {filteredProducts.map((product) => (
+                <Link
                   key={product.id}
                   className="flex-shrink-0 w-48 md:w-56 lg:w-64 group"
+                  to={`/${gender}/product/${product.id}`}
                 >
                   {/* Product Card */}
                   <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
@@ -100,25 +104,15 @@ const NewArrivals = () => {
                                 {isLoading ? (
                                   <div className="skeleton-animated-background w-full h-full bg-gray-200 animate-pulse"></div>
                                 ) : (
-                                  <picture>
-                                    <source
-                                      data-srcset={product.images.desktop.srcset}
-                                      srcSet={product.images.desktop.srcset}
-                                      media="(min-width: 1025px)"
-                                    />
-                                    <source
-                                      data-srcset={product.images.tablet.srcset}
-                                      srcSet={product.images.tablet.srcset}
-                                      media="(min-width: 768px)"
-                                    />
+
                                     <img
                                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                      src={product.images.mobile.src}
+                                      src={product.coverImage.src}
                                       alt={product.name}
-                                      srcSet={product.images.mobile.srcset}
+                                      srcSet={product.coverImage.srcset}
                                       loading="lazy"
                                     />
-                                  </picture>
+                        
                                 )}
                               </div>
                             </div>
@@ -177,7 +171,7 @@ const NewArrivals = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
