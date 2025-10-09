@@ -7,8 +7,8 @@ const NewArrivals = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const sliderRef = useRef(null);
-  const { title, products } = productsData.productSlider;
-  const filteredProducts = productsData.productSlider.products.filter(item => item.gender === gender )
+  const {  products } = productsData.productSlider;
+  const filteredProducts = productsData.productSlider.products.filter(item => item.gender === gender && item.title === "newarrival" )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,7 +44,7 @@ const NewArrivals = () => {
           <div className="slider-products-card-container mb-8">
             <div className="card-text">
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-wide text-gray-900">
-                {title}
+                NEW ARRIVALS // SHOP NOW
               </h3>
             </div>
           </div>

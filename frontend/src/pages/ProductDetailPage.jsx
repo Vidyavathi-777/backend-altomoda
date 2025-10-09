@@ -70,6 +70,10 @@ const ProductDetailPage = () => {
         return 2;
     };
 
+      useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [id]);
+
     const visibleItems = getVisibleItems();
     const maxSlide = Math.ceil(relatedProducts.length / visibleItems) - 1;
 

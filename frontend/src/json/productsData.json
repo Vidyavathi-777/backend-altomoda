@@ -1,11 +1,11 @@
 {
   "productSlider": {
-    "title": "NEW ARRIVALS // SHOP NOW",
     "products": [
       {
         "id": 1,
         "name": "Blazer in wool",
         "brand": "Dries Van Noten",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Blazers & Suits",
         "price": 1995,
@@ -35,6 +35,7 @@
         "id": 2,
         "name": "Gonna pareo in Platinum",
         "brand": "Fabiana Filippi",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Skirts",
         "price": 590,
@@ -64,6 +65,7 @@
         "id": 3,
         "name": "Iman boots in leather",
         "brand": "Alevì",
+        "title": "newarrival",
         "category": "Shoes",
         "subcategory": "Boots",
         "price": 950,
@@ -93,6 +95,7 @@
         "id": 4,
         "name": "Shoulder bag Gucci Diana size small",
         "brand": "Gucci",
+        "title": "newarrival",
         "category": "Bags",
         "subcategory": "Shoulder Bags",
         "price": 2200,
@@ -122,6 +125,7 @@
         "id": 5,
         "name": "Sweater in wool and mohair",
         "brand": "Fendi",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Knitwear",
         "price": 1200,
@@ -151,6 +155,7 @@
         "id": 6,
         "name": "Wool and mohair trousers",
         "brand": "Fendi",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Pants",
         "price": 1200,
@@ -180,6 +185,7 @@
         "id": 7,
         "name": "Décolleté slingback with Clip",
         "brand": "Gucci",
+        "title": "newarrival",
         "category": "Shoes",
         "subcategory": "Heels",
         "price": 870,
@@ -209,6 +215,7 @@
         "id": 8,
         "name": "Borsa Le Petit Turismo in scamosciato leather",
         "brand": "Jacquemus",
+        "title": "newarrival",
         "category": "Bags",
         "subcategory": "Shoulder Bags",
         "price": 950,
@@ -238,6 +245,7 @@
         "id": 9,
         "name": "Shoulder bag Gucci Diana size small",
         "brand": "Gucci",
+        "title": "newarrival",
         "category": "Bags",
         "subcategory": "Shoulder Bags",
         "price": 2200,
@@ -267,6 +275,7 @@
         "id": 10,
         "name": "Shoulder bag Gucci Diana size small",
         "brand": "Gucci",
+        "title": "newarrival",
         "category": "Bags",
         "subcategory": "Shoulder Bags",
         "price": 2200,
@@ -296,6 +305,7 @@
         "id": 11,
         "name": "Crew neck sweater in mixed wool",
         "brand": "Dries Van Noten",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Sweaters",
         "price": 895,
@@ -326,6 +336,7 @@
         "id": 12,
         "name": "Jeans regolare fit",
         "brand": "Slowear",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Jeans",
         "price": 325,
@@ -357,6 +368,7 @@
         "id": 13,
         "name": "Sneakers low-top 3XL",
         "brand": "Balenciaga",
+        "title": "newarrival",
         "category": "Shoes",
         "subcategory": "Sneakers",
         "price": 990,
@@ -390,6 +402,7 @@
         "id": 14,
         "name": "Tech Technical fabric backpack",
         "brand": "Moncler",
+        "title": "newarrival",
         "category": "Accessories",
         "subcategory": "Bags",
         "price": 1250,
@@ -414,69 +427,72 @@
         ],
         "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics."
       },
-        {
-          "id": 15,
-          "name": "Tech Technical fabric backpack",
-          "brand": "Moncler",
-          "category": "Accessories",
-          "subcategory": "Bags",
-          "price": 1250,
-          "currency": "€",
-          "coverImage": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x@2x.jpg?v=1756461659 2x"
-          },
-          "link": "/ww-en/tech-technical-fabric-backpack-k209a5a00010m7835_999-p",
-          "gender": "man",
-          "images": [
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_350x.jpg?v=1756461659",
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_450x.jpg?v=1756461659"
-          ],
-          "tag": "new arrival",
-          "sku": "K209A5A00010M7835_999",
-          "care": "Wipe clean with damp cloth",
-          "madeIn": "Italy",
-          "sizes": [
-            "One Size"
-          ],
-          "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics."
+      {
+        "id": 15,
+        "name": "Tech Technical fabric backpack",
+        "brand": "Moncler",
+        "title": "newarrival",
+        "category": "Accessories",
+        "subcategory": "Bags",
+        "price": 1250,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x@2x.jpg?v=1756461659 2x"
         },
-        {
-          "id": 16,
-          "name": "Tank top in cotton",
-          "brand": "Rick Owens",
-          "category": "Clothing",
-          "subcategory": "Tops",
-          "price": 355,
-          "currency": "€",
-          "coverImage": {
-            "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
-            "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x@2x.jpg?v=1759231913 2x"
-          },
-          "link": "/ww-en/tank-top-in-cotton-rr02e1108rig_09-p",
-          "gender": "man",
-          "images": [
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_350x.jpg?v=1759231913",
-            "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_450x.jpg?v=1759231913"
-          ],
-          "tag": "new arrival",
-          "sku": "RR02E1108RIG_09",
-          "care": "Machine wash cold, gentle cycle",
-          "madeIn": "Italy",
-          "sizes": [
-            "S",
-            "M",
-            "L",
-            "XL"
-          ],
-          "description": "Classic cotton tank top with relaxed fit, designed for layering or casual wear. Soft, breathable fabric ensures comfort while maintaining a modern, minimalist look."
+        "link": "/ww-en/tech-technical-fabric-backpack-k209a5a00010m7835_999-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_350x.jpg?v=1756461659",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_450x.jpg?v=1756461659"
+        ],
+        "tag": "new arrival",
+        "sku": "K209A5A00010M7835_999",
+        "care": "Wipe clean with damp cloth",
+        "madeIn": "Italy",
+        "sizes": [
+          "One Size"
+        ],
+        "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics."
+      },
+      {
+        "id": 16,
+        "name": "Tank top in cotton",
+        "brand": "Rick Owens",
+        "title": "newarrival",
+        "category": "Clothing",
+        "subcategory": "Tops",
+        "price": 355,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x@2x.jpg?v=1759231913 2x"
         },
-              {
+        "link": "/ww-en/tank-top-in-cotton-rr02e1108rig_09-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_350x.jpg?v=1759231913",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_450x.jpg?v=1759231913"
+        ],
+        "tag": "new arrival",
+        "sku": "RR02E1108RIG_09",
+        "care": "Machine wash cold, gentle cycle",
+        "madeIn": "Italy",
+        "sizes": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "description": "Classic cotton tank top with relaxed fit, designed for layering or casual wear. Soft, breathable fabric ensures comfort while maintaining a modern, minimalist look."
+      },
+      {
         "id": 17,
         "name": "Jeans regolare fit",
         "brand": "Slowear",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Jeans",
         "price": 325,
@@ -504,10 +520,11 @@
         ],
         "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort."
       },
-            {
+      {
         "id": 18,
         "name": "Jeans regolare fit",
         "brand": "Slowear",
+        "title": "newarrival",
         "category": "Clothing",
         "subcategory": "Jeans",
         "price": 325,
@@ -534,8 +551,143 @@
           "38"
         ],
         "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort."
+      },
+      {
+        "id": 19,
+        "name": "Jersey dress",
+        "brand": "Magda Butrym",
+        "title": "newarrival",
+        "category": "Clothing",
+        "subcategory": "Dresses",
+        "price": 847,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_200x.jpg?v=1756467678",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_200x@2x.jpg?v=1756467678 2x"
+        },
+        "link": "/ww-en/jersey-dress-120525_purple-p",
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_200x.jpg?v=1756467678",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_350x.jpg?v=1756467678",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_450x.jpg?v=1756467678"
+        ],
+        "tag": "new arrival",
+        "sku": "120525_PURPLE-0",
+        "care": "Dry clean only",
+        "madeIn": "Italy",
+        "sizes": [
+          "XS",
+          "S",
+          "M",
+          "L"
+        ],
+        "description": "Elegant jersey dress crafted with luxurious stretch fabric. Features a flattering silhouette, rich purple tone, and minimalist design perfect for evening occasions.",
+        "discount": "-50%",
+        "originalPrice": 1695
+      },
+      {
+        "id": 20,
+        "name": "Technical fabric leggings",
+        "brand": "Magda Butrym",
+        "title": "newarrival",
+        "category": "Clothing",
+        "subcategory": "Leggings",
+        "price": 350,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_200x.jpg?v=1756467630",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_200x@2x.jpg?v=1756467630 2x"
+        },
+        "link": "/ww-en/technical-fabric-leggings-208724_black-p",
+        "gender": "woman",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_200x.jpg?v=1756467630",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_350x.jpg?v=1756467630",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_450x.jpg?v=1756467630"
+        ],
+        "tag": "new arrival",
+        "sku": "208724_BLACK-1",
+        "care": "Machine wash cold, gentle cycle",
+        "madeIn": "Poland",
+        "sizes": [
+          "XS",
+          "S",
+          "M",
+          "L"
+        ],
+        "description": "High-performance technical leggings designed with breathable fabric. Offers superior comfort, perfect for casual wear or workouts.",
+        "discount": "-50%",
+        "originalPrice": 700
+      },
+      {
+        "id": 21,
+        "name": "Cotton crew-neck T-shirt",
+        "brand": "Maison Kitsuné",
+        "title": "newarrival",
+        "category": "Clothing",
+        "subcategory": "T-Shirts",
+        "price": 78,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_200x.jpg?v=1753951078",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_200x@2x.jpg?v=1753951078 2x"
+        },
+        "link": "/ww-en/cotton-crew-neck-t-shirt-om00121kj0118_0074-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_200x.jpg?v=1753951078",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_350x.jpg?v=1753951078",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_450x.jpg?v=1753951078"
+        ],
+        "tag": "new arrival",
+        "sku": "OM00121KJ0118_0074-0",
+        "care": "Machine wash cold, gentle cycle",
+        "madeIn": "Portugal",
+        "sizes": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "description": "Soft cotton crew-neck T-shirt featuring Maison Kitsuné’s signature minimalist design. Perfect for casual everyday wear.",
+        "discount": "-40%",
+        "originalPrice": 130
+      },
+      {
+        "id": 22,
+        "name": "Donny padded bomber jacket",
+        "brand": "Marant",
+        "title": "newarrival",
+        "category": "Clothing",
+        "subcategory": "Jackets",
+        "price": 297,
+        "currency": "€",
+        "coverImage": {
+          "src": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_200x.jpg?v=1751898169",
+          "srcset": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_200x@2x.jpg?v=1751898169 2x"
+        },
+        "link": "/ww-en/donny-padded-bomber-jacket-23ama0148haa3c41h_90be-p",
+        "gender": "man",
+        "images": [
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_200x.jpg?v=1751898169",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_350x.jpg?v=1751898169",
+          "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_450x.jpg?v=1751898169"
+        ],
+        "tag": "new arrival",
+        "sku": "23AMA0148HAA3C41H_90BE-1",
+        "care": "Dry clean only",
+        "madeIn": "France",
+        "sizes": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "description": "Stylish padded bomber jacket from Marant, crafted for both comfort and warmth. A modern classic perfect for layering.",
+        "discount": "-40%",
+        "originalPrice": 495
       }
-      
     ]
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, ShoppingBag, Menu, X, User, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderChange }) => {
     const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
@@ -14,10 +14,23 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
     const navigate = useNavigate()
     const location = useLocation()
 
-
     useEffect(() => {
         setMobileGender(currentGender);
     }, [currentGender]);
+
+    useEffect(() => {
+        const path = location.pathname;
+        if (path.startsWith('/man')) {
+            setMobileGender('man');
+        } else if (path.startsWith('/woman')) {
+            setMobileGender('woman');
+        }
+    }, [location.pathname]);
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            setMobileGender(currentGender);
+        }
+    }, [mobileMenuOpen, currentGender]);
 
     const handleGenderSwitch = (gender) => {
         setMobileGender(gender);
@@ -30,6 +43,9 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
         } else {
             navigate('/woman');
         }
+        // Close mobile menu after gender switch
+        setMobileMenuOpen(false);
+        setMobileSubView(null);
     };
 
     const handleMenuEnter = (menu) => {
@@ -44,6 +60,10 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             setActiveDesktopMenu(null);
         }, 100);
         setMenuTimeout(timeout);
+    };
+
+    const closeDesktopMenu = () => {
+        setActiveDesktopMenu(null);
     };
 
     const womanCategories = {
@@ -77,6 +97,17 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
         setMobileSubView(null);
     };
 
+    const handleMobileItemClick = (route) => {
+        navigate(route);
+        setMobileMenuOpen(false);
+        setMobileSubView(null);
+    };
+
+    const handleDesktopItemClick = (route) => {
+        navigate(route);
+        closeDesktopMenu();
+    };
+
     const getCurrentCategories = () => {
         return mobileGender === 'woman' ? womanCategories : manCategories;
     };
@@ -101,9 +132,12 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     onMouseEnter={() => handleMenuEnter('newarrivals')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
+                    <Link
+                        to={`/${currentGender}/newarrival/products`}
+                        onClick={closeDesktopMenu}
+                        className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         New Arrivals
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Woman */}
@@ -183,15 +217,15 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                         <div className="max-w-7xl mx-auto grid grid-cols-3 gap-12 px-8 py-12">
                             <div>
                                 <div className="space-y-3">
-                                    <a href="#" className="block  font-medium hover:underline">DESIGNERS Woman</a>
-                                    <a href="#" className="block  font-medium hover:underline">DESIGNERS Man</a>
+                                    <Link to={"/woman/designers"} onClick={closeDesktopMenu} className="block  font-medium hover:underline">DESIGNERS Woman</Link>
+                                    <Link to={"/man/designers"} onClick={closeDesktopMenu} className="block  font-medium hover:underline">DESIGNERS Man</Link>
                                 </div>
                             </div>
                             <div>
                                 <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands woman</h4>
                                 <div className="space-y-3">
                                     {designerBrands.woman.slice(0, 10).map(brand => (
-                                        <a key={brand} href="#" className="block text-lg hover:underline">{brand}</a>
+                                        <Link to={`/woman/designers/${brand}/products`} onClick={closeDesktopMenu} key={brand} className="block text-lg hover:underline">{brand}</Link>
                                     ))}
                                 </div>
                             </div>
@@ -199,7 +233,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                 <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands man</h4>
                                 <div className="space-y-3">
                                     {designerBrands.man.slice(0, 10).map(brand => (
-                                        <a key={brand} href="#" className="block text-lg hover:underline">{brand}</a>
+                                        <Link to={`/man/designers/${brand}/products`} onClick={closeDesktopMenu} key={brand} className="block text-lg hover:underline">{brand}</Link>
                                     ))}
                                 </div>
                             </div>
@@ -209,42 +243,42 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     {activeDesktopMenu === 'newarrivals' && (
                         <div className="max-w-7xl mx-auto grid grid-cols-5 gap-12 px-8 py-12">
                             <div>
-                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">CLOTHING</h4>
+                                <Link to={`/${currentGender}/newarrival/clothing/products`} onClick={closeDesktopMenu} className="font-bold mb-6 text-xl uppercase tracking-wider">CLOTHING</Link>
                                 <div className="space-y-3">
                                     {womanCategories.clothing.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/${currentGender}/newarrival/clothing/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">BAGS</h4>
+                                <Link to={`/${currentGender}/newarrival/bags/products`} onClick={closeDesktopMenu} className="font-bold mb-6 text-xl uppercase tracking-wider">BAGS</Link>
                                 <div className="space-y-3">
                                     {womanCategories.bags.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/${currentGender}/newarrival/bags/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">SHOES</h4>
+                                <Link to={`/${currentGender}/newarrival/shoes/products`} onClick={closeDesktopMenu} className="font-bold mb-6 text-xl uppercase tracking-wider">SHOES</Link>
                                 <div className="space-y-3">
                                     {womanCategories.shoes.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/${currentGender}/newarrival/shoe/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">ACCESSORIES</h4>
+                                <Link to={`/${currentGender}/newarrival/accessories/products`} onClick={closeDesktopMenu} className="font-bold mb-6 text-xl uppercase tracking-wider">ACCESSORIES</Link>
                                 <div className="space-y-3">
                                     {womanCategories.accessories.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/${currentGender}/newarrival/accessories/${item}/product`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 text-xl uppercase tracking-wider">LIFESTYLE</h4>
+                                <Link to={`/${currentGender}/newarrival/lifestyle/products`} onClick={closeDesktopMenu} className="font-bold mb-6 text-xl uppercase tracking-wider">LIFESTYLE</Link>
                                 <div className="space-y-3">
                                     {womanCategories.lifestyle.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/${currentGender}/newarrival/lifestyle/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
@@ -255,47 +289,51 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                         <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
                             <div>
                                 <h4 className="font-bold mb-6  uppercase tracking-wider">
-                                    <a href="#" className="hover:underline">WOMAN</a>
+                                    <Link to={`/woman/products`} onClick={closeDesktopMenu} className="hover:underline">WOMAN</Link>
                                 </h4>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">CLOTHING</h4>
+                                <Link to="/woman/clothing/products" onClick={closeDesktopMenu} className="font-bold mb-6  uppercase tracking-wider">CLOTHING</Link>
                                 <div className="space-y-3">
                                     {womanCategories.clothing.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link
+                                            to={`/woman/clothing/${item}/products`}
+                                            onClick={closeDesktopMenu}
+                                            key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">BAGS</h4>
+                                <Link to="/woman/bags/products" onClick={closeDesktopMenu}
+                                    className="font-bold mb-6  uppercase tracking-wider">BAGS</Link>
                                 <div className="space-y-3">
                                     {womanCategories.bags.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/woman/bags/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">SHOES</h4>
+                                <Link to="/woman/shoes/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">SHOES</Link>
                                 <div className="space-y-3">
                                     {womanCategories.shoes.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/woman/shoes/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</h4>
+                                <Link to="/woman/accessories/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</Link>
                                 <div className="space-y-3">
                                     {womanCategories.accessories.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/woman/accessories/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
 
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</h4>
+                                <Link to="/woman/lifestyle/products" onClick={closeDesktopMenu} className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</Link>
                                 <div className="space-y-3">
                                     {womanCategories.lifestyle.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/woman/lifestyle/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
@@ -306,47 +344,47 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                         <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
                             <div>
                                 <h4 className="font-bold mb-6 uppercase tracking-wider">
-                                    <a href="#" className="hover:underline">MAN</a>
+                                    <Link to={"/man/products"} onClick={closeDesktopMenu} className="hover:underline">MAN</Link>
                                 </h4>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">CLOTHING</h4>
+                                <Link to="/man/clothing/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">CLOTHING</Link>
                                 <div className="space-y-3">
                                     {manCategories.clothing.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/man/clothing/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">BAGS</h4>
+                                <Link to="/man/bags/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">BAGS</Link>
                                 <div className="space-y-3">
                                     {manCategories.bags.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/man/bags/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">SHOES</h4>
+                                <Link to="/man/shoes/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">SHOES</Link>
                                 <div className="space-y-3">
                                     {manCategories.shoes.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/man/shoes/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</h4>
+                                <Link to="/man/accessories/products" onClick={closeDesktopMenu} className="font-bold mb-6 uppercase tracking-wider">ACCESSORIES</Link>
                                 <div className="space-y-3">
                                     {manCategories.accessories.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/man/accessories/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
 
                             </div>
                             <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</h4>
+                                <Link to="/man/lifestyle/products" onClick={closeDesktopMenu} className="font-bold mb-6  uppercase tracking-wider">LIFESTYLE</Link>
                                 <div className="space-y-3">
                                     {manCategories.lifestyle.map(item => (
-                                        <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
+                                        <Link to={`/man/lifestyle/${item}/products`} onClick={closeDesktopMenu} key={item} className="block text-lg hover:underline">{item}</Link>
                                     ))}
                                 </div>
                             </div>
@@ -355,12 +393,12 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
 
                     {activeDesktopMenu === 'upto50%off' && (
                         <div className="max-w-sm mx-auto px-8 py-12">
-                            <a href="#" className="block text-lg hover:underline py-1">
+                            <Link to={"/man/discount/products"} onClick={closeDesktopMenu} className="block text-lg hover:underline py-1">
                                 Man
-                            </a>
-                            <a href="#" className="block text-lg hover:underline py-1">
+                            </Link>
+                            <Link to={"/woman/discount/products"} onClick={closeDesktopMenu} className="block text-lg hover:underline py-1">
                                 Woman
-                            </a>
+                            </Link>
                         </div>
                     )}
 
@@ -405,49 +443,92 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                 </div>
 
                                 <nav className="p-4">
-                                    <a href="#" className="block py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                    <button
+                                        onClick={() => handleMobileItemClick(`/${mobileGender}/products`)}
+                                        className="block py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200 w-full text-left"
+                                    >
                                         {mobileGender.toUpperCase()}
-                                    </a>
-
-                                    <button
-                                        onClick={() => openMobileSubView('clothing')}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        Clothing
-                                        <ChevronRight className="w-5 h-5" />
                                     </button>
 
-                                    <button
-                                        onClick={() => openMobileSubView('bags')}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        Bags
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/clothing/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            Clothing
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('clothing')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
 
-                                    <button
-                                        onClick={() => openMobileSubView('shoes')}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        Shoes
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/bags/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            Bags
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('bags')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
 
-                                    <button
-                                        onClick={() => openMobileSubView('accessories')}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        Accessories
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/shoes/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            Shoes
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('shoes')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
 
-                                    <button
-                                        onClick={() => openMobileSubView('lifestyle')}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        Lifestyle
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/accessories/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            Accessories
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('accessories')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
+
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/lifestyle/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            Lifestyle
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('lifestyle')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
 
                                     <button
                                         onClick={() => openMobileSubView('designers')}
@@ -458,7 +539,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                     </button>
 
                                     <button
-                                        onClick={() => openMobileSubView('newarrivals')}
+                                        onClick={() => handleMobileItemClick(`/${mobileGender}/newarrival/products`)}
                                         className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
                                     >
                                         New Arrivals
@@ -470,7 +551,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                     </a>
 
                                     <button
-                                        onClick={() => openMobileSubView('sale')}
+                                        onClick={() => handleMobileItemClick(`/${mobileGender}/discount/products`)}
                                         className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium text-red-600 border-b border-gray-200"
                                     >
                                         Up To 50% Off
@@ -534,9 +615,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
 
                                     <div className="space-y-0">
                                         {getCurrentCategories()[mobileSubView]?.map(item => (
-                                            <a key={item} href="#" className="block py-3 text-sm border-b border-gray-200">
+                                            <button
+                                                key={item}
+                                                onClick={() => handleMobileItemClick(`/${mobileGender}/${mobileSubView}/${item}/products`)}
+                                                className="block w-full text-left py-3 text-sm border-b border-gray-200"
+                                            >
                                                 {item}
-                                            </a>
+                                            </button>
                                         ))}
                                     </div>
 
