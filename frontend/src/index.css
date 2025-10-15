@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+:root {
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-accent: 'Space Grotesk', sans-serif;
+  --primary: #30486b;
+  --secondary : #ffaa6b;
+  --neutral : #374151;
+  
+}
+
 body {
-  font-family: Avenir;
+  font-family: var(--font-heading);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+}
+
+.special {
+  font-family: var(--font-accent);
 }

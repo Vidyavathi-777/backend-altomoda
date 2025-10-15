@@ -7,8 +7,10 @@ const NewArrivals = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const sliderRef = useRef(null);
-  const {  products } = productsData.productSlider;
-  const filteredProducts = productsData.productSlider.products.filter(item => item.gender === gender && item.title === "newarrival" )
+  const   products  = productsData.productSlider.products;
+  const filteredProducts = products.filter(item => item.gender === gender )
+ // const filteredProducts = productsData.productSlider.products.filter(item => item.gender === gender && item.title === "newarrival" )
+  // console.log(filteredProducts)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -87,9 +89,9 @@ const NewArrivals = () => {
             <div className="flex space-x-4 md:space-x-6 lg:space-x-8 pb-4">
               {filteredProducts.map((product) => (
                 <Link
-                  key={product.id}
+                  key={product._id.$oid}
                   className="flex-shrink-0 w-48 md:w-56 lg:w-64 group"
-                  to={`/${gender}/product/${product.id}`}
+                  to={`/${gender}/product/${product._id.$oid}`}
                 >
                   {/* Product Card */}
                   <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
@@ -107,9 +109,9 @@ const NewArrivals = () => {
 
                                     <img
                                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                      src={product.coverImage.src}
+                                      src={product.imgs[0].url}
                                       alt={product.name}
-                                      srcSet={product.coverImage.srcset}
+                                      // srcSet={product.coverImage.srcset}
                                       loading="lazy"
                                     />
                         
@@ -138,7 +140,7 @@ const NewArrivals = () => {
                         <div className="product-title">
                           <a href={product.link}>
                             <h3 className="product-description text-sm font-medium text-gray-900 leading-tight line-clamp-2 hover:text-gray-700 transition-colors">
-                              {product.name}
+                              {product.title}
                             </h3>
                           </a>
                         </div>
@@ -151,7 +153,7 @@ const NewArrivals = () => {
                                 <div className="price-format left-currency">
                                   <span className="simbol text-gray-900 font-semibold">{product.currency}</span>
                                   <span className="text-gray-900 font-semibold ml-1">
-                                    {formatPrice(product.price)}
+                                    {formatPrice(product.price.amount)}
                                   </span>
                                 </div>
                               </span>
@@ -178,7 +180,7 @@ const NewArrivals = () => {
         </div>
 
         {/* Loading Skeletons */}
-        {isLoading && (
+        {/* {isLoading && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
             {[...Array(8)].map((_, index) => (
               <div key={index} className="product-card-skeleton-container animate-pulse">
@@ -188,7 +190,7 @@ const NewArrivals = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Custom Styles */}

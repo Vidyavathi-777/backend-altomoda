@@ -26,8 +26,10 @@ const HomePage = ({gender:propGender}) => {
     }
   }
 
+
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f9fafb]">
       {/* Main Content */}
       <main className="pt-[120px] sm:pt-[140px] md:pt-[160px] lg:pt-[180px]">
         <HeroSection  />
