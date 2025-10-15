@@ -56,7 +56,7 @@ const ProductsPage = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`/api/shop/v1/categories/tree`, {
+            const response = await fetch(`https://sandbox.csplatform.io:9950/shop/v1/categories/tree`, {
                 headers: {
                     'Authorization': API_TOKEN,
                     'Content-Type': 'application/json'
@@ -172,7 +172,7 @@ const ProductsPage = () => {
             const sortExpression = getSortExpression();
             
             // Always use the new endpoint with POST request
-            const apiUrl = `/api/shop/v2/items/listParentsByFilter?_pageIndex=${pageIndex}&_pageSize=${pageSize}&_sort=${sortExpression}`;
+            const apiUrl = `https://sandbox.csplatform.io:9950/shop/v2/items/listParentsByFilter?_pageIndex=${pageIndex}&_pageSize=${pageSize}&_sort=${sortExpression}`;
             
             const requestOptions = {
                 method: "POST",

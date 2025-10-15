@@ -126,7 +126,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     onMouseLeave={handleMenuLeave}
                 >
                     <Link
-                        to={`/${currentGender}/newarrival/products`}
+                        to={`/${navitems[currentGender]}/products`}
                         onClick={closeDesktopMenu}
                         className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         New Arrivals
