@@ -1,10 +1,12 @@
 const TOKEN = "55f707f6b49dbbe14ec6354d-68e7881e65cc94067098b7ab:4b02bdd96ac3b665239151aea7b0faf8";
+const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const fetchCategoryByRoot = async (categoryId, pageIndex = 0, pageSize = 20) => {
   try {
     const res = await fetch(
-      `https://sandbox.csplatform.io:9950/shop/v1/categories/${categoryId}/children`,
+      `${proxyUrl}https://sandbox.csplatform.io:9950/shop/v1/categories/${categoryId}/children`,
       {
+        method:"GET",
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           Accept: "application/json",
@@ -31,7 +33,8 @@ export const fetchAllBrands = async () => {
 
   try {
     while (hasMore) {
-      const res = await fetch(`https://sandbox.csplatform.io:9950/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=250`, {
+      const res = await fetch(`${proxyUrl}https://sandbox.csplatform.io:9950/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=250`, {
+        method:"GET",
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           Accept: "application/json",
