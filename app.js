@@ -174,9 +174,9 @@ app.get("/api/products/related/:sku", async (req, res) => {
   }
 });
 
-app.post("/api/products/new-arrivals", async (req, res) => {
+app.post("/api/products/new-arrivals/:gender", async (req, res) => {
   try {
-    const { gender } = req.query; // e.g. woman, man
+    const { gender } = req.params; // e.g. woman, man
   const navitems = {
     "man": "561d7300b49dbb9c2c551be1",
     "woman": "561d7300b49dbb9c2c551c29"
