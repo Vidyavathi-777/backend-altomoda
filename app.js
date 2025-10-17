@@ -174,5 +174,118 @@ app.get("/api/products/related/:sku", async (req, res) => {
   }
 });
 
+app.post("/api/products/new-arrivals", async (req, res) => {
+  try {
+    const { gender } = req.query; // e.g. woman, man
+    // const navitems = {
+    //   woman: "561d72f4b49dbb9c2c551c1f",
+    //   man: "561d72f4b49dbb9c2c551c20",
+    //   kids: "561d72f4b49dbb9c2c551c22",
+    //   accessories: "561d72f4b49dbb9c2c551c23"
+    // };
+
+    const categoryId = gender;
+
+    const filter = {
+      "cat_ids": {
+        "op": "IN",
+        "values": [{ "$oid": categoryId }]
+      },
+      images_option: "WITH_IMAGES"
+    };
+
+    const response = await fetch(
+      `${API_BASE}/shop/v2/items/listParentsByFilter?_pageIndex=0&_pageSize=20&_sort=last_info_update[DESC]`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: API_TOKEN,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(filter)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.content || !Array.isArray(data.content)) {
+      return res.json({ products: [] });
+    }
+
+    // Transform products to simplified format
+    const transformedProducts = data.content.flatMap((parent) => {
+      if (parent.items && Array.isArray(parent.items)) {
+        return parent.items.map((item) => {
+          const mainImage =
+            item.imgs?.find((img) =>
+              img.placement?.includes("LIST")
+            ) || item.imgs?.[0];
+
+          const color =
+            item.locs?.singles?.color?.en ||
+            item.locs?.lists?.colors?.[0]?.en ||
+            item.props?.color ||
+            "";
+
+          const title =
+            item.locs?.singles?.title?.en ||
+            item.props?.model_name ||
+            parent.parent_sku ||
+            "Product";
+
+          const description =
+            item.locs?.singles?.desc?.en ||
+            item.locs?.singles?.description?.en ||
+            "";
+
+          return {
+            _id: { $oid: item.item_id?.$oid || Math.random().toString() },
+            name: item.props?.brand || "Unknown Brand",
+            title,
+            description,
+            price: {
+              amount: item.stock_price || 0,
+              currency: "USD"
+            },
+            imgs: mainImage ? [{ url: mainImage.url }] : [],
+            brand: item.props?.brand || "Unknown",
+            category: item.props?.category || "Clothing",
+            subcategory: item.props?.subcategory || "General",
+            color,
+            type: item.props?.type || item.props?.product_type || "",
+            gender: item.locs?.singles?.sex?.en || gender,
+            size: item.props?.size || "",
+            madeIn: item.locs?.singles?.made?.en || "",
+            composition: item.composition || [],
+            qty: item.qty || 0,
+            inStock: (item.qty || 0) > 0,
+            lastUpdated: item.last_info_update || new Date().toISOString(),
+            link: `/${gender}/product/${item.item_id?.$oid}`
+          };
+        });
+      }
+      return [];
+    });
+
+    // Sort by last updated and limit
+    const sortedProducts = transformedProducts
+      .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
+      .slice(0, 10);
+
+    res.json({
+      gender,
+      count: sortedProducts.length,
+      products: sortedProducts
+    });
+  } catch (error) {
+    console.error("Error fetching new arrivals:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
