@@ -113,4 +113,66 @@ app.get("/api/products/search", async (req, res) => {
   }
 });
 
+// GET /api/products/:id
+app.get("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const response = await fetch(`https://sandbox.csplatform.io:9950/shop/v1/items/${id}`, {
+      headers: { Authorization: API_TOKEN }
+    });
+
+    if (!response.ok) throw new Error(`Failed to fetch product ${id}`);
+
+    const data = await response.json();
+    res.json(data.content); // send the product data directly
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/products/related/:sku
+app.get("/api/products/related/:sku", async (req, res) => {
+  const { sku } = req.params;
+
+  try {
+    const response = await fetch(
+      `https://sandbox.csplatform.io:9950/shop/v1/items/listByCode?code=${encodeURIComponent(sku)}&type=SKU&_searchType=PARTIAL_CASE_INSENSITIVE&_pageSize=20`,
+      {
+        headers: { Authorization: API_TOKEN }
+      }
+    );
+
+    if (!response.ok) throw new Error(`Failed to fetch related products for SKU ${sku}`);
+
+    const data = await response.json();
+
+    // Transform products
+    const relatedProducts = (data.content || []).map(item => {
+      const mainImage = item.imgs?.find(img =>
+        img.placement?.includes("DETAIL") || img.placement?.includes("LIST")
+      ) || item.imgs?.[0];
+
+      return {
+        _id: { $oid: item.item_id?.$oid },
+        sku: item.sku,
+        brand: item.props?.brand || "Unknown Brand",
+        title: item.locs?.singles?.title?.en || item.props?.model_name || "Product",
+        price: item.stock_price || 0,
+        imgs: mainImage ? [{ url: mainImage.url }] : [],
+        color: item.locs?.singles?.color?.en || "",
+        size: item.props?.size || "",
+        inStock: (item.qty || 0) > 0
+      };
+    });
+
+    res.json({ related: relatedProducts });
+  } catch (error) {
+    console.error("Error fetching related products:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
