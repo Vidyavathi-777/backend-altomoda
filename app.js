@@ -32,22 +32,30 @@ app.post("/api/products", async (req, res) => {
 // Proxy route for category children
 app.get("/api/categories/:categoryId", async (req, res) => {
   const { categoryId } = req.params;
-
   try {
     const response = await fetch(`${API_BASE}/shop/v1/categories/${categoryId}/children`, {
       method: "GET",
-      headers: {
-        Authorization: API_TOKEN,
-        Accept: "application/json",
-      },
+      headers: { Authorization: API_TOKEN, Accept: "application/json" },
     });
+
+    // Check if upstream responded with success
+    if (!response.ok) {
+      const text = await response.text(); // get actual error page
+      console.error(`Upstream API failed: ${response.status} - ${text}`);
+      return res.status(response.status).json({
+        error: `Upstream API error: ${response.status}`,
+        details: text
+      });
+    }
 
     const data = await response.json();
     res.json(data);
   } catch (err) {
+    console.error("Error fetching categories:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 app.get("/api/products/categories/tree", async (req, res) => {
   try {
