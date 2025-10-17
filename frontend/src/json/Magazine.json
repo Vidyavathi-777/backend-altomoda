@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "category": "Trend",
+    "title": "The Tie: The Return of a Classic",
+    "description": "Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Preview",
+    "alt": "tie"
+  },
+  {
+    "id": 2,
+    "category": "Trend",
+    "title": "Pitti Immagine 2025: Effortless Elegance Under the Florentine Sun",
+    "description": "From the streets of Pitti Uomo emerges a new way of living fashion: authentic, dynamic, and able to blend tradition and innovation with ease.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Preview",
+    "alt": "pitti"
+  },
+  {
+    "id": 3,
+    "category": "Trend",
+    "title": "Country Summer: The Free Spirit of the Season",
+    "description": "Discover how country style is taking over summer 2025 and get inspired by a look that's authentic, natural, and full of contemporary charm.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Preview",
+    "alt": "country"
+  },
+  {
+    "id": 4,
+    "category": "Trend",
+    "title": "Denim: The Return of a Timeless Icon",
+    "description": "Discover how denim is once again taking center stage and get inspired to reinvent it with style in your everyday wardrobe.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Preview",
+    "alt": "denim"
+  },
+  {
+    "id": 5,
+    "category": "How To Wear It",
+    "title": "How to Wear... Loafers",
+    "description": "Discover how to style loafers in three versatile and on-trend looks, from minimal elegance to creative casual.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Preview",
+    "alt": "loafers"
+  },
+  {
+    "id": 6,
+    "category": "Trend",
+    "title": "Street Style Report: The Most Iconic Looks of Fashion Week",
+    "description": "Get inspired by the street style of the Fall-Winter 25-26 Women's Fashion Week in Paris.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Preview",
+    "alt": "street style"
+  },
+  {
+    "id": 7,
+    "category": "Green Talks",
+    "title": "Agolde x RSVP: 15 Years of Style",
+    "description": "An exclusive collaboration celebrating Chicago's creativity with vintage-inspired pieces and a commemorative coffee table book marking RSVP Gallery's 15-year legacy.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Preview",
+    "alt": "RSVP"
+  },
+  {
+    "id": 8,
+    "category": "Trend",
+    "title": "Layering: The Art of Stylish Overlapping",
+    "description": "Explore the season's must-have trend and get inspired to effortlessly incorporate it into your wardrobe.",
+    "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Preview",
+    "alt": "layering"
+  }
+]

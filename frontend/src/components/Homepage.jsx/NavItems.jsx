@@ -9,9 +9,10 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
         "man": "561d7300b49dbb9c2c551be1",
         "woman": "561d7300b49dbb9c2c551c29"
     }
-    
+
     const { womanCategories, manCategories, newArrivals } = useCategories();
-    
+    console.log(womanCategories)
+
     const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
     const [mobileGender, setMobileGender] = useState('woman');
     const [activeDesktopMenu, setActiveDesktopMenu] = useState(null);
@@ -34,7 +35,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             setMobileGender('woman');
         }
     }, [location.pathname]);
-    
+
     useEffect(() => {
         if (mobileMenuOpen) {
             setMobileGender(currentGender);
@@ -105,9 +106,19 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
         return mobileGender === 'woman' ? womanCategories : manCategories;
     };
 
+
+    const cssVariables = {
+        primary: '#30486B',
+        secondary: '#FFAA6B',
+        neutral: '#30486B',
+        fontHeading: "'Cormorant Garamond', serif",
+        fontBody: "'Inter', sans-serif",
+        fontAccent: "'Inter', sans-serif"
+    };
+
     return (
         <>
-            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4 border-t border-gray-200 bg-white relative">
+            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4 border-t border-gray-200 bg-white relative "  style={{ fontFamily: cssVariables.fontBody }}>
                 {/* Designers */}
                 <div
                     className="relative h-full"
@@ -185,9 +196,11 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     onMouseEnter={() => handleMenuEnter('magazine')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
+                    <Link
+                        to={"/magazine"}
+                        className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         TCZ_TheCornerZine
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Product Finder */}
@@ -197,165 +210,200 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             </nav>
 
             {/* Mega Menu Dropdowns - Portal Style */}
-            {activeDesktopMenu && (
-                <div
-                    className="hidden text-xl lg:block fixed left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-[60]"
+{activeDesktopMenu && (
+  <div
+    className="hidden lg:block fixed left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-[60] text-gray-800" style={{ fontFamily: cssVariables.fontBody }}
+    onMouseEnter={() => menuTimeout && clearTimeout(menuTimeout)}
+    onMouseLeave={handleMenuLeave}
+  >
+    {/* Common wrapper */}
+    <div className="max-w-7xl mx-auto px-10 py-10 flex justify-between gap-10 text-base leading-relaxed">
+      
+      {/* Designers Menu */}
+      {activeDesktopMenu === "designers" && (
+        <>
+          <div className="space-y-4 w-1/4">
+            <Link
+              to="/woman/designers"
+              onClick={closeDesktopMenu}
+              className="block hover:text-black hover:underline transition"
+            >
+              Designers Woman
+            </Link>
+            <Link
+              to="/man/designers"
+              onClick={closeDesktopMenu}
+              className="block hover:text-black hover:underline transition"
+            >
+              Designers Man
+            </Link>
+          </div>
 
-                    onMouseEnter={() => {
-                        if (menuTimeout) clearTimeout(menuTimeout);
-                    }}
-                    onMouseLeave={handleMenuLeave}
+          <div className="w-1/3">
+            <h4 className="font-semibold text-gray-900 uppercase tracking-wide text-sm mb-4">
+              Top Brands — Woman
+            </h4>
+            <div className="grid grid-cols-1 gap-y-2 text-gray-700">
+              {designerBrands.woman.map((brand) => (
+                <Link
+                  to={`/woman/${navitems.woman}/${brand}/products`}
+                  key={brand}
+                  onClick={closeDesktopMenu}
+                  className="hover:text-black hover:underline transition"
                 >
-                    {activeDesktopMenu === 'designers' && (
-                        <div className="max-w-7xl mx-auto grid grid-cols-3 gap-12 px-8 py-12">
-                            <div>
-                                <div className="space-y-3">
-                                    <Link to={"/woman/designers"} onClick={closeDesktopMenu} className="block  font-medium hover:underline">DESIGNERS Woman</Link>
-                                    <Link to={"/man/designers"} onClick={closeDesktopMenu} className="block  font-medium hover:underline">DESIGNERS Man</Link>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands woman</h4>
-                                <div className="space-y-3">
-                                    {designerBrands.woman.slice(0, 10).map(brand => (
-                                        <Link to={`/woman/designers/${brand}/products`} onClick={closeDesktopMenu} key={brand} className="block text-lg hover:underline">{brand}</Link>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">Top brands man</h4>
-                                <div className="space-y-3">
-                                    {designerBrands.man.slice(0, 10).map(brand => (
-                                        <Link to={`/man/designers/${brand}/products`} onClick={closeDesktopMenu} key={brand} className="block text-lg hover:underline">{brand}</Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                  {brand}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-                    {activeDesktopMenu === 'newarrivals' && (
-                        <div className="max-w-7xl mx-auto grid grid-cols-5 gap-12 px-8 py-12">
-                            {Object.keys(newArrivals).map((mainCat) => {
-                                return (
-                                    <div key={mainCat} className="flex-1 px-4">
-                                        <Link
-                                            to={`/woman/${mainCat}/products`}
-                                            onClick={closeDesktopMenu}
-                                            className="font-bold mb-6 uppercase tracking-wider block"
-                                        >
-                                            {mainCat}
-                                        </Link>
-                                        <div className='space-y-3'>
-                                            {newArrivals[mainCat].map((sub, index) => (
-                                                <Link
-                                                    key={index}
-                                                    to={`/woman/${mainCat}/${sub}/products`}
-                                                    onClick={closeDesktopMenu}
-                                                    className="block text-lg hover:underline text-gray-700"
-                                                >
-                                                    {sub}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}  
+          <div className="w-1/3">
+            <h4 className="font-semibold text-gray-900 uppercase tracking-wide text-sm mb-4">
+              Top Brands — Man
+            </h4>
+            <div className="grid grid-cols-1 gap-y-2 text-gray-700">
+              {designerBrands.man.map((brand) => (
+                <Link
+                  to={`/man/${navitems.man}/${brand}/products`}
+                  key={brand}
+                  onClick={closeDesktopMenu}
+                  className="hover:text-black transition"
+                >
+                  {brand}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
-                    {activeDesktopMenu === 'woman' && (
-                        <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
-                            <div>
-                                <h4 className="font-bold mb-6  uppercase tracking-wider">
-                                    <Link to={`/${navitems.woman}/products`} onClick={closeDesktopMenu} className="hover:underline">WOMAN</Link>
-                                </h4>
-                            </div>
-                            {Object.keys(womanCategories).map((mainCat) => {
-                                return (
-                                    <div key={mainCat} className="flex-1 px-4">
-                                        <Link
-                                            to={`/woman/${mainCat}/products`}
-                                            onClick={closeDesktopMenu}
-                                            className="font-bold mb-6 uppercase tracking-wider block"
-                                        >
-                                            {mainCat}
-                                        </Link>
-                                        <div className='space-y-3'>
-                                            {womanCategories[mainCat].map((sub, index) => (
-                                                <Link
-                                                    key={index}
-                                                    to={`/woman/${index}/products`}
-                                                    onClick={closeDesktopMenu}
-                                                    className="block text-lg hover:underline text-gray-700"
-                                                >
-                                                    {sub}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {activeDesktopMenu === 'man' && (
-                        <div className="max-w-7xl text-xl mx-auto flex justify-between px-8 py-12">
-                            <div>
-                                <h4 className="font-bold mb-6 uppercase tracking-wider">
-                                    <Link to={`/${navitems.man}/products`} onClick={closeDesktopMenu} className="hover:underline">MAN</Link>
-                                </h4>
-                            </div>
-                            {Object.keys(manCategories).map((mainCat) => {
-                                return (
-                                    <div key={mainCat} className="flex-1 px-4">
-                                        <Link
-                                            to={`/man/${mainCat}/products`}
-                                            onClick={closeDesktopMenu}
-                                            className="font-bold mb-6 uppercase tracking-wider block"
-                                        >
-                                            {mainCat}
-                                        </Link>
-                                        <div className='space-y-3'>
-                                            {manCategories[mainCat].map((sub, index) => (
-                                                <Link
-                                                    key={index}
-                                                    to={`/man/${mainCat}/${sub}/products`}
-                                                    onClick={closeDesktopMenu}
-                                                    className="block text-lg hover:underline text-gray-700"
-                                                >
-                                                    {sub}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {activeDesktopMenu === 'upto50%off' && (
-                        <div className="max-w-sm mx-auto px-8 py-12">
-                            <Link to={"/man/discount/products"} onClick={closeDesktopMenu} className="block text-lg hover:underline py-1">
-                                Man
-                            </Link>
-                            <Link to={"/woman/discount/products"} onClick={closeDesktopMenu} className="block text-lg hover:underline py-1">
-                                Woman
-                            </Link>
-                        </div>
-                    )}
-
-                    {activeDesktopMenu === 'magazine' && (
-                        <div className="max-w-sm mx-auto px-8 py-12">
-                            <h4 className="font-bold mb-4 text-xl uppercase tracking-wider">Magazine</h4>
-                            <div className="space-y-2">
-                                {magazineItems.map(item => (
-                                    <a key={item} href="#" className="block text-lg hover:underline">{item}</a>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+      {/* New Arrivals */}
+      {activeDesktopMenu === "newarrivals" && (
+        <div className="grid grid-cols-5 gap-8 w-full ">
+          {Object.keys(newArrivals).map((mainCatKey) => {
+            const mainCategory = newArrivals[mainCatKey];
+            return (
+              <div key={mainCategory.id}>
+                <Link
+                  to={`/${currentGender}/${mainCategory.id}/products`}
+                  onClick={closeDesktopMenu}
+                  className="font-bold uppercase tracking-wide text-gray-900 block  mb-4 text-sm hover:text-black hover:underline"
+                >
+                  {mainCategory.name}
+                </Link>
+                <div className="space-y-2 text-gray-950">
+                  {mainCategory.subs?.map((sub) => (
+                    <Link
+                      key={sub.id}
+                      to={`/${currentGender}/${sub.id}/products`}
+                      onClick={closeDesktopMenu}
+                      className="block  hover:text-black hover:underline transition"
+                    >
+                      {sub.name}
+                    </Link>
+                  ))}
                 </div>
-            )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Woman / Man Categories */}
+      {(activeDesktopMenu === "woman" || activeDesktopMenu === "man") && (
+        <div className="grid grid-cols-6 gap-8 w-full">
+          <div>
+            <h4 className="font-bold uppercase tracking-wide text-gray-900 hover:text-black hover:underline mb-6">
+              <Link
+                to={`/${navitems[activeDesktopMenu]}/products`}
+                onClick={closeDesktopMenu}
+                className="hover:underline"
+              >
+                {activeDesktopMenu}
+              </Link>
+            </h4>
+          </div>
+
+          {Object.keys(
+            activeDesktopMenu === "woman" ? womanCategories : manCategories
+          ).map((mainCatKey) => {
+            const mainCategory =
+              activeDesktopMenu === "woman"
+                ? womanCategories[mainCatKey]
+                : manCategories[mainCatKey];
+            return (
+              <div key={mainCategory.id}>
+                <Link
+                  to={`/${activeDesktopMenu}/${mainCategory.id}/products`}
+                  onClick={closeDesktopMenu}
+                  className="font-semibold uppercase tracking-wide text-gray-900 block mb-4 text-sm hover:text-black hover:underline"
+                >
+                  {mainCategory.name}
+                </Link>
+                <div className="space-y-2 text-gray-700">
+                  {mainCategory.subs?.map((sub) => (
+                    <Link
+                      key={sub.id}
+                      to={`/${activeDesktopMenu}/${sub.id}/products`}
+                      onClick={closeDesktopMenu}
+                      className="block hover:text-black hover:underline transition"
+                    >
+                      {sub.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Upto 50% Off */}
+      {activeDesktopMenu === "upto50%off" && (
+        <div className="text-center space-y-3 mx-auto hover:underline">
+          <h4 className="font-semibold text-gray-900 uppercase tracking-wide mb-3">
+            Upto 50% Off
+          </h4>
+          <Link
+            to="/man/discount/products"
+            onClick={closeDesktopMenu}
+            className="block hover:text-black transition"
+          >
+            Man
+          </Link>
+          <Link
+            to="/woman/discount/products"
+            onClick={closeDesktopMenu}
+            className="block hover:text-black transition"
+          >
+            Woman
+          </Link>
+        </div>
+      )}
+
+      {/* Magazine */}
+      {activeDesktopMenu === "magazine" && (
+        <div className="text-center mx-auto ">
+          <h4 className="font-semibold uppercase tracking-wide text-gray-900 mb-4">
+            Magazine
+          </h4>
+          <div className="space-y-2 text-gray-700">
+            {magazineItems.map((item) => (
+              <a
+                key={item}
+                href="#"
+                className="block hover:text-black hover:underline transition"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
 
             {/* Mobile menu */}
             {mobileMenuOpen && (
@@ -386,30 +434,33 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
 
                                 <nav className="p-4">
                                     <button
-                                        onClick={() => handleMobileItemClick(`/${mobileGender}/products`)}
+                                        onClick={() => handleMobileItemClick(`/${mobileGender}/${navitems[mobileGender]}/products`)}
                                         className="block py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200 w-full text-left"
                                     >
                                         {mobileGender.toUpperCase()}
                                     </button>
 
                                     {/* Dynamic Mobile Categories */}
-                                    {Object.keys(getCurrentCategories()).map((mainCat) => (
-                                        <div key={mainCat} className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
-                                            <Link
-                                                to={`/${mobileGender}/${mainCat}/products`}
-                                                onClick={() => setMobileMenuOpen(false)}
-                                                className="flex-1"
-                                            >
-                                                {mainCat}
-                                            </Link>
-                                            <button
-                                                onClick={() => openMobileSubView(mainCat)}
-                                                className="p-2 ml-2"
-                                            >
-                                                <ChevronRight className="w-5 h-5" />
-                                            </button>
-                                        </div>
-                                    ))}
+                                    {Object.keys(getCurrentCategories()).map((mainCatKey) => {
+                                        const mainCategory = getCurrentCategories()[mainCatKey];
+                                        return (
+                                            <div key={mainCategory.id} className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                                <Link
+                                                    to={`/${mobileGender}/${mainCategory.id}/products`}
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="flex-1"
+                                                >
+                                                    {mainCategory.name}
+                                                </Link>
+                                                <button
+                                                    onClick={() => openMobileSubView(mainCatKey)}
+                                                    className="p-2 ml-2"
+                                                >
+                                                    <ChevronRight className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
 
                                     <button
                                         onClick={() => openMobileSubView('designers')}
@@ -419,25 +470,33 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                         <ChevronRight className="w-5 h-5" />
                                     </button>
 
-                                    <button
-                                        onClick={() => handleMobileItemClick(`/${mobileGender}/newarrival/products`)}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
-                                    >
-                                        New Arrivals
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
+                                        <Link
+                                            to={`/${mobileGender}/${navitems[mobileGender]}/products`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className="flex-1"
+                                        >
+                                            New Arrivals
+                                        </Link>
+                                        <button
+                                            onClick={() => openMobileSubView('newarrivals')}
+                                            className="p-2 ml-2"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
 
                                     <a href="#" className="block py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
                                         Boutiques
                                     </a>
 
-                                    <button
-                                        onClick={() => handleMobileItemClick(`/${mobileGender}/discount/products`)}
-                                        className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium text-red-600 border-b border-gray-200"
+                                    <Link
+                                        to={`/${mobileGender}/${navitems[mobileGender]}/products`}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="block py-3 text-sm uppercase tracking-wider font-medium text-red-600 border-b border-gray-200"
                                     >
                                         Up To 50% Off
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                    </Link>
 
                                     <button
                                         onClick={() => openMobileSubView('magazine')}
@@ -499,12 +558,39 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                             {designerBrands[mobileGender]?.map(brand => (
                                                 <button
                                                     key={brand}
-                                                    onClick={() => handleMobileItemClick(`/${mobileGender}/designers/${brand}/products`)}
+                                                    onClick={() => handleMobileItemClick(`/${mobileGender}/${navitems[mobileGender]}/${brand}/products`)}
                                                     className="block w-full text-left py-3 text-sm border-b border-gray-200"
                                                 >
                                                     {brand}
                                                 </button>
                                             ))}
+                                        </div>
+                                    ) : mobileSubView === 'newarrivals' ? (
+                                        <div className="space-y-0">
+                                            {Object.keys(newArrivals).map((mainCatKey) => {
+                                                const mainCategory = newArrivals[mainCatKey];
+                                                return (
+                                                    <div key={mainCategory.id}>
+                                                        <Link
+                                                            to={`/${mobileGender}/${mainCategory.id}/products`}
+                                                            onClick={() => setMobileMenuOpen(false)}
+                                                            className="block w-full text-left py-3 text-sm font-semibold border-b border-gray-200"
+                                                        >
+                                                            {mainCategory.name}
+                                                        </Link>
+                                                        {mainCategory.subs && mainCategory.subs.map((sub) => (
+                                                            <Link
+                                                                key={sub.id}
+                                                                to={`/${mobileGender}/${sub.id}/products`}
+                                                                onClick={() => setMobileMenuOpen(false)}
+                                                                className="block w-full text-left py-2 pl-4 text-sm text-gray-600 border-b border-gray-100"
+                                                            >
+                                                                {sub.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     ) : mobileSubView === 'magazine' ? (
                                         <div className="space-y-0">
@@ -520,13 +606,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                         </div>
                                     ) : (
                                         <div className="space-y-0">
-                                            {getCurrentCategories()[mobileSubView]?.map(subCategory => (
+                                            {getCurrentCategories()[mobileSubView]?.subs?.map(subCategory => (
                                                 <button
-                                                    key={subCategory}
-                                                    onClick={() => handleMobileItemClick(`/${mobileGender}/${mobileSubView}/${subCategory}/products`)}
+                                                    key={subCategory.id}
+                                                    onClick={() => handleMobileItemClick(`/${mobileGender}/${subCategory.id}/products`)}
                                                     className="block w-full text-left py-3 text-sm border-b border-gray-200"
                                                 >
-                                                    {subCategory}
+                                                    {subCategory.name}
                                                 </button>
                                             ))}
                                         </div>

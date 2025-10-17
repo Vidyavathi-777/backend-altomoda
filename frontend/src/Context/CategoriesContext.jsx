@@ -1,8 +1,6 @@
 // context/CategoriesContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
-
 import { fetchCategoryByRoot } from "../api/categories";
-import { useRef } from "react";
 
 const CategoriesContext = createContext();
 
@@ -24,7 +22,7 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
   // Helper function with delay between requests
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // Updated fetchCat with caching and rate limiting
+  // Updated fetchCat with caching and rate limiting - now stores IDs
   const fetchCat = async (rootId) => {
     // Check cache first
     if (categoryCache.current.has(rootId)) {
@@ -50,28 +48,44 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
           const batchResults = await Promise.all(
             batch.map(async (category) => {
               const categoryName = category?.name?.locs?.en;
-              if (!categoryName) return null;
+              const categoryId = category?._id?.$oid;
+              
+              if (!categoryName || !categoryId) return null;
               
               try {
                 // Add delay between subcategory requests
                 await delay(500); // 500ms delay between subcategory fetches
                 
-                const subCategories = await fetchCategoryByRoot(category._id.$oid);
+                const subCategories = await fetchCategoryByRoot(categoryId);
                 return {
+                  id: categoryId, // Store category ID
                   name: categoryName.toLowerCase(),
                   subs: Array.isArray(subCategories?.content)
-                    ? subCategories.content.map(sub => sub?.name?.locs?.en || "Unnamed")
+                    ? subCategories.content.map(sub => ({
+                        id: sub?._id?.$oid, // Store subcategory ID
+                        name: sub?.name?.locs?.en || "Unnamed"
+                      }))
                     : []
                 };
               } catch {
-                // If subcategories fail, still return the main category
-                return { name: categoryName.toLowerCase(), subs: [] };
+                // If subcategories fail, still return the main category with ID
+                return { 
+                  id: categoryId,
+                  name: categoryName.toLowerCase(), 
+                  subs: [] 
+                };
               }
             })
           );
           
           batchResults.forEach(result => {
-            if (result) categoryWithSubs[result.name] = result.subs;
+            if (result) {
+              categoryWithSubs[result.name] = {
+                id: result.id,
+                name: result.name,
+                subs: result.subs
+              };
+            }
           });
 
           // Add delay between batches
@@ -188,13 +202,38 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
     }
   };
 
+  // Helper function to get category ID by name
+  const getCategoryIdByName = (gender, categoryName) => {
+    const categories = gender === 'woman' ? womanCategories : manCategories;
+    return categories[categoryName]?.id || null;
+  };
+
+  // Helper function to get subcategory ID by name
+  const getSubcategoryIdByName = (gender, categoryName, subcategoryName) => {
+    const categories = gender === 'woman' ? womanCategories : manCategories;
+    const category = categories[categoryName];
+    if (!category || !category.subs) return null;
+    
+    const subcategory = category.subs.find(sub => sub.name === subcategoryName);
+    return subcategory?.id || null;
+  };
+
+  // Helper function to get all category IDs for a gender
+  const getAllCategoryIds = (gender) => {
+    const categories = gender === 'woman' ? womanCategories : manCategories;
+    return Object.values(categories).map(cat => cat.id).filter(Boolean);
+  };
+
   const value = {
     womanCategories,
     manCategories,
     newArrivals,
     loading,
     error,
-    refetchCategories
+    refetchCategories,
+    getCategoryIdByName,
+    getSubcategoryIdByName,
+    getAllCategoryIds
   };
 
   return (

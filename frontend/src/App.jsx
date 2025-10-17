@@ -1,4 +1,4 @@
-import './App.css'
+import './index.css'
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import ProductsPage from './pages/ProductsPage';
 import DesignersPage from './pages/DesignersPage';
 import { CategoriesProvider } from './Context/CategoriesContext';
+import { CartProvider } from './Context/CartContext';
+
+
 
 function App({ gender: propGender }) {
   const location = useLocation();
@@ -27,6 +30,7 @@ function App({ gender: propGender }) {
 
   return (
     <CategoriesProvider currentGender={currentGender}>
+      <CartProvider >
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <Header currentGender={currentGender} onGenderChange={handleGenderChange} />
       </header>
@@ -34,21 +38,50 @@ function App({ gender: propGender }) {
       <Routes>
         <Route path='/:gender?' element={<HomePage />} />
         <Route path='/:gender/product/:id' element={<ProductDetailPage />} />
-           <Route path="/:categoryId/products" element={<ProductsPage />} />
+        <Route path='/product/:id' element={<ProductDetailPage />} />
+           {/* <Route path="/:categoryId/products" element={<ProductsPage />} />
         <Route path='/:gender/discount/products' element={<ProductsPage />} />
-        <Route path='/:gender/designers/:brandName/products' element={<ProductsPage />} />
-        <Route path='/:gender/:category/products' element={<ProductsPage />} />
-        <Route path='/:gender/:category/:subCategory/products' element={<ProductsPage />} />
+        <Route path='/:gender/designers/:brandName/products' element={<ProductsPage />} /> */}
+
+        <Route path='/:gender/:categoryId/:brandName/products' element={<ProductsPage />} />
+        
+        {/* gender + categoryId */}
+        <Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
+        
+        {/* Just categoryId (for backward compatibility) */}
+        <Route path='/:categoryId/products' element={<ProductsPage />} />
+        
+        {/* Designers page */}
         <Route path='/:gender/designers' element={<DesignersPage />} />
-        <Route path='/:gender/newArrival/products' element={<ProductsPage />} />
+       <Route path='/magazine' element={<MagazinePage />}/>
+       <Route path='/login' element={<UserLogin/>} />
+       <Route path='/search' element={<SearchPage />} />
+       <Route path='/cart' element={<CartPage />} />
+       <Route path='/checkout' element={<CheckoutPage/>} />
+       <Route path='/success' element={<SuccessPage />} />
+ 
+
+{/* <Route path='/:categoryId/products' element={<ProductsPage />} />
+<Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
+<Route path='/:gender/:category/:subCategory/products' element={<ProductsPage />} />
+<Route path='/:gender/:brandName/products' element={<ProductsPage />} /> */}
+        {/* <Route path='/:gender/designers' element={<DesignersPage />} /> */}
+        {/* <Route path='/:gender/newArrival/products' element={<ProductsPage />} />
         <Route path='/:gender/newArrival/:category/products' element={<ProductsPage />} />
-        <Route path='/:gender/newArrival/:category/:subCategory/products' element={<ProductsPage />} />
+        <Route path='/:gender/newArrival/:category/:subCategory/products' element={<ProductsPage />} /> */}
       </Routes>
 
       <BrandsSection />
       <Footer />
+      </CartProvider>
     </CategoriesProvider>
   );
 }
+import MagazinePage from './pages/MagazinePage';
+import UserLogin from './pages/LoginPage';
+import SearchPage from './pages/SearchPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import SuccessPage from './pages/SuccessPage';
 
 export default App;
