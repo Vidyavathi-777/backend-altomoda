@@ -81,7 +81,6 @@ app.get("/api/products/search", async (req, res) => {
 
   try {
    
-    const { term } = req.query;
 
     if (!term || term.length < 1) {
       return res.json({ products: [], searchTerm: "" });
