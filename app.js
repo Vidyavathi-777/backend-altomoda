@@ -30,7 +30,7 @@ app.post("/api/products", async (req, res) => {
 });
 
 // Proxy route for category children
-app.get("/api/categories/", async (req, res) => {
+app.get("/api/categories/:categoryId", async (req, res) => {
   const { categoryId } = req.params;
 
   try {
