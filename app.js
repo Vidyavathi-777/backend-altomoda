@@ -81,9 +81,14 @@ app.get("/api/products/search", async (req, res) => {
 
   try {
    
-    const filteredSuggestions = popularTerms.filter(item =>
-      item.toLowerCase().includes(term.toLowerCase())
-    );
+    const { term } = req.query;
+
+    if (!term || term.length < 1) {
+      return res.json({ products: [], searchTerm: "" });
+    }
+
+    // Capitalize first letter for display
+    const displayTerm = term.charAt(0).toUpperCase() + term.slice(1);
 
     // Fetch products from real API
     const response = await fetch(
