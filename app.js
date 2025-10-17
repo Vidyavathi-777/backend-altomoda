@@ -106,7 +106,7 @@ app.get("/api/products/search", async (req, res) => {
     }
 
     const products = await response.json();
-    res.json({ suggestions: filteredSuggestions, products });
+    res.json({ searchTerm:displayTerm, products });
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: error.message });
