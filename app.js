@@ -177,14 +177,14 @@ app.get("/api/products/related/:sku", async (req, res) => {
 app.post("/api/products/new-arrivals", async (req, res) => {
   try {
     const { gender } = req.query; // e.g. woman, man
-    // const navitems = {
-    //   woman: "561d72f4b49dbb9c2c551c1f",
-    //   man: "561d72f4b49dbb9c2c551c20",
-    //   kids: "561d72f4b49dbb9c2c551c22",
-    //   accessories: "561d72f4b49dbb9c2c551c23"
-    // };
+    const navitems = {
+      woman: "561d72f4b49dbb9c2c551c1f",
+      man: "561d72f4b49dbb9c2c551c20",
+      kids: "561d72f4b49dbb9c2c551c22",
+      accessories: "561d72f4b49dbb9c2c551c23"
+    };
 
-    const categoryId = gender;
+    const categoryId = navitems[gender];
 
     const filter = {
       "cat_ids": {
