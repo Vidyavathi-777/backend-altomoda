@@ -5,6 +5,10 @@ const routes =  require('./routes');
 const errorMiddleware = require("../middlewares/error.middleware");
 const { apiLimiter } = require('../middlewares/rateLimit.middleware');
 const logger = require('../utils/logger');
+<<<<<<< HEAD
+=======
+
+>>>>>>> a482586c64654c9935323210268c264ee9f28892
 const app = express();
 
 // Security middleware
@@ -25,8 +29,11 @@ app.use('/api', apiLimiter);
 // Routes
 app.use('/api', routes);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a482586c64654c9935323210268c264ee9f28892
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({

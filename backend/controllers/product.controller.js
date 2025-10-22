@@ -4,12 +4,16 @@ const searchService = require('../services/search.service');
 const cloudstoreService = require('../services/cloudstore.service');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/apiError');
+<<<<<<< HEAD
 const mongoose = require("mongoose")
+=======
+>>>>>>> a482586c64654c9935323210268c264ee9f28892
 
 // Get all products with search/filter support
 exports.getProducts = catchAsync(async (req, res) => {
   const result = await searchService.searchProducts(req.query);
 
+<<<<<<< HEAD
 
 
   const mapped = result.items.map(p => ({
@@ -21,6 +25,17 @@ exports.getProducts = catchAsync(async (req, res) => {
     categories: p.categories,
     warehouses: p.warehouses,
     brand: p.brand || null,
+=======
+  const mapped = result.map(p => ({
+    sku: p.sku,
+    title: p.locs?.singles?.title?.en || 'Untitled',
+    price: p.stock_price,
+    qty: p.qty,
+    images: p.imgs?.map(img => img.url) || [],
+    categories: p.cats,
+    warehouses: p.whs,
+    brand: p.props?.brand || null,
+>>>>>>> a482586c64654c9935323210268c264ee9f28892
   }));
 
   res.json({

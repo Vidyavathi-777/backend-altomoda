@@ -71,8 +71,7 @@ class CloudStoreService {
     }
   }
 
-// Get full catalog from CloudStore
-// In your CloudStoreService class
+
 async getFullCatalog(pageIndex = 1, pageSize = 20) {
   const url = `${config.cloudstore.apiUrl}/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
   logger.info(`Fetching from CloudStore URL: ${url}`);
