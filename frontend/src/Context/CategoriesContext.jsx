@@ -1,4 +1,3 @@
-// context/CategoriesContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { fetchCategoryByRoot } from "../api/categories";
 
@@ -15,14 +14,14 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
   const categoryCache = React.useRef(new Map());
 
   const navitems = {
-    man: "561d7300b49dbb9c2c551be1",
-    woman: "561d7300b49dbb9c2c551c29"
+    man: "68f86b10734810ab97bb98d1",
+    woman: "68f86b1c734810ab97bb9a2f"
   };
 
   // Helper function with delay between requests
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // Updated fetchCat with caching and rate limiting - now stores IDs
+  // Fixed fetchCat function with proper API response handling
   const fetchCat = async (rootId) => {
     // Check cache first
     if (categoryCache.current.has(rootId)) {
@@ -33,13 +32,16 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
       const topCategories = await fetchCategoryByRoot(rootId);
       const categoryWithSubs = {};
 
-      if (Array.isArray(topCategories?.content)) {
+      // Now topCategories should be an array (the content)
+      if (Array.isArray(topCategories)) {
+        console.log(`Processing ${topCategories.length} categories for root ${rootId}`);
+        
         // Process categories in batches with delays to avoid rate limiting
-        const batchSize = 2; // Process 2 categories at a time
+        const batchSize = 2;
         const batches = [];
         
-        for (let i = 0; i < topCategories.content.length; i += batchSize) {
-          batches.push(topCategories.content.slice(i, i + batchSize));
+        for (let i = 0; i < topCategories.length; i += batchSize) {
+          batches.push(topCategories.slice(i, i + batchSize));
         }
 
         for (let i = 0; i < batches.length; i++) {
@@ -47,27 +49,35 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
           
           const batchResults = await Promise.all(
             batch.map(async (category) => {
-              const categoryName = category?.name?.locs?.en;
-              const categoryId = category?._id?.$oid;
+              const categoryName = category?.name?.locs?.en || category?.name;
+              const categoryId = category?._id?.$oid || category?._id;
               
-              if (!categoryName || !categoryId) return null;
+              console.log(`Processing category: ${categoryName} (${categoryId})`);
+              
+              if (!categoryName || !categoryId) {
+                console.warn('Skipping category with missing name or ID:', category);
+                return null;
+              }
               
               try {
                 // Add delay between subcategory requests
-                await delay(500); // 500ms delay between subcategory fetches
+                await delay(500);
                 
                 const subCategories = await fetchCategoryByRoot(categoryId);
+                console.log(`Found ${subCategories.length} subcategories for ${categoryName}`);
+                
                 return {
-                  id: categoryId, // Store category ID
+                  id: categoryId,
                   name: categoryName.toLowerCase(),
-                  subs: Array.isArray(subCategories?.content)
-                    ? subCategories.content.map(sub => ({
-                        id: sub?._id?.$oid, // Store subcategory ID
-                        name: sub?.name?.locs?.en || "Unnamed"
-                      }))
+                  subs: Array.isArray(subCategories)
+                    ? subCategories.map(sub => ({
+                        id: sub?._id?.$oid || sub?._id,
+                        name: sub?.name?.locs?.en || sub?.name || "Unnamed"
+                      })).filter(sub => sub.name && sub.id) // Filter out invalid subs
                     : []
                 };
-              } catch {
+              } catch (subError) {
+                console.error(`Error fetching subcategories for ${categoryName}:`, subError);
                 // If subcategories fail, still return the main category with ID
                 return { 
                   id: categoryId,
@@ -78,23 +88,28 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
             })
           );
           
-          batchResults.forEach(result => {
-            if (result) {
+          // Filter out null results and add to categoryWithSubs
+          batchResults
+            .filter(result => result !== null)
+            .forEach(result => {
               categoryWithSubs[result.name] = {
                 id: result.id,
                 name: result.name,
                 subs: result.subs
               };
-            }
-          });
+            });
 
           // Add delay between batches
           if (i < batches.length - 1) {
-            await delay(1000); // 1 second delay between batches
+            await delay(1000);
           }
         }
+      } else {
+        console.warn(`Expected array for root ${rootId}, got:`, topCategories);
       }
 
+      console.log(`Final categories for root ${rootId}:`, categoryWithSubs);
+      
       // Cache the result
       categoryCache.current.set(rootId, categoryWithSubs);
       return categoryWithSubs;
@@ -117,12 +132,15 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
         // Add initial delay before starting requests
         await delay(1000);
         
+        console.log("Starting to fetch initial categories...");
         const [womanData, manData] = await Promise.all([
           fetchCat(navitems.woman),
           fetchCat(navitems.man)
         ]);
         
         if (isMounted) {
+          console.log("Setting woman categories:", womanData);
+          console.log("Setting man categories:", manData);
           setWomanCategories(womanData);
           setManCategories(manData);
         }
@@ -145,7 +163,7 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
     };
   }, []);
 
-  // Fetch new arrivals when currentGender changes with debouncing
+  // Fetch new arrivals when currentGender changes
   useEffect(() => {
     let isMounted = true;
     let timeoutId;
@@ -155,9 +173,11 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
       
       try {
         const genderKey = currentGender || "woman";
+        console.log(`Fetching new arrivals for: ${genderKey}`);
         const newArrivalData = await fetchCat(navitems[genderKey]);
         
         if (isMounted) {
+          console.log("Setting new arrivals:", newArrivalData);
           setNewArrivals(newArrivalData);
         }
       } catch (error) {
@@ -205,23 +225,29 @@ export const CategoriesProvider = ({ children, currentGender = "woman" }) => {
   // Helper function to get category ID by name
   const getCategoryIdByName = (gender, categoryName) => {
     const categories = gender === 'woman' ? womanCategories : manCategories;
-    return categories[categoryName]?.id || null;
+    const categoryKey = categoryName.toLowerCase();
+    return categories[categoryKey]?.id || null;
   };
 
   // Helper function to get subcategory ID by name
   const getSubcategoryIdByName = (gender, categoryName, subcategoryName) => {
     const categories = gender === 'woman' ? womanCategories : manCategories;
-    const category = categories[categoryName];
+    const categoryKey = categoryName.toLowerCase();
+    const category = categories[categoryKey];
     if (!category || !category.subs) return null;
     
-    const subcategory = category.subs.find(sub => sub.name === subcategoryName);
+    const subcategory = category.subs.find(sub => 
+      sub.name.toLowerCase() === subcategoryName.toLowerCase()
+    );
     return subcategory?.id || null;
   };
 
   // Helper function to get all category IDs for a gender
   const getAllCategoryIds = (gender) => {
     const categories = gender === 'woman' ? womanCategories : manCategories;
-    return Object.values(categories).map(cat => cat.id).filter(Boolean);
+    return Object.values(categories)
+      .map(cat => cat.id)
+      .filter(Boolean);
   };
 
   const value = {

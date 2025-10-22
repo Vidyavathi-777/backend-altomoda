@@ -16,97 +16,176 @@ const ProductsPage = () => {
     
     const [openFilters, setOpenFilters] = useState({});
     const [showMore, setShowMore] = useState(false);
-    const [sortBy, setSortBy] = useState("Ranking");
+    const [sortBy, setSortBy] = useState("createdAt");
+    const [sortOrder, setSortOrder] = useState("desc");
     const [loading, setLoading] = useState(false);
     const [allProducts, setAllProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [error, setError] = useState(null);
     
-    // Client-side filters (color, type, subcategory)
+    // Client-side filters (color only)
     const [clientFilters, setClientFilters] = useState({
-        color: [],
-        type: [],
-        subcategory: [],
+        color: []
     });
     
-    // API filters (brand, category) - these need apply button
+    // API filters (brand, category, type)
     const [apiFilters, setApiFilters] = useState({
         brand: [],
         category: [],
+        type: []
     });
     
     // Temporary API filters (before applying)
     const [tempApiFilters, setTempApiFilters] = useState({
         brand: [],
         category: [],
+        type: []
     });
 
     const [filterOptions, setFilterOptions] = useState({
         brands: [],
         colors: [],
         types: [],
-        categories: [],
-        subcategories: []
+        categories: []
     });
 
     const pageSize = 20;
-    const API_TOKEN = "Bearer 55f707f6b49dbbe14ec6354d-68e7881e65cc94067098b7ab:4b02bdd96ac3b665239151aea7b0faf8";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+
+    // Fetch brands and categories on component mount
     useEffect(() => {
+        fetchBrands();
         fetchCategories();
-    }, []);
+        fetchTypes();
+    }, [gender, actualCategoryId]);
 
     // Fetch products when URL params or API filters change
     useEffect(() => {
-        setCurrentPage(0);
-        fetchProducts(0);
-    }, [actualCategoryId, actualBrandName, apiFilters, sortBy]);
+        setCurrentPage(1);
+        fetchProducts(1);
+    }, [actualCategoryId, actualBrandName, apiFilters, sortBy, sortOrder]);
 
     // Fetch products when page changes
     useEffect(() => {
-        if (currentPage > 0) {
+        if (currentPage > 1) {
             fetchProducts(currentPage);
         }
     }, [currentPage]);
 
-    const fetchCategories = async () => {
+    const fetchBrands = async () => {
         try {
-            const response = await fetch(`https://backend-altomoda.vercel.app/api/products/categories/tree`, {
+            const response = await fetch(`${API_BASE_URL}/products/brands`, {
                 headers: {
-                    'Authorization': API_TOKEN,
                     'Content-Type': 'application/json'
                 }
             });
             
             if (response.ok) {
                 const data = await response.json();
-                const extractCategories = (cats, result = []) => {
-                    cats.forEach(cat => {
-                        result.push({
-                            id: cat.id?.$oid,
-                            name: cat.name
-                        });
-                        if (cat.children && cat.children.length > 0) {
-                            extractCategories(cat.children, result);
-                        }
-                    });
-                    return result;
-                };
+                if (data.status === 'success') {
+                    setFilterOptions(prev => ({ 
+                        ...prev, 
+                        brands: data.data.brands || [] 
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching brands:", error);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            let categoryIdToFetch = actualCategoryId;
+            
+            // If no category ID in URL, use gender-based category
+            if (!categoryIdToFetch) {
+                categoryIdToFetch = gender === 'man' ? '561d7300b49dbb9c2c551be1' : '561d7300b49dbb9c2c551c29';
+            }
+
+            const response = await fetch(`${API_BASE_URL}/products/categoryChildren/${categoryId}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Categories API Response:", data);
                 
-                const allCategories = extractCategories(data);
-                setFilterOptions(prev => ({ ...prev, categories: allCategories }));
+                if (data.content && Array.isArray(data.content)) {
+                    // Extract category names from the response
+                    const categories = data.data.map(cat => ({
+                        id: cat._id?.$oid,
+                        name: cat.name?.locs?.en || cat.name // Handle both formats
+                    })).filter(cat => cat.name); // Filter out any undefined names
+
+                    // Use the same data for both types and categories
+                    const types = categories.map(cat => cat.name);
+
+                    setFilterOptions(prev => ({ 
+                        ...prev, 
+                        categories: categories,
+                        types: types
+                    }));
+                }
             }
         } catch (error) {
             console.error("Error fetching categories:", error);
         }
     };
 
+    const fetchTypes = async () => {
+        try {
+            let categoryIdToFetch = actualCategoryId;
+            
+            // If no category ID in URL, use gender-based category
+            if (!categoryIdToFetch) {
+                categoryIdToFetch = gender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+            }
+
+            const response = await fetch(`${API_BASE_URL}/products/categoryChildren/${categoryIdToFetch}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Categories API Response:", data);
+                
+                if (data.content && Array.isArray(data.content)) {
+                    // Extract category names from the response
+                    const categories = data.data.map(cat => ({
+                        id: cat._id?.$oid,
+                        name: cat.name?.locs?.en || cat.name // Handle both formats
+                    })).filter(cat => cat.name); // Filter out any undefined names
+
+                    // Use the same data for both types and categories
+                    const types = categories.map(cat => cat.name);
+
+                    setFilterOptions(prev => ({ 
+                        ...prev, 
+                        categories: categories,
+                        types: types
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching types:", error);
+        }
+    };
+
     const buildApiFilter = () => {
         const filter = {
-            images_option: "WITH_IMAGES"
+            page: currentPage,
+            limit: pageSize,
+            sortBy: sortBy,
+            sortOrder: sortOrder
         };
 
         // Brand filter - from URL or API filters
@@ -115,12 +194,10 @@ const ProductsPage = () => {
             brands.push(actualBrandName);
         }
         if (apiFilters.brand?.length > 0) {
-            apiFilters.brand.forEach(b => {
-                if (!brands.includes(b)) brands.push(b);
-            });
+            brands.push(...apiFilters.brand);
         }
         if (brands.length > 0) {
-            filter.brands = { op: "IN", values: brands };
+            filter.brands = brands;
         }
 
         // Category filter - collect all category IDs
@@ -128,7 +205,7 @@ const ProductsPage = () => {
 
         // Priority 1: actualCategoryId from URL (validated ObjectId)
         if (actualCategoryId) {
-            categoryIds.push({ "$oid": actualCategoryId.trim() });
+            categoryIds.push(actualCategoryId);
         }
 
         // Priority 2: API category filters
@@ -136,137 +213,131 @@ const ProductsPage = () => {
             apiFilters.category.forEach(catName => {
                 const categoryObj = filterOptions.categories.find(c => c.name === catName);
                 if (categoryObj?.id) {
-                    const idString = String(categoryObj.id).trim();
-                    if (!categoryIds.some(c => c["$oid"] === idString)) {
-                        categoryIds.push({ "$oid": idString });
+                    if (!categoryIds.includes(categoryObj.id)) {
+                        categoryIds.push(categoryObj.id);
                     }
                 }
             });
         }
 
         if (categoryIds.length > 0) {
-            filter.cat_ids = { 
-                op: "IN", 
-                values: categoryIds 
-            };
+            filter.categories = categoryIds;
         }
 
-        // console.log("=== API FILTER ===");
-        // console.log("actualCategoryId:", actualCategoryId);
-        // console.log("actualBrandName:", actualBrandName);
-        // console.log("Filter:", JSON.stringify(filter, null, 2));
-        // console.log("==================");
-        
+        // Type filter (from categories)
+        if (apiFilters.type?.length > 0) {
+            filter.categories = [...(filter.categories || []), ...apiFilters.type.map(typeName => {
+                const typeObj = filterOptions.categories.find(c => c.name === typeName);
+                return typeObj?.id;
+            }).filter(Boolean)];
+        }
+
+        // Color filter (client-side only, not sent to API)
+        // This will be applied client-side after fetching
+
         return filter;
     };
 
-    const getSortExpression = () => {
-        switch (sortBy) {
-            case "Price: Low to High": return "stock_price[ASC]";
-            case "Price: High to Low": return "stock_price[DESC]";
-            case "Newest": return "last_info_update[DESC]";
-            default: return "_id[ASC]";
-        }
-    };
-
-    const fetchProducts = async (pageIndex = 0) => {
+ const fetchProducts = async (page = 1) => {
         setLoading(true);
         setError(null);
         
         try {
             const filter = buildApiFilter();
-            const sortExpression = getSortExpression();
-            
-            const apiUrl = `https://backend-altomoda.vercel.app/api/products?_pageIndex=${pageIndex}&_pageSize=${pageSize}_`;
+            filter.page = page;
+
+            const apiUrl = `${API_BASE_URL}/products/filter`;
             
             const requestOptions = {
                 method: "POST",
                 headers: {
-                    'Authorization': API_TOKEN,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(filter)
             };
 
-            console.log("Fetching:", apiUrl);
+            console.log("Fetching products:", apiUrl);
             console.log("Payload:", JSON.stringify(filter, null, 2));
 
             const response = await fetch(apiUrl, requestOptions);
-            
+
             if (!response.ok) {
-                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-                try {
-                    const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) {
-                        const errorData = await response.json();
-                        errorMessage = errorData.message || errorData.error || errorMessage;
-                    } else {
-                        const errorText = await response.text();
-                        if (errorText) errorMessage = errorText;
-                    }
-                } catch (e) {}
-                throw new Error(errorMessage);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
-            console.log("API Response:", data);
+            console.log("Products API Response:", data);
             
-            let transformedProducts = [];
-            
-            if (data.content && Array.isArray(data.content)) {
-                transformedProducts = data.content.flatMap(parent => {
-                    if (parent.items && Array.isArray(parent.items)) {
-                        return parent.items.map(item => {
-                            const mainImage = item.imgs?.find(img => 
-                                img.placement?.includes("LIST")
-                            ) || item.imgs?.[0];
-                            
-                            const color = item.locs?.singles?.color?.en || 
-                                        item.locs?.lists?.colors?.[0]?.en || 
-                                        item.props?.color || '';
-
-                            const title = item.locs?.singles?.title?.en || 
-                                        item.props?.model_name || 
-                                        parent.parent_sku || 
-                                        'Product';
-
-                            const description = item.locs?.singles?.desc?.en || 
-                                              item.locs?.singles?.description?.en || '';
-
-                            return {
-                                id: item.item_id?.$oid || Math.random().toString(),
-                                sku: item.sku || parent.parent_sku,
-                                name: item.props?.brand || 'Unknown Brand',
-                                productName: title,
-                                description: description,
-                                price: item.stock_price || 0,
-                                originalPrice: item.stock_price || 0,
-                                discount: 0,
-                                images: mainImage ? [mainImage.url] : [],
-                                brand: item.props?.brand || 'Unknown',
-                                category: item.props?.category || 'Clothing',
-                                subcategory: item.props?.subcategory || 'General',
-                                color: color,
-                                type: item.props?.type || item.props?.product_type || '',
-                                gender: item.locs?.singles?.sex?.en || gender,
-                                size: item.props?.size || '',
-                                madeIn: item.locs?.singles?.made?.en || '',
-                                composition: item.composition || [],
-                                qty: item.qty || 0,
-                                inStock: (item.qty || 0) > 0,
-                                tag: item.tag
-                            };
-                        });
+            if (data.success) {
+                // Transform products to match your frontend format
+                const transformedProducts = data.products.map(product => {
+                    // Handle different image formats
+                    let mainImage = '';
+                    if (product.imgs && product.imgs.length > 0) {
+                        if (typeof product.imgs[0] === 'string') {
+                            mainImage = product.imgs[0];
+                        } else if (product.imgs[0].url) {
+                            mainImage = product.imgs[0].url;
+                        }
                     }
-                    return [];
+                    
+                    const color = product.locs?.singles?.color?.en || 
+                                product.locs?.lists?.colors?.[0]?.en || 
+                                product.props?.color || '';
+
+                    const title = product.locs?.singles?.title?.en || 
+                                product.props?.model_name || 
+                                product.sku || 
+                                'Product';
+
+                    const description = product.locs?.singles?.desc?.en || 
+                                      product.locs?.singles?.description?.en || '';
+
+                    // Get category name from populated cats array
+                    const category = product.cats?.[0]?.name?.locs?.en || 
+                                   product.cats?.[0]?.name || 
+                                   product.props?.category || 
+                                   'Clothing';
+
+                    // Get type from props or category
+                    const type = product.props?.type || 
+                               product.props?.product_type || 
+                               category;
+
+                    return {
+                        id: product._id || Math.random().toString(),
+                        sku: product.sku,
+                        name: product.props?.brand || 'Unknown Brand',
+                        productName: title,
+                        description: description,
+                        price: product.stock_price || 0,
+                        originalPrice: product.stock_price || 0,
+                        discount: 0,
+                        images: mainImage ? [mainImage] : [],
+                        brand: product.props?.brand || 'Unknown',
+                        category: category,
+                        color: color,
+                        type: type,
+                        gender: product.locs?.singles?.sex?.en || gender,
+                        size: product.props?.size || '',
+                        madeIn: product.locs?.singles?.made?.en || '',
+                        composition: product.composition || [],
+                        qty: product.qty || 0,
+                        inStock: (product.qty || 0) > 0,
+                        tag: product.tag
+                    };
                 });
+
+                setAllProducts(transformedProducts);
+                setTotalPages(data.totalPages || 1);
+                setTotalItems(data.totalCount || transformedProducts.length);
+
+                // Extract color options from products
+                extractColorOptions(transformedProducts);
+                
+            } else {
+                throw new Error(data.message || 'Failed to fetch products');
             }
-
-            setAllProducts(transformedProducts);
-            setTotalPages(data._metadata?.total_pages || 1);
-            setTotalItems(data._metadata?.total_items || transformedProducts.length);
-
-            extractFilterOptions(transformedProducts);
             
         } catch (error) {
             console.error("Fetch Error:", error);
@@ -277,11 +348,11 @@ const ProductsPage = () => {
         }
     };
 
-    // Client-side filtered products
+    // Client-side filtered products (only color filter applied client-side)
     const filteredProducts = useMemo(() => {
         let filtered = [...allProducts];
 
-        // Apply color filter
+        // Apply color filter client-side
         if (clientFilters.color.length > 0) {
             filtered = filtered.filter(p => 
                 clientFilters.color.some(color => 
@@ -290,38 +361,14 @@ const ProductsPage = () => {
             );
         }
 
-        // Apply type filter
-        if (clientFilters.type.length > 0) {
-            filtered = filtered.filter(p => 
-                clientFilters.type.includes(p.type)
-            );
-        }
-
-        // Apply subcategory filter
-        if (clientFilters.subcategory.length > 0) {
-            filtered = filtered.filter(p => 
-                clientFilters.subcategory.includes(p.subcategory)
-            );
-        }
-
         return filtered;
-    }, [allProducts, clientFilters]);
+    }, [allProducts, clientFilters.color]);
 
-    const extractFilterOptions = (productList) => {
-        const brands = [...new Set(productList.map(p => p.brand).filter(Boolean))];
+    const extractColorOptions = (productList) => {
         const colors = [...new Set(productList.map(p => p.color).filter(Boolean))];
-        const types = [...new Set(productList.map(p => p.type).filter(Boolean))];
-        const categories = [...new Set(productList.map(p => p.category).filter(Boolean))];
-        const subcategories = [...new Set(productList.map(p => p.subcategory).filter(Boolean))];
-
         setFilterOptions(prev => ({
-            brands: brands.length > 0 ? brands : prev.brands,
-            colors: colors.length > 0 ? colors : prev.colors,
-            types: types.length > 0 ? types : prev.types,
-            categories: categories.length > 0 ? [...new Set([...prev.categories.map(c => c.name), ...categories])].map(name => 
-                prev.categories.find(c => c.name === name) || { name, id: null }
-            ) : prev.categories,
-            subcategories: subcategories.length > 0 ? subcategories : prev.subcategories
+            ...prev,
+            colors: colors.length > 0 ? colors : prev.colors
         }));
     };
 
@@ -365,24 +412,41 @@ const ProductsPage = () => {
             }
         });
     };
+
+    const handleTypeFilterChange = (value) => {
+        setTempApiFilters(prev => {
+            const currentTypes = prev.type || [];
+            if (currentTypes.includes(value)) {
+                return {
+                    ...prev,
+                    type: currentTypes.filter(v => v !== value)
+                };
+            } else {
+                return {
+                    ...prev,
+                    type: [...currentTypes, value]
+                };
+            }
+        });
+    };
     
     const applyApiFilters = () => {
         setApiFilters(tempApiFilters);
         setShowMobileFilters(false);
     };
 
-    const handleClientFilterChange = (filterKey, value) => {
+    const handleColorFilterChange = (value) => {
         setClientFilters(prev => {
-            const currentValues = prev[filterKey] || [];
-            if (currentValues.includes(value)) {
+            const currentColors = prev.color || [];
+            if (currentColors.includes(value)) {
                 return {
                     ...prev,
-                    [filterKey]: currentValues.filter(v => v !== value)
+                    color: currentColors.filter(v => v !== value)
                 };
             } else {
                 return {
                     ...prev,
-                    [filterKey]: [...currentValues, value]
+                    color: [...currentColors, value]
                 };
             }
         });
@@ -390,22 +454,22 @@ const ProductsPage = () => {
 
     const clearAllFilters = () => {
         setClientFilters({
-            color: [],
-            type: [],
-            subcategory: [],
+            color: []
         });
         setApiFilters({
             brand: [],
             category: [],
+            type: []
         });
         setTempApiFilters({
             brand: [],
             category: [],
+            type: []
         });
     };
 
     const handlePageChange = (newPage) => {
-        if (newPage >= 0 && newPage < totalPages && !loading) {
+        if (newPage >= 1 && newPage <= totalPages && !loading) {
             setCurrentPage(newPage);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -425,19 +489,26 @@ const ProductsPage = () => {
     ];
 
     const currentGender = description.find(item => item.id === actualCategoryId)?.gender || gender;
-    const filterDescription = description.find(item => item.id === actualCategoryId || item.gender == gender)?.description || "";
+    const filterDescription = description.find(item => item.id === actualCategoryId || item.gender === gender)?.description || "";
 
-    const totalActiveFilters = [...(apiFilters.brand || []), ...(apiFilters.category || []), ...clientFilters.color, ...clientFilters.type, ...clientFilters.subcategory].length;
+    const totalActiveFilters = [
+        ...(apiFilters.brand || []), 
+        ...(apiFilters.category || []), 
+        ...(apiFilters.type || []),
+        ...clientFilters.color
+    ].length;
+
     const hasPendingApiFilters = JSON.stringify(tempApiFilters) !== JSON.stringify(apiFilters);
 
     const FilterSection = ({ title, filterKey, options, isApiFilter = false }) => {
-        const displayOptions = Array.isArray(options) ? 
-            (options[0]?.name ? options.map(o => o.name) : options) : [];
+        const displayOptions = Array.isArray(options) ? options : [];
 
         const getCheckedValue = (option) => {
             if (filterKey === 'brand') return tempApiFilters.brand?.includes(option) || false;
             if (filterKey === 'category') return tempApiFilters.category?.includes(option) || false;
-            return clientFilters[filterKey]?.includes(option) || false;
+            if (filterKey === 'type') return tempApiFilters.type?.includes(option) || false;
+            if (filterKey === 'color') return clientFilters.color?.includes(option) || false;
+            return false;
         };
 
         const handleChange = (option) => {
@@ -445,8 +516,10 @@ const ProductsPage = () => {
                 handleBrandFilterChange(option);
             } else if (filterKey === 'category') {
                 handleCategoryFilterChange(option);
-            } else {
-                handleClientFilterChange(filterKey, option);
+            } else if (filterKey === 'type') {
+                handleTypeFilterChange(option);
+            } else if (filterKey === 'color') {
+                handleColorFilterChange(option);
             }
         };
 
@@ -468,7 +541,6 @@ const ProductsPage = () => {
                                     if (filterKey === 'color') return p.color === option;
                                     if (filterKey === 'type') return p.type === option;
                                     if (filterKey === 'category') return p.category === option;
-                                    if (filterKey === 'subcategory') return p.subcategory === option;
                                     return false;
                                 }).length;
 
@@ -504,7 +576,7 @@ const ProductsPage = () => {
                     {actualBrandName && (
                         <h2 className="text-xl font-medium mb-4 text-gray-600">{actualBrandName}</h2>
                     )}
-                    <div className="text-lg text-gray-900  font-medium leading-relaxed">
+                    <div className="text-lg text-gray-900 font-medium leading-relaxed">
                         <p className={`${!showMore ? "line-clamp-3" : ""}`}>{filterDescription}</p>
                         {filterDescription && (
                             <button
@@ -520,9 +592,8 @@ const ProductsPage = () => {
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                         <p className="text-red-700 text-sm font-medium mb-2">Error Loading Products</p>
-                        {/* <p className="text-red-600 text-sm mb-3">{error}</p> */}
                         <button
-                            onClick={() => fetchProducts(0)}
+                            onClick={() => fetchProducts(1)}
                             className="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
                         >
                             Try Again
@@ -563,10 +634,17 @@ const ProductsPage = () => {
                             onChange={(e) => setSortBy(e.target.value)}
                             className="border-0 bg-transparent focus:outline-none cursor-pointer font-medium"
                         >
-                            <option>Ranking</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                            <option>Newest</option>
+                            <option value="createdAt">Newest</option>
+                            <option value="stock_price">Price</option>
+                            <option value="updatedAt">Recently Updated</option>
+                        </select>
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="border-0 bg-transparent focus:outline-none cursor-pointer font-medium"
+                        >
+                            <option value="desc">Descending</option>
+                            <option value="asc">Ascending</option>
                         </select>
                     </div>
                 </div>
@@ -575,9 +653,8 @@ const ProductsPage = () => {
                     <div className="mb-6 flex flex-wrap gap-2">
                         {[...(apiFilters.brand || []).map(v => ({ key: 'brand', value: v, isApi: true })),
                           ...(apiFilters.category || []).map(v => ({ key: 'category', value: v, isApi: true })),
-                          ...clientFilters.color.map(v => ({ key: 'color', value: v, isApi: false })),
-                          ...clientFilters.type.map(v => ({ key: 'type', value: v, isApi: false })),
-                          ...clientFilters.subcategory.map(v => ({ key: 'subcategory', value: v, isApi: false }))
+                          ...(apiFilters.type || []).map(v => ({ key: 'type', value: v, isApi: true })),
+                          ...clientFilters.color.map(v => ({ key: 'color', value: v, isApi: false }))
                         ].map(({ key, value, isApi }) => (
                             <span key={`${key}-${value}`} className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 text-xs rounded-full">
                                 {value}
@@ -588,14 +665,17 @@ const ProductsPage = () => {
                                                 const newBrands = apiFilters.brand.filter(b => b !== value);
                                                 setApiFilters(prev => ({ ...prev, brand: newBrands }));
                                                 setTempApiFilters(prev => ({ ...prev, brand: newBrands }));
-                                            }
-                                            if (key === 'category') {
+                                            } else if (key === 'category') {
                                                 const newCategories = apiFilters.category.filter(c => c !== value);
                                                 setApiFilters(prev => ({ ...prev, category: newCategories }));
                                                 setTempApiFilters(prev => ({ ...prev, category: newCategories }));
+                                            } else if (key === 'type') {
+                                                const newTypes = apiFilters.type.filter(t => t !== value);
+                                                setApiFilters(prev => ({ ...prev, type: newTypes }));
+                                                setTempApiFilters(prev => ({ ...prev, type: newTypes }));
                                             }
                                         } else {
-                                            handleClientFilterChange(key, value);
+                                            handleColorFilterChange(value);
                                         }
                                     }}
                                     className="hover:text-red-500"
@@ -612,9 +692,8 @@ const ProductsPage = () => {
                         <div className="space-y-0 sticky top-24">
                             <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} isApiFilter={true} />
                             <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
-                            <FilterSection title="Type" filterKey="type" options={filterOptions.types} />
+                            <FilterSection title="Type" filterKey="type" options={filterOptions.types} isApiFilter={true} />
                             <FilterSection title="Category" filterKey="category" options={filterOptions.categories} isApiFilter={true} />
-                            <FilterSection title="Subcategory" filterKey="subcategory" options={filterOptions.subcategories} />
                             
                             {/* Apply Filters Button - Only show if there are pending API filter changes */}
                             {hasPendingApiFilters && (
@@ -638,7 +717,7 @@ const ProductsPage = () => {
 
                     {showMobileFilters && (
                         <div className="fixed inset-0 z-50 lg:hidden">
-                            <div className="absolute inset-0  bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
+                            <div className="absolute inset-0 bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
                             <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
                                 <div className="p-4 border-b border-gray-200">
                                     <div className="flex items-center justify-between">
@@ -648,17 +727,16 @@ const ProductsPage = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="p-4  ">
+                                <div className="p-4">
                                     <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} isApiFilter={true} />
                                     <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
-                                    <FilterSection title="Type" filterKey="type" options={filterOptions.types} />
+                                    <FilterSection title="Type" filterKey="type" options={filterOptions.types} isApiFilter={true} />
                                     <FilterSection title="Category" filterKey="category" options={filterOptions.categories} isApiFilter={true} />
-                                    <FilterSection title="Subcategory" filterKey="subcategory" options={filterOptions.subcategories} />
                                     
                                     <div className="mt-6 space-y-3">
                                         <button
                                             onClick={applyApiFilters}
-                                            className="w-full bg-black text-white font-medium  py-3 rounded text-sm uppercase tracking-wider"
+                                            className="w-full bg-black text-white font-medium py-3 rounded text-sm uppercase tracking-wider"
                                         >
                                             Apply Filters
                                         </button>
@@ -728,9 +806,6 @@ const ProductsPage = () => {
                                                     {product.name}
                                                 </h3>
                                                 <p className="text-md text-gray-900 line-clamp-2">{product.productName}</p>
-                                                
-                                                    {/* <p className="text-xs text-gray-500 capitalize">{product.tag}</p> */}
-                                                
                                                 <div className="flex items-center gap-2 pt-1">
                                                     <p className="text-base font-semibold">Eur {product.price.toFixed(2)}</p>
                                                 </div>
@@ -743,7 +818,7 @@ const ProductsPage = () => {
                                     <div className="mt-12 flex justify-center items-center gap-2">
                                         <button
                                             onClick={() => handlePageChange(currentPage - 1)}
-                                            disabled={currentPage === 0 || loading}
+                                            disabled={currentPage === 1 || loading}
                                             className="px-5 py-2 border border-gray-300 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
                                         >
                                             Previous
@@ -753,13 +828,13 @@ const ProductsPage = () => {
                                             {[...Array(Math.min(5, totalPages))].map((_, idx) => {
                                                 let pageNum;
                                                 if (totalPages <= 5) {
-                                                    pageNum = idx;
+                                                    pageNum = idx + 1;
                                                 } else if (currentPage < 3) {
-                                                    pageNum = idx;
+                                                    pageNum = idx + 1;
                                                 } else if (currentPage > totalPages - 3) {
-                                                    pageNum = totalPages - 5 + idx;
+                                                    pageNum = totalPages - 5 + idx + 1;
                                                 } else {
-                                                    pageNum = currentPage - 2 + idx;
+                                                    pageNum = currentPage - 2 + idx + 1;
                                                 }
 
                                                 return (
@@ -773,7 +848,7 @@ const ProductsPage = () => {
                                                                 : 'border-gray-300 hover:bg-gray-50'
                                                         } disabled:opacity-50 transition`}
                                                     >
-                                                        {pageNum + 1}
+                                                        {pageNum}
                                                     </button>
                                                 );
                                             })}
@@ -781,7 +856,7 @@ const ProductsPage = () => {
 
                                         <button
                                             onClick={() => handlePageChange(currentPage + 1)}
-                                            disabled={currentPage === totalPages - 1 || loading}
+                                            disabled={currentPage === totalPages || loading}
                                             className="px-5 py-2 border border-gray-300 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
                                         >
                                             Next

@@ -27,14 +27,14 @@ const ProductDetailPage = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const res = await fetch(`https://backend-altomoda.vercel.app/api/products/${id}`, {
-                    headers: { Authorization: TOKEN }
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
+                    
                 });
                 
                 if (!res.ok) throw new Error("Failed to fetch product");
                 
                 const data = await res.json();
-                console.log('Product data:', data.content);
+                console.log('Product data:', data.data);
                 setProduct(data);
                 
                 // Set default size from props if available
@@ -239,7 +239,7 @@ const ProductDetailPage = () => {
         const materials = getLocalizedList('material');
         const logoPositions = getLocalizedList('logo_position');
 
-        const brand = product.props?.brand || 'Unknown Brand';
+        const brand = product.props?.brand
         const sku = product.sku || '';
         const stockPrice = product.stock_price || 0;
         const salePrice = product.sale_price || stockPrice;

@@ -5,10 +5,10 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useCategories } from '../../Context/CategoriesContext';
 
 const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderChange }) => {
-    const navitems = {
-        "man": "561d7300b49dbb9c2c551be1",
-        "woman": "561d7300b49dbb9c2c551c29"
-    }
+  const navitems = {
+    man: "68f86b10734810ab97bb98d1",
+    woman: "68f86b1c734810ab97bb9a2f"
+  };
 
     const { womanCategories, manCategories, newArrivals } = useCategories();
     console.log(womanCategories)
