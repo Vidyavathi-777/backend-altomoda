@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth.route');
-<<<<<<< HEAD
 const productRoutes = require("./product.route")
 
-=======
->>>>>>> a482586c64654c9935323210268c264ee9f28892
 
 // Health check
 router.get('/health', (req, res) => {
