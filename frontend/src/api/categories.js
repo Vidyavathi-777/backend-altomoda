@@ -11,6 +11,9 @@ export const fetchCategoryByRoot = async (categoryId, pageIndex = 0, pageSize = 
       //   },
       // }
     );
+    console.log(import.meta.env.VITE_API_URL)
+    console.log('API URL:', import.meta.env.VITE_API_URL);
+console.log('All env vars:', import.meta.env);
 
     if (!res.ok) {
       throw new Error(`API error: ${res.status}`);

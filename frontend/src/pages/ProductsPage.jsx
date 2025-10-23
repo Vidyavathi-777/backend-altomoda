@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown, ChevronUp, Loader2, Filter, X } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
+import { 
+    fetchBrands, 
+    fetchCategoryChildren, 
+    fetchProductsByCategory,
+    fetchProductsByBrand,
+    fetchProductsWithFilters,
+    transformProduct 
+} from "../../src/api/productsApi";
 
 const ProductsPage = () => {
     const { gender = 'woman', brandName, categoryId } = useParams();
@@ -16,8 +24,6 @@ const ProductsPage = () => {
     
     const [openFilters, setOpenFilters] = useState({});
     const [showMore, setShowMore] = useState(false);
-    const [sortBy, setSortBy] = useState("createdAt");
-    const [sortOrder, setSortOrder] = useState("desc");
     const [loading, setLoading] = useState(false);
     const [allProducts, setAllProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -48,304 +54,161 @@ const ProductsPage = () => {
     const [filterOptions, setFilterOptions] = useState({
         brands: [],
         colors: [],
-        types: [],
-        categories: []
+        types: [], 
+        categories: [] 
     });
 
     const pageSize = 20;
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+    // Get the base category ID based on gender
+    const getBaseCategoryId = () => {
+        return gender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+    };
 
     // Fetch brands and categories on component mount
     useEffect(() => {
-        fetchBrands();
-        fetchCategories();
-        fetchTypes();
+        loadFilterOptions();
     }, [gender, actualCategoryId]);
 
     // Fetch products when URL params or API filters change
     useEffect(() => {
         setCurrentPage(1);
-        fetchProducts(1);
-    }, [actualCategoryId, actualBrandName, apiFilters, sortBy, sortOrder]);
+        loadProducts(1);
+    }, [actualCategoryId, actualBrandName, apiFilters]);
 
     // Fetch products when page changes
     useEffect(() => {
         if (currentPage > 1) {
-            fetchProducts(currentPage);
+            loadProducts(currentPage);
         }
     }, [currentPage]);
 
-    const fetchBrands = async () => {
+    const loadFilterOptions = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/products/brands`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            // Fetch brands
+            const brandsData = await fetchBrands();
             
-            if (response.ok) {
-                const data = await response.json();
-                if (data.status === 'success') {
-                    setFilterOptions(prev => ({ 
-                        ...prev, 
-                        brands: data.data.brands || [] 
-                    }));
-                }
+            // Fetch types using gender base category ID
+            const genderCategoryId = getBaseCategoryId();
+            const typesData = await fetchCategoryChildren(genderCategoryId);
+            
+            // Fetch categories using the actual category ID from URL (if exists)
+            let categoriesData = [];
+            if (actualCategoryId) {
+                categoriesData = await fetchCategoryChildren(actualCategoryId);
             }
+            
+            setFilterOptions({
+                brands: brandsData,
+                types: typesData, // Store full objects with {id, name}
+                categories: categoriesData, // Store full objects with {id, name}
+                colors: [] // Will be populated from products
+            });
         } catch (error) {
-            console.error("Error fetching brands:", error);
+            console.error("Error loading filter options:", error);
         }
     };
 
-    const fetchCategories = async () => {
-        try {
-            let categoryIdToFetch = actualCategoryId;
-            
-            // If no category ID in URL, use gender-based category
-            if (!categoryIdToFetch) {
-                categoryIdToFetch = gender === 'man' ? '561d7300b49dbb9c2c551be1' : '561d7300b49dbb9c2c551c29';
-            }
-
-            const response = await fetch(`${API_BASE_URL}/products/categoryChildren/${categoryId}`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Categories API Response:", data);
-                
-                if (data.content && Array.isArray(data.content)) {
-                    // Extract category names from the response
-                    const categories = data.data.map(cat => ({
-                        id: cat._id?.$oid,
-                        name: cat.name?.locs?.en || cat.name // Handle both formats
-                    })).filter(cat => cat.name); // Filter out any undefined names
-
-                    // Use the same data for both types and categories
-                    const types = categories.map(cat => cat.name);
-
-                    setFilterOptions(prev => ({ 
-                        ...prev, 
-                        categories: categories,
-                        types: types
-                    }));
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-        }
-    };
-
-    const fetchTypes = async () => {
-        try {
-            let categoryIdToFetch = actualCategoryId;
-            
-            // If no category ID in URL, use gender-based category
-            if (!categoryIdToFetch) {
-                categoryIdToFetch = gender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
-            }
-
-            const response = await fetch(`${API_BASE_URL}/products/categoryChildren/${categoryIdToFetch}`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Categories API Response:", data);
-                
-                if (data.content && Array.isArray(data.content)) {
-                    // Extract category names from the response
-                    const categories = data.data.map(cat => ({
-                        id: cat._id?.$oid,
-                        name: cat.name?.locs?.en || cat.name // Handle both formats
-                    })).filter(cat => cat.name); // Filter out any undefined names
-
-                    // Use the same data for both types and categories
-                    const types = categories.map(cat => cat.name);
-
-                    setFilterOptions(prev => ({ 
-                        ...prev, 
-                        categories: categories,
-                        types: types
-                    }));
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching types:", error);
-        }
-    };
-
-    const buildApiFilter = () => {
-        const filter = {
-            page: currentPage,
-            limit: pageSize,
-            sortBy: sortBy,
-            sortOrder: sortOrder
-        };
-
-        // Brand filter - from URL or API filters
-        const brands = [];
-        if (actualBrandName) {
-            brands.push(actualBrandName);
-        }
-        if (apiFilters.brand?.length > 0) {
-            brands.push(...apiFilters.brand);
-        }
-        if (brands.length > 0) {
-            filter.brands = brands;
-        }
-
-        // Category filter - collect all category IDs
-        const categoryIds = [];
-
-        // Priority 1: actualCategoryId from URL (validated ObjectId)
-        if (actualCategoryId) {
-            categoryIds.push(actualCategoryId);
-        }
-
-        // Priority 2: API category filters
-        if (apiFilters.category?.length > 0) {
-            apiFilters.category.forEach(catName => {
-                const categoryObj = filterOptions.categories.find(c => c.name === catName);
-                if (categoryObj?.id) {
-                    if (!categoryIds.includes(categoryObj.id)) {
-                        categoryIds.push(categoryObj.id);
-                    }
-                }
-            });
-        }
-
-        if (categoryIds.length > 0) {
-            filter.categories = categoryIds;
-        }
-
-        // Type filter (from categories)
-        if (apiFilters.type?.length > 0) {
-            filter.categories = [...(filter.categories || []), ...apiFilters.type.map(typeName => {
-                const typeObj = filterOptions.categories.find(c => c.name === typeName);
-                return typeObj?.id;
-            }).filter(Boolean)];
-        }
-
-        // Color filter (client-side only, not sent to API)
-        // This will be applied client-side after fetching
-
-        return filter;
-    };
-
- const fetchProducts = async (page = 1) => {
+    const loadProducts = async (page = 1) => {
         setLoading(true);
         setError(null);
         
         try {
-            const filter = buildApiFilter();
-            filter.page = page;
-
-            const apiUrl = `${API_BASE_URL}/products/filter`;
+            let result;
             
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(filter)
-            };
-
-            console.log("Fetching products:", apiUrl);
-            console.log("Payload:", JSON.stringify(filter, null, 2));
-
-            const response = await fetch(apiUrl, requestOptions);
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            console.log("Products API Response:", data);
+            // Determine which API to use based on filters and URL params
+            const hasActiveFilters = apiFilters.brand.length > 0 || 
+                                    apiFilters.category.length > 0 || 
+                                    apiFilters.type.length > 0;
             
-            if (data.success) {
-                // Transform products to match your frontend format
-                const transformedProducts = data.products.map(product => {
-                    // Handle different image formats
-                    let mainImage = '';
-                    if (product.imgs && product.imgs.length > 0) {
-                        if (typeof product.imgs[0] === 'string') {
-                            mainImage = product.imgs[0];
-                        } else if (product.imgs[0].url) {
-                            mainImage = product.imgs[0].url;
-                        }
-                    }
-                    
-                    const color = product.locs?.singles?.color?.en || 
-                                product.locs?.lists?.colors?.[0]?.en || 
-                                product.props?.color || '';
-
-                    const title = product.locs?.singles?.title?.en || 
-                                product.props?.model_name || 
-                                product.sku || 
-                                'Product';
-
-                    const description = product.locs?.singles?.desc?.en || 
-                                      product.locs?.singles?.description?.en || '';
-
-                    // Get category name from populated cats array
-                    const category = product.cats?.[0]?.name?.locs?.en || 
-                                   product.cats?.[0]?.name || 
-                                   product.props?.category || 
-                                   'Clothing';
-
-                    // Get type from props or category
-                    const type = product.props?.type || 
-                               product.props?.product_type || 
-                               category;
-
-                    return {
-                        id: product._id || Math.random().toString(),
-                        sku: product.sku,
-                        name: product.props?.brand || 'Unknown Brand',
-                        productName: title,
-                        description: description,
-                        price: product.stock_price || 0,
-                        originalPrice: product.stock_price || 0,
-                        discount: 0,
-                        images: mainImage ? [mainImage] : [],
-                        brand: product.props?.brand || 'Unknown',
-                        category: category,
-                        color: color,
-                        type: type,
-                        gender: product.locs?.singles?.sex?.en || gender,
-                        size: product.props?.size || '',
-                        madeIn: product.locs?.singles?.made?.en || '',
-                        composition: product.composition || [],
-                        qty: product.qty || 0,
-                        inStock: (product.qty || 0) > 0,
-                        tag: product.tag
-                    };
-                });
-
-                setAllProducts(transformedProducts);
-                setTotalPages(data.totalPages || 1);
-                setTotalItems(data.totalCount || transformedProducts.length);
-
-                // Extract color options from products
-                extractColorOptions(transformedProducts);
-                
+            if (hasActiveFilters) {
+                // Use filter API when filters are applied
+                const filterPayload = buildFilterPayload();
+                result = await fetchProductsWithFilters(filterPayload, page, pageSize);
+            } else if (actualBrandName && !actualCategoryId) {
+                // Use brand API when only brand is in URL
+                result = await fetchProductsByBrand(actualBrandName, page, pageSize);
+            } else if (actualCategoryId) {
+                // Use category API when category is in URL
+                result = await fetchProductsByCategory(actualCategoryId, page, pageSize);
             } else {
-                throw new Error(data.message || 'Failed to fetch products');
+                // Use base category for gender
+                const baseCategoryId = getBaseCategoryId();
+                result = await fetchProductsByCategory(baseCategoryId, page, pageSize);
             }
+
+            // Transform products
+            const transformedProducts = result.products.map(transformProduct);
+
+            setAllProducts(transformedProducts);
+            setTotalPages(result.pagination.totalPages || 1);
+            setTotalItems(result.pagination.totalProducts || transformedProducts.length);
+
+            // Extract color options from products
+            extractColorOptions(transformedProducts);
             
         } catch (error) {
-            console.error("Fetch Error:", error);
+            console.error("Load Products Error:", error);
             setError(error.message || "Failed to fetch products");
             setAllProducts([]);
         } finally {
             setLoading(false);
         }
+    };
+
+    const buildFilterPayload = () => {
+        const payload = {};
+
+        // Category IDs
+        const categoryIds = [];
+        
+        // Add URL category if exists
+        if (actualCategoryId) {
+            categoryIds.push(actualCategoryId);
+        }
+        
+        // Add filtered types (types are from gender base category)
+        if (apiFilters.type?.length > 0) {
+             apiFilters.type.forEach(catName => {
+                const categoryObj = filterOptions.types.find(c => c.name === catName);
+                if (categoryObj?.id && !categoryIds.includes(categoryObj.id)) {
+                    categoryIds.push(categoryObj.id);
+                }
+            });
+        }
+        
+        // Add filtered categories (these are children of the current category)
+        if (apiFilters.category?.length > 0) {
+            apiFilters.category.forEach(catName => {
+                const categoryObj = filterOptions.categories.find(c => c.name === catName);
+                if (categoryObj?.id && !categoryIds.includes(categoryObj.id)) {
+                    categoryIds.push(categoryObj.id);
+                }
+            });
+        }
+        
+        if (categoryIds.length > 0) {
+            payload.categoryIds = categoryIds;
+        }
+
+        // Brands
+        const brands = [];
+        if (actualBrandName) {
+            brands.push(actualBrandName);
+        }
+        if (apiFilters.brand?.length > 0) {
+            brands.push(...apiFilters.brand.filter(b => b !== actualBrandName));
+        }
+        if (brands.length > 0) {
+            payload.brands = brands;
+        }
+
+        // Colors (if backend supports it)
+        if (clientFilters.color?.length > 0) {
+            payload.colors = clientFilters.color;
+        }
+
+        return payload;
     };
 
     // Client-side filtered products (only color filter applied client-side)
@@ -478,12 +341,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
     const description = [
         {
             gender: "man",
-            id: "561d7300b49dbb9c2c551be1",
+            id: "68f86b10734810ab97bb98d1",
             description: "Explore our selection of men's fashion and lifestyle products, where luxury and style converge with a curated offer from the world's top brands."
         },
         {
             gender: "woman",
-            id: "561d7300b49dbb9c2c551c29",
+            id: "68f86b1c734810ab97bb9a2f",
             description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs."
         }
     ];
@@ -501,25 +364,32 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
     const hasPendingApiFilters = JSON.stringify(tempApiFilters) !== JSON.stringify(apiFilters);
 
     const FilterSection = ({ title, filterKey, options, isApiFilter = false }) => {
+        // Handle both array of strings and array of objects
         const displayOptions = Array.isArray(options) ? options : [];
 
         const getCheckedValue = (option) => {
-            if (filterKey === 'brand') return tempApiFilters.brand?.includes(option) || false;
-            if (filterKey === 'category') return tempApiFilters.category?.includes(option) || false;
-            if (filterKey === 'type') return tempApiFilters.type?.includes(option) || false;
-            if (filterKey === 'color') return clientFilters.color?.includes(option) || false;
+            // Extract name from option (could be string or object)
+            const optionName = typeof option === 'string' ? option : option.name;
+            
+            if (filterKey === 'brand') return tempApiFilters.brand?.includes(optionName) || false;
+            if (filterKey === 'category') return tempApiFilters.category?.includes(optionName) || false;
+            if (filterKey === 'type') return tempApiFilters.type?.includes(optionName) || false;
+            if (filterKey === 'color') return clientFilters.color?.includes(optionName) || false;
             return false;
         };
 
         const handleChange = (option) => {
+            // Extract name from option
+            const optionName = typeof option === 'string' ? option : option.name;
+            
             if (filterKey === 'brand') {
-                handleBrandFilterChange(option);
+                handleBrandFilterChange(optionName);
             } else if (filterKey === 'category') {
-                handleCategoryFilterChange(option);
+                handleCategoryFilterChange(optionName);
             } else if (filterKey === 'type') {
-                handleTypeFilterChange(option);
+                handleTypeFilterChange(optionName);
             } else if (filterKey === 'color') {
-                handleColorFilterChange(option);
+                handleColorFilterChange(optionName);
             }
         };
 
@@ -536,23 +406,26 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
                     <div className="pb-4 space-y-2 max-h-60 overflow-y-auto">
                         {displayOptions.length > 0 ? (
                             displayOptions.map((option) => {
+                                const optionName = typeof option === 'string' ? option : option.name;
+                                const optionKey = typeof option === 'string' ? option : option.id;
+                                
                                 const count = filteredProducts.filter(p => {
-                                    if (filterKey === 'brand') return p.brand === option;
-                                    if (filterKey === 'color') return p.color === option;
-                                    if (filterKey === 'type') return p.type === option;
-                                    if (filterKey === 'category') return p.category === option;
+                                    if (filterKey === 'brand') return p.brand === optionName;
+                                    if (filterKey === 'color') return p.color === optionName;
+                                    if (filterKey === 'type') return p.type === optionName;
+                                    if (filterKey === 'category') return p.category === optionName;
                                     return false;
                                 }).length;
 
                                 return (
-                                    <label key={option} className="flex items-center gap-3 text-sm cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                    <label key={optionKey} className="flex items-center gap-3 text-sm cursor-pointer hover:bg-gray-50 p-2 rounded">
                                         <input
                                             type="checkbox"
                                             checked={getCheckedValue(option)}
                                             onChange={() => handleChange(option)}
                                             className="cursor-pointer w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
                                         />
-                                        <span className="flex-1 select-none">{option}</span>
+                                        <span className="flex-1 select-none">{optionName}</span>
                                         <span className="text-xs text-gray-500">({count})</span>
                                     </label>
                                 );
@@ -592,8 +465,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                         <p className="text-red-700 text-sm font-medium mb-2">Error Loading Products</p>
+                        <p className="text-red-600 text-sm mb-3">{error}</p>
                         <button
-                            onClick={() => fetchProducts(1)}
+                            onClick={() => loadProducts(1)}
                             className="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
                         >
                             Try Again
@@ -625,27 +499,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
                                 Clear all filters
                             </button>
                         )}
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm">
-                        <span className="text-gray-600">Sort By:</span>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="border-0 bg-transparent focus:outline-none cursor-pointer font-medium"
-                        >
-                            <option value="createdAt">Newest</option>
-                            <option value="stock_price">Price</option>
-                            <option value="updatedAt">Recently Updated</option>
-                        </select>
-                        <select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                            className="border-0 bg-transparent focus:outline-none cursor-pointer font-medium"
-                        >
-                            <option value="desc">Descending</option>
-                            <option value="asc">Ascending</option>
-                        </select>
                     </div>
                 </div>
 
@@ -695,7 +548,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
                             <FilterSection title="Type" filterKey="type" options={filterOptions.types} isApiFilter={true} />
                             <FilterSection title="Category" filterKey="category" options={filterOptions.categories} isApiFilter={true} />
                             
-                            {/* Apply Filters Button - Only show if there are pending API filter changes */}
                             {hasPendingApiFilters && (
                                 <div className="pt-4 space-y-2 border-t border-gray-200 mt-4">
                                     <button
@@ -717,7 +569,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
                     {showMobileFilters && (
                         <div className="fixed inset-0 z-50 lg:hidden">
-                            <div className="absolute inset-0 bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
+                            <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
                             <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
                                 <div className="p-4 border-b border-gray-200">
                                     <div className="flex items-center justify-between">

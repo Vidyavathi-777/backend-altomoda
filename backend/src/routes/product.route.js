@@ -16,5 +16,8 @@ router.get('/:sku/availability', optionalAuth, productController.getProductAvail
 router.get('/categories/tree',productController.getCategoryTree)
 router.post('/filter',productController.getProductsWithFilters)
 router.get('/categoryChildren/:categoryId',productController.getChildCategories)
+router.get("/categroyLevels/:id",productController.getCategoryLevelsById)
+router.get("/productbyCategroy/:id",productController.getProductsByCategory)
+router.get("/productsbyBrand/:brand", productController.getProductsByBrand)
 
 module.exports = router;

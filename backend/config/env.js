@@ -10,11 +10,8 @@ module.exports = {
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
   },
-<<<<<<< HEAD
     cloudstore: {
     apiUrl: process.env.CLOUDSTORE_API_URL,
     apiKey: process.env.CLOUDSTORE_API_KEY,
   },
-=======
->>>>>>> a482586c64654c9935323210268c264ee9f28892
 };

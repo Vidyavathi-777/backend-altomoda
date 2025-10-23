@@ -132,56 +132,56 @@ exports.getBrands = catchAsync(async (req, res) => {
 
 
 // Controller: Fetch products by filters (categories, brands, pagination, limit)
-exports.getProductsWithFilters = catchAsync(async (req, res) => {
-  let {
-    page = 1,
-    limit = 20,
-    sortBy = "createdAt",
-    sortOrder = "desc",
-    categories = [],
-    brands = [],
-  } = req.body;
+// exports.getProductsWithFilters = catchAsync(async (req, res) => {
+//   let {
+//     page = 1,
+//     limit = 20,
+//     sortBy = "createdAt",
+//     sortOrder = "desc",
+//     categories = [],
+//     brands = [],
+//   } = req.body;
 
-  // Convert to proper types
-   page = Math.max(parseInt(page) || 1, 1);  // ✅ ensures page >= 1
-  limit = Math.max(parseInt(limit) || 20, 1); // ✅ ensures limit >= 1
+//   // Convert to proper types
+//    page = Math.max(parseInt(page) || 1, 1);  // ✅ ensures page >= 1
+//   limit = Math.max(parseInt(limit) || 20, 1); // ✅ ensures limit >= 1
 
-  const query = {};
+//   const query = {};
 
-  // 🟡 Filter by categories
-  if (Array.isArray(categories) && categories.length > 0) {
-    query.cats = { $in: categories };
-  }
+//   // 🟡 Filter by categories
+//   if (Array.isArray(categories) && categories.length > 0) {
+//     query.cats = { $in: categories };
+//   }
 
-  // 🟢 Filter by brands (inside props.brand)
-  if (Array.isArray(brands) && brands.length > 0) {
-    query["props.brand"] = { $in: brands };
-  }
+//   // 🟢 Filter by brands (inside props.brand)
+//   if (Array.isArray(brands) && brands.length > 0) {
+//     query["props.brand"] = { $in: brands };
+//   }
 
-  // 🧮 Pagination
-  const skip = (page - 1) * limit;
+//   // 🧮 Pagination
+//   const skip = (page - 1) * limit;
 
-  // 🧾 Sorting
-  const sort = { [sortBy]: sortOrder === "asc" ? 1 : -1 };
+//   // 🧾 Sorting
+//   const sort = { [sortBy]: sortOrder === "asc" ? 1 : -1 };
 
-  // ⚡ Fetch products
-  const [products, totalCount] = await Promise.all([
-    Product.find(query)
-      .populate("cats", "name") // optional
-      .sort(sort)
-      .skip(skip)
-      .limit(limit),
-    Product.countDocuments(query),
-  ]);
+//   // ⚡ Fetch products
+//   const [products, totalCount] = await Promise.all([
+//     Product.find(query)
+//       .populate("cats", "name") // optional
+//       .sort(sort)
+//       .skip(skip)
+//       .limit(limit),
+//     Product.countDocuments(query),
+//   ]);
 
-  res.status(200).json({
-    success: true,
-    totalCount,
-    page,
-    totalPages: Math.ceil(totalCount / limit),
-    products,
-  });
-});
+//   res.status(200).json({
+//     success: true,
+//     totalCount,
+//     page,
+//     totalPages: Math.ceil(totalCount / limit),
+//     products,
+//   });
+// });
 
 
 
@@ -413,4 +413,259 @@ exports.getChildCategories = catchAsync(async (req, res) => {
     data: childCategories,
   });
 });
+
+
+exports.getCategoryLevelsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
+
+    // 1️⃣ Fetch all categories (only needed fields)
+    const allCategories = await Category.find()
+      .select("_id name.locs parent_id children")
+      .lean();
+
+    // 2️⃣ Create a map for quick lookup
+    const categoryMap = new Map();
+    allCategories.forEach((cat) => categoryMap.set(cat._id.toString(), cat));
+
+    // 3️⃣ Recursive helper (build from local data, no DB calls)
+    const buildHierarchy = (categoryId) => {
+      const category = categoryMap.get(categoryId.toString());
+      if (!category) return null;
+
+      return {
+        _id: category._id,
+        name: category.name?.locs?.en || "",
+        children: (category.children || [])
+          .map((childId) => buildHierarchy(childId))
+          .filter(Boolean),
+      };
+    };
+
+    // 4️⃣ Build hierarchy starting from the given category
+    const hierarchy = buildHierarchy(id);
+
+    if (!hierarchy) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: hierarchy,
+    });
+  } catch (error) {
+    console.error("Error fetching category levels:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+
+
+// Controller: fetch products by category ID with pagination
+exports.getProductsByCategory = async (req, res) => {
+  const getAllCategoryIds = (category) => {
+  let ids = [category._id.toString()];
+
+  if (category.children && category.children.length > 0) {
+    category.children.forEach((child) => {
+      ids = ids.concat(getAllCategoryIds(child));
+    });
+  }
+
+  return ids;
+};
+  try {
+    const { id } = req.params;
+    const page = parseInt(req.query.page) || 1; // default page 1
+    const limit = parseInt(req.query.limit) || 20; // default 20 products per page
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
+
+    // 1️⃣ Fetch category hierarchy
+    const categoryHierarchy = await Category.findById(id).populate({
+      path: "children",
+      populate: { path: "children", populate: { path: "children" } },
+    }).lean();
+
+    if (!categoryHierarchy) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    // 2️⃣ Get all category IDs including children
+    const categoryIds = getAllCategoryIds(categoryHierarchy);
+
+    // 3️⃣ Count total products
+    const totalProducts = await Product.countDocuments({ cats: { $in: categoryIds } });
+
+    // 4️⃣ Calculate total pages
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // 5️⃣ Fetch paginated products
+    const products = await Product.find({ cats: { $in: categoryIds } })
+      .populate("cats", "name.locs") // optional: populate category names
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    // 6️⃣ Return response with pagination info
+    res.status(200).json({
+      success: true,
+      pagination:{
+                totalProducts,
+        totalPages,
+        currentPage: page,
+        perPage: limit,
+      },
+      data: {
+        products,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+exports.getProductsByBrand = async (req, res) => {
+  try {
+    const {brand} = req.params; // pass brand as query parameter
+    const page = parseInt(req.query.page) || 1; // default page 1
+    const limit = parseInt(req.query.limit) || 20; // default 20 per page
+
+    if (!brand) {
+      return res.status(400).json({ message: "Brand query is required" });
+    }
+
+    // 1️⃣ Count total products for this brand
+    const totalProducts = await Product.countDocuments({ "props.brand": brand });
+
+    // 2️⃣ Calculate total pages
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // 3️⃣ Fetch paginated products
+    const products = await Product.find({ "props.brand": brand })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    // 4️⃣ Send response
+    res.status(200).json({
+      success: true,
+      pagination:{
+                totalProducts,
+        totalPages,
+        currentPage: page,
+        perPage: limit,
+      },
+      data: {
+
+        products,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error fetching products by brand:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+
+
+// Controller: fetch products with multiple categories and brands
+exports.getProductsWithFilters = async (req, res) => {
+  const getAllCategoryIds = (category) => {
+  let ids = [category._id.toString()];
+  if (category.children && category.children.length > 0) {
+    category.children.forEach((child) => {
+      ids = ids.concat(getAllCategoryIds(child));
+    });
+  }
+  return ids;
+};
+  try {
+    const { categoryIds, brands, colors } = req.body; // note plural categoryIds
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    let filter = {};
+
+    // 1️⃣ Handle multiple categories
+    if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
+      let allCategoryIds = [];
+
+      for (let id of categoryIds) {
+        if (!mongoose.Types.ObjectId.isValid(id)) continue;
+
+        const categoryHierarchy = await Category.findById(id).populate({
+          path: "children",
+          populate: { path: "children", populate: { path: "children" } },
+        }).lean();
+
+        if (categoryHierarchy) {
+          allCategoryIds = allCategoryIds.concat(getAllCategoryIds(categoryHierarchy));
+        }
+      }
+
+      if (allCategoryIds.length > 0) {
+        filter.cats = { $in: allCategoryIds };
+      }
+    }
+
+    // 2️⃣ Brand filter (multiple brands)
+    if (brands && Array.isArray(brands) && brands.length > 0) {
+      filter["props.brand"] = { $in: brands };
+    }
+
+    // 3️⃣ Color filter (multiple colors)
+    if (colors && Array.isArray(colors) && colors.length > 0) {
+      filter["locs.singles.color.en"] = { $in: colors };
+    }
+
+    // 4️⃣ Count total products
+    const totalProducts = await Product.countDocuments(filter);
+
+    // 5️⃣ Calculate total pages
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // 6️⃣ Fetch paginated products
+    const products = await Product.find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalProducts,
+        totalPages,
+        currentPage: page,
+        perPage: limit,
+        products,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error fetching products with filters:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 

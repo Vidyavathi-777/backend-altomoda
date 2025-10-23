@@ -4,7 +4,6 @@ import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCart } from '../Context/CartContext';
 
 const ProductDetailPage = () => {
-
     const {addToCart} = useCart()
     const [selectedSize, setSelectedSize] = useState('');
     const [activeTab, setActiveTab] = useState(null);
@@ -27,19 +26,17 @@ const ProductDetailPage = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
-                    
-                });
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {});
                 
                 if (!res.ok) throw new Error("Failed to fetch product");
                 
                 const data = await res.json();
                 console.log('Product data:', data.data);
-                setProduct(data);
+                setProduct(data.data); // FIXED: Use data.data instead of data
                 
                 // Set default size from props if available
-                if (data.props?.size) {
-                    setSelectedSize(data.props.size);
+                if (data.data?.props?.size) {
+                    setSelectedSize(data.data.props.size);
                 }
             } catch (err) {
                 console.error(err);
@@ -52,8 +49,10 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
+    // FIXED: Correct SKU extraction for related products
     const extractSKU = (sku) => {
         if (!sku) return '';
+        // Extract base SKU (remove size suffix) - e.g., "008050805N_742-L" -> "008050805N_742"
         return sku.split('-').slice(0, -1).join('-');
     };
 
@@ -83,67 +82,31 @@ const ProductDetailPage = () => {
                 throw new Error(`HTTP ${res.status}`);
             }
             
-            const data = await res.json(); // FIXED: Added await
+            const data = await res.json();
             
-            // if (data && Array.isArray(data)) {
-            //     // Transform API response to match our product structure
-            //     const transformedProducts = data.related.map(item => {
-            //         const mainImage = item.imgs?.find(img => 
-            //             img.placement?.includes("DETAIL") || img.placement?.includes("LIST")
-            //         ) || item.imgs?.[0];
+            const transformedProducts = (data.related || []).map(item => {
+                const mainImage = item.imgs?.[0] || null;
+                return {
+                    _id: { $oid: item._id?.$oid || item.item_id?.$oid },
+                    sku: item.sku,
+                    brand: item.brand || 'Unknown Brand',
+                    title: item.title || 'Product',
+                    price: item.price?.amount || item.stock_price || 0,
+                    imgs: mainImage ? [{ url: mainImage.url }] : [],
+                    color: item.color || '',
+                    size: item.size || '',
+                    inStock: item.inStock ?? ((item.qty || 0) > 0)
+                };
+            });
 
-            //         return {
-            //             _id: { $oid: item.item_id?.$oid },
-            //             sku: item.sku,
-            //             brand: item.props?.brand || 'Unknown Brand',
-            //             title: item.locs?.singles?.title?.en || item.props?.model_name || 'Product',
-            //             price: {
-            //                 amount: item.stock_price || 0
-            //             },
-            //             imgs: mainImage ? [{ url: mainImage.url }] : [],
-            //             color: item.locs?.singles?.color?.en || '',
-            //             size: item.props?.size || '',
-            //             inStock: (item.qty || 0) > 0
-            //         };
-            //     });
+            // Remove current product and duplicates, limit to 12
+            const uniqueProducts = transformedProducts
+                .filter(p => p._id.$oid !== product._id?.$oid)
+                .filter((p, index, self) => index === self.findIndex(x => x._id.$oid === p._id.$oid))
+                .slice(0, 12);
 
-            //     // FIXED: Use 'product' instead of 'currentProduct'
-            //     const uniqueProducts = transformedProducts
-            //         .filter(relatedProduct => relatedProduct._id.$oid !== product._id?.$oid) // FIXED: Changed variable name
-            //         .filter((relatedProduct, index, self) => 
-            //             index === self.findIndex(p => p._id.$oid === relatedProduct._id.$oid)
-            //         )
-            //         .slice(0, 12); // Limit to 12 products for slider
-
-            //     setRelatedProducts(uniqueProducts);
-            //     console.log('Related products found:', uniqueProducts.length);
-            // } else {
-            //     setRelatedProducts([]);
-            // }
-
-                    const transformedProducts = (data.related || []).map(item => {
-            const mainImage = item.imgs?.[0] || null;
-            return {
-                _id: { $oid: item._id?.$oid || item.item_id?.$oid },
-                sku: item.sku,
-                brand: item.brand || 'Unknown Brand',
-                title: item.title || 'Product',
-                price: item.price?.amount || item.stock_price || 0,
-                imgs: mainImage ? [{ url: mainImage.url }] : [],
-                color: item.color || '',
-                size: item.size || '',
-                inStock: item.inStock ?? ((item.qty || 0) > 0)
-            };
-        });
-
-        // Remove current product and duplicates, limit to 12
-        const uniqueProducts = transformedProducts
-            .filter(p => p._id.$oid !== product._id?.$oid)
-            .filter((p, index, self) => index === self.findIndex(x => x._id.$oid === p._id.$oid))
-            .slice(0, 12);
-
-        setRelatedProducts(uniqueProducts);
-        console.log('Related products found:', uniqueProducts.length);
+            setRelatedProducts(uniqueProducts);
+            console.log('Related products found:', uniqueProducts.length);
         } catch (error) {
             console.error("Error fetching related products:", error);
             setRelatedProducts([]);
@@ -239,7 +202,7 @@ const ProductDetailPage = () => {
         const materials = getLocalizedList('material');
         const logoPositions = getLocalizedList('logo_position');
 
-        const brand = product.props?.brand
+        const brand = product.props?.brand || '';
         const sku = product.sku || '';
         const stockPrice = product.stock_price || 0;
         const salePrice = product.sale_price || stockPrice;
@@ -437,10 +400,8 @@ const ProductDetailPage = () => {
                                     style={{ backgroundColor: cssVariables.primary, fontFamily: cssVariables.fontAccent }}
                                     onMouseEnter={e => e.target.style.backgroundColor = cssVariables.secondary}
                                     onMouseLeave={e => e.target.style.backgroundColor = cssVariables.primary}
-                                       onClick={() => addToCart(product)}
-                                    // disabled={productDetails.quantity === 0}
+                                    onClick={() => addToCart(product)}
                                 >
-                                    {/* {productDetails.quantity === 0 ? 'Out of Stock' : 'Add to cart'} */}
                                     Add to Cart
                                 </button>
                             </div>
