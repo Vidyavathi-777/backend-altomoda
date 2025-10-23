@@ -1,8 +1,8 @@
 // routes/order.routes.js
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/order.controller');
-const { protect } = require('../middlewares/auth.middleware');
+const orderController = require("../../controllers/order.controller");
+const { protect } = require('../../middlewares/auth.middleware');
 
 router.post('/', protect, orderController.createOrder);
 router.get('/', protect, orderController.getOrders);
