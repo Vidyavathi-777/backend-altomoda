@@ -11,17 +11,65 @@ import {
 } from "../../src/api/productsApi";
 
 const ProductsPage = () => {
-    const { gender = 'woman', brandName, categoryId } = useParams();
+    const { gender, categoryId, brandName } = useParams();
     
-    // Validate if categoryId is a valid MongoDB ObjectId (24 hex characters)
+    console.log("URL Params:", { gender, categoryId, brandName });
+    
+    // Validate if a string is a valid MongoDB ObjectId (24 hex characters)
     const isValidObjectId = (str) => {
         return str && /^[0-9a-fA-F]{24}$/.test(str);
     };
     
-    // Determine actual values
-    const actualCategoryId = isValidObjectId(categoryId) ? categoryId : null;
-    const actualBrandName = !isValidObjectId(categoryId) ? categoryId : brandName;
+    // Parse URL parameters based on different URL patterns
+    const parseUrlParams = () => {
+        // Pattern 1: /woman/68f86b1c734810ab97bb9a31/products (gender + categoryId)
+        if (gender && isValidObjectId(categoryId) && !brandName) {
+            return {
+                actualGender: gender,
+                actualCategoryId: categoryId,
+                actualBrandName: null
+            };
+        }
+        
+        // Pattern 2: /68f86b1c734810ab97bb9a2f/products (categoryId only)
+        if (isValidObjectId(gender) && !categoryId && !brandName) {
+            return {
+                actualGender: 'woman', // default gender
+                actualCategoryId: gender,
+                actualBrandName: null
+            };
+        }
+        
+        // Pattern 3: /68f86b1c734810ab97bb9a2f/Etro/products (categoryId + brandName)
+        if (isValidObjectId(gender) && categoryId && !isValidObjectId(categoryId) && !brandName) {
+            return {
+                actualGender: 'woman', // default gender
+                actualCategoryId: gender,
+                actualBrandName: categoryId
+            };
+        }
+        
+        // Pattern 4: /woman/68f86b1c734810ab97bb9a31/Etro/products (gender + categoryId + brandName)
+        if (gender && isValidObjectId(categoryId) && brandName) {
+            return {
+                actualGender: gender,
+                actualCategoryId: categoryId,
+                actualBrandName: brandName
+            };
+        }
+        
+        // Default fallback
+        return {
+            actualGender: gender || 'woman',
+            actualCategoryId: isValidObjectId(categoryId) ? categoryId : null,
+            actualBrandName: brandName || (!isValidObjectId(categoryId) ? categoryId : null)
+        };
+    };
     
+    const { actualGender, actualCategoryId, actualBrandName } = parseUrlParams();
+    
+    console.log("Parsed Params:", { actualGender, actualCategoryId, actualBrandName });
+
     const [openFilters, setOpenFilters] = useState({});
     const [showMore, setShowMore] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -62,13 +110,13 @@ const ProductsPage = () => {
 
     // Get the base category ID based on gender
     const getBaseCategoryId = () => {
-        return gender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+        return actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
     };
 
     // Fetch brands and categories on component mount
     useEffect(() => {
         loadFilterOptions();
-    }, [gender, actualCategoryId]);
+    }, [actualGender, actualCategoryId]);
 
     // Fetch products when URL params or API filters change
     useEffect(() => {
@@ -100,9 +148,9 @@ const ProductsPage = () => {
             
             setFilterOptions({
                 brands: brandsData,
-                types: typesData, // Store full objects with {id, name}
-                categories: categoriesData, // Store full objects with {id, name}
-                colors: [] // Will be populated from products
+                types: typesData,
+                categories: categoriesData,
+                colors: []
             });
         } catch (error) {
             console.error("Error loading filter options:", error);
@@ -117,32 +165,50 @@ const ProductsPage = () => {
             let result;
             
             // Determine which API to use based on filters and URL params
-            const hasActiveFilters = apiFilters.brand.length > 0 || 
+            const hasActiveApiFilters = apiFilters.brand.length > 0 || 
                                     apiFilters.category.length > 0 || 
                                     apiFilters.type.length > 0;
             
-            if (hasActiveFilters) {
-                // Use filter API when filters are applied
+            if (hasActiveApiFilters) {
+                // Use filter API when API filters are applied
                 const filterPayload = buildFilterPayload();
+                console.log("Using filter API with payload:", filterPayload);
                 result = await fetchProductsWithFilters(filterPayload, page, pageSize);
-            } else if (actualBrandName && !actualCategoryId) {
-                // Use brand API when only brand is in URL
-                result = await fetchProductsByBrand(actualBrandName, page, pageSize);
+            } else if (actualCategoryId && actualBrandName) {
+                // Use brand API when brand is in URL (with category)
+                console.log("Using brand API:", actualBrandName, "with category:", actualCategoryId);
+                result = await fetchProductsByBrand(actualBrandName, actualCategoryId, page, pageSize);
             } else if (actualCategoryId) {
-                // Use category API when category is in URL
+                // Use category API when only category is in URL
+                console.log("Using category API:", actualCategoryId);
                 result = await fetchProductsByCategory(actualCategoryId, page, pageSize);
             } else {
                 // Use base category for gender
                 const baseCategoryId = getBaseCategoryId();
+                console.log("Using base category API:", baseCategoryId);
                 result = await fetchProductsByCategory(baseCategoryId, page, pageSize);
             }
 
+            // Check if result is valid and has products
+            if (!result) {
+                throw new Error("No data received from API");
+            }
+
+            // Handle different response structures
+            const products = result.products || [];
+            const pagination = result.pagination || {
+                totalPages: 1,
+                totalProducts: products.length,
+                currentPage: page,
+                perPage: pageSize
+            };
+
             // Transform products
-            const transformedProducts = result.products.map(transformProduct);
+            const transformedProducts = products.map(transformProduct);
 
             setAllProducts(transformedProducts);
-            setTotalPages(result.pagination.totalPages || 1);
-            setTotalItems(result.pagination.totalProducts || transformedProducts.length);
+            setTotalPages(pagination.totalPages || 1);
+            setTotalItems(pagination.totalProducts || transformedProducts.length);
 
             // Extract color options from products
             extractColorOptions(transformedProducts);
@@ -151,6 +217,8 @@ const ProductsPage = () => {
             console.error("Load Products Error:", error);
             setError(error.message || "Failed to fetch products");
             setAllProducts([]);
+            setTotalPages(0);
+            setTotalItems(0);
         } finally {
             setLoading(false);
         }
@@ -159,17 +227,15 @@ const ProductsPage = () => {
     const buildFilterPayload = () => {
         const payload = {};
 
-        // Category IDs
+        // Category IDs - combine URL category and filter categories
         const categoryIds = [];
         
-        // Add URL category if exists
         if (actualCategoryId) {
             categoryIds.push(actualCategoryId);
         }
         
-        // Add filtered types (types are from gender base category)
         if (apiFilters.type?.length > 0) {
-             apiFilters.type.forEach(catName => {
+            apiFilters.type.forEach(catName => {
                 const categoryObj = filterOptions.types.find(c => c.name === catName);
                 if (categoryObj?.id && !categoryIds.includes(categoryObj.id)) {
                     categoryIds.push(categoryObj.id);
@@ -177,7 +243,6 @@ const ProductsPage = () => {
             });
         }
         
-        // Add filtered categories (these are children of the current category)
         if (apiFilters.category?.length > 0) {
             apiFilters.category.forEach(catName => {
                 const categoryObj = filterOptions.categories.find(c => c.name === catName);
@@ -191,23 +256,29 @@ const ProductsPage = () => {
             payload.categoryIds = categoryIds;
         }
 
-        // Brands
+        // Brands - combine URL brand and filter brands
         const brands = [];
+        
         if (actualBrandName) {
             brands.push(actualBrandName);
         }
+        
         if (apiFilters.brand?.length > 0) {
-            brands.push(...apiFilters.brand.filter(b => b !== actualBrandName));
+            const filteredBrands = apiFilters.brand.filter(brand => 
+                !actualBrandName || brand.toLowerCase() !== actualBrandName.toLowerCase()
+            );
+            brands.push(...filteredBrands);
         }
+        
         if (brands.length > 0) {
             payload.brands = brands;
         }
 
-        // Colors (if backend supports it)
         if (clientFilters.color?.length > 0) {
             payload.colors = clientFilters.color;
         }
 
+        console.log("Filter Payload:", payload);
         return payload;
     };
 
@@ -347,12 +418,14 @@ const ProductsPage = () => {
         {
             gender: "woman",
             id: "68f86b1c734810ab97bb9a2f",
-            description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs."
+            description: "Our offer of designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs."
         }
     ];
 
-    const currentGender = description.find(item => item.id === actualCategoryId)?.gender || gender;
-    const filterDescription = description.find(item => item.id === actualCategoryId || item.gender === gender)?.description || "";
+    // Find description based on actual category ID or gender
+    const filterDescription = description.find(item => 
+        item.id === actualCategoryId || item.gender === actualGender
+    )?.description || "";
 
     const totalActiveFilters = [
         ...(apiFilters.brand || []), 
@@ -364,11 +437,9 @@ const ProductsPage = () => {
     const hasPendingApiFilters = JSON.stringify(tempApiFilters) !== JSON.stringify(apiFilters);
 
     const FilterSection = ({ title, filterKey, options, isApiFilter = false }) => {
-        // Handle both array of strings and array of objects
         const displayOptions = Array.isArray(options) ? options : [];
 
         const getCheckedValue = (option) => {
-            // Extract name from option (could be string or object)
             const optionName = typeof option === 'string' ? option : option.name;
             
             if (filterKey === 'brand') return tempApiFilters.brand?.includes(optionName) || false;
@@ -379,7 +450,6 @@ const ProductsPage = () => {
         };
 
         const handleChange = (option) => {
-            // Extract name from option
             const optionName = typeof option === 'string' ? option : option.name;
             
             if (filterKey === 'brand') {
@@ -445,7 +515,7 @@ const ProductsPage = () => {
         <div className="min-h-screen bg-white pt-[100px] sm:pt-[140px] md:pt-[100px] lg:pt-[200px]">
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold mb-4 uppercase">{currentGender}</h1>
+                    {/* <h1 className="text-2xl font-bold mb-4 uppercase">{actualGender}</h1> */}
                     {actualBrandName && (
                         <h2 className="text-xl font-medium mb-4 text-gray-600">{actualBrandName}</h2>
                     )}
@@ -569,7 +639,7 @@ const ProductsPage = () => {
 
                     {showMobileFilters && (
                         <div className="fixed inset-0 z-50 lg:hidden">
-                            <div className="absolute inset-0  bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
+                            <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
                             <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
                                 <div className="p-4 border-b border-gray-200">
                                     <div className="flex items-center justify-between">
@@ -619,6 +689,7 @@ const ProductsPage = () => {
                         {loading && allProducts.length === 0 ? (
                             <div className="flex items-center justify-center h-96">
                                 <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                                <span className="ml-2 text-gray-600">Loading products...</span>
                             </div>
                         ) : filteredProducts.length === 0 ? (
                             <div className="text-center py-12">
@@ -633,7 +704,11 @@ const ProductsPage = () => {
                             <>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-4 gap-y-8">
                                     {filteredProducts.map((product) => (
-                                        <Link to={`/${currentGender}/product/${product.id}`} key={product.id} className="group cursor-pointer">
+                                        <Link 
+                                            to={`/${actualGender}/product/${product.sku}`}
+                                            key={product.sku} 
+                                            className="group cursor-pointer"
+                                        >
                                             <div className="relative aspect-[2/3] bg-gray-50 mb-3 overflow-hidden">
                                                 {product.images[0] ? (
                                                     <img
@@ -652,6 +727,11 @@ const ProductsPage = () => {
                                                         Out of Stock
                                                     </div>
                                                 )}
+                                                {product.variantCount > 1 && (
+                                                    <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 text-xs">
+                                                        {product.variantCount} sizes
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className="space-y-1">
                                                 <h3 className="text-base uppercase tracking-wider group-hover:underline font-medium">
@@ -659,7 +739,12 @@ const ProductsPage = () => {
                                                 </h3>
                                                 <p className="text-md text-gray-900 line-clamp-2">{product.productName}</p>
                                                 <div className="flex items-center gap-2 pt-1">
-                                                    <p className="text-base font-semibold">Eur {product.price.toFixed(2)}</p>
+                                                    <p className="text-base font-semibold">
+                                                        {product.minPrice === product.maxPrice 
+                                                            ? `Eur ${product.minPrice.toFixed(2)}`
+                                                            : `Eur ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
+                                                        }
+                                                    </p>
                                                 </div>
                                             </div>
                                         </Link>

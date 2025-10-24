@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
@@ -29,15 +30,19 @@ const Footer = () => {
                     {/* Column 1 */}
                     <div className="flex-1">
                         <div className="space-y-3 text-center lg:text-left">
-                            <a href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
+                            <Link
+                            to={"/privacyPolicy"}
+                             href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
                                 Privacy Policy
-                            </a>
+                            </Link>
                             <a href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
                                 Cookies Policy
                             </a>
-                            <a href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
+                            <Link 
+                            to={"/terms&conditions"}
+                            href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
                                 Terms and Conditions
-                            </a>
+                            </Link>
                             <a href="#" className="block text-xs uppercase tracking-wider hover:opacity-70 transition">
                                 FAQs
                             </a>

@@ -1,13 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const API_TOKEN = "Bearer 55f707f6b49dbbe14ec6354d-68e7881e65cc94067098b7ab:4b02bdd96ac3b665239151aea7b0faf8";
-
 const NewArrivals = () => {
-  const navitems = {
-    "man": "561d7300b49dbb9c2c551be1",
-    "woman": "561d7300b49dbb9c2c551c29"
-  }
   const { gender = 'woman' } = useParams();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,30 +15,7 @@ const NewArrivals = () => {
     setError(null);
 
     try {
-      const filter = {
-        "cat_ids": {
-          "op": "IN",
-          "values": [
-            { "$oid": navitems[gender] }
-          ]
-        },
-        //     "brands": {
-        //     "op": "IN", 
-        //     "values": ["Gucci"]
-        //   },
-        "images_option": "WITH_IMAGES"
-      }
-
-
-
-      const response = await fetch(`https://backend-altomoda.vercel.app/api/products/new-arrivals/${gender}`, {
-        method: "POST",
-        headers: {
-          'Authorization': API_TOKEN,
-          'Content-Type': 'application/json'
-        },
-        // body: JSON.stringify(filter)
-      });
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/new?page=1&limit=20`);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -52,65 +23,56 @@ const NewArrivals = () => {
 
       const data = await response.json();
 
-      // if (data.content && Array.isArray(data.content)) {
-      //   const transformedProducts = data.content.flatMap((parent) => {
-      //     if (parent.items && Array.isArray(parent.items)) {
-      //       return parent.items.map((item) => {
-      //         const mainImage = item.imgs?.find((img) =>
-      //           img.placement?.includes("LIST")
-      //         ) || item.imgs?.[0];
+      if (data.success && data.data && Array.isArray(data.data.products)) {
+        // Transform the API response to match your component's expected format
+        const transformedProducts = data.data.products.map((product) => {
+          const mainImage = product.images?.[0] || null;
+          
+          // Get localized title (default to English)
+          const title = product.title?.en || 
+                       product.title?.it || 
+                       product.title?.zh || 
+                       Object.values(product.title || {})[0] || 
+                       'Product';
 
-      //         const color = item.locs?.singles?.color?.en ||
-      //           item.locs?.lists?.colors?.[0]?.en ||
-      //           item.props?.color || '';
+          // Get localized category
+          const category = product.category?.en || 
+                          product.category?.it || 
+                          Object.values(product.category || {})[0] || 
+                          'Clothing';
 
-      //         const title = item.locs?.singles?.title?.en ||
-      //           item.props?.model_name ||
-      //           parent.parent_sku ||
-      //           'Product';
+          return {
+            _id: { $oid: product._id || Math.random().toString() },
+            name: product.brand || 'Unknown Brand',
+            title: title,
+            description: product.description?.en || '',
+            price: {
+              amount: product.base_price || 0,
+              currency: 'EUR' // Changed from USD to EUR based on your product data
+            },
+            imgs: mainImage ? [{ url: mainImage.url }] : [],
+            brand: product.brand || 'Unknown',
+            category: category,
+            subcategory: '',
+            color: product.color?.en || product.color?.it || Object.values(product.color || {})[0] || '',
+            type: '',
+            gender: product.sex?.en || gender,
+            size: product.variants?.[0]?.size || '',
+            madeIn: product.made?.en || '',
+            composition: product.composition || [],
+            qty: product.variants?.[0]?.stock || 0,
+            inStock: (product.variants?.[0]?.stock || 0) > 0,
+            lastUpdated: new Date().toISOString(),
+            link: `/${gender}/product/${product.sku_parent}` // Using sku_parent instead of _id
+          };
+        });
 
-      //         const description = item.locs?.singles?.desc?.en ||
-      //           item.locs?.singles?.description?.en || '';
-
-      //         return {
-      //           _id: { $oid: item.item_id?.$oid || Math.random().toString() },
-      //           name: item.props?.brand || 'Unknown Brand',
-      //           title: title,
-      //           description: description,
-      //           price: {
-      //             amount: item.stock_price || 0,
-      //             currency: 'USD'
-      //           },
-      //           imgs: mainImage ? [{ url: mainImage.url }] : [],
-      //           brand: item.props?.brand || 'Unknown',
-      //           category: item.props?.category || 'Clothing',
-      //           subcategory: item.props?.subcategory || 'General',
-      //           color: color,
-      //           type: item.props?.type || item.props?.product_type || '',
-      //           gender: item.locs?.singles?.sex?.en || gender,
-      //           size: item.props?.size || '',
-      //           madeIn: item.locs?.singles?.made?.en || '',
-      //           composition: item.composition || [],
-      //           qty: item.qty || 0,
-      //           inStock: (item.qty || 0) > 0,
-      //           lastUpdated: item.last_info_update || new Date().toISOString(),
-      //           link: `/${gender}/product/${item.item_id?.$oid}`
-      //         };
-      //       });
-      //     }
-      //     return [];
-      //   });
-
-      //   // Sort by last updated date (newest first) and take only first 10 for slider
-      //   const sortedProducts = transformedProducts
-      //     .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
-      //     .slice(0, 10);
-
-      //   setProducts(sortedProducts);
-      // } else {
-      //   setProducts([]);
-      // }
-      setProducts(data.products)
+        // Take only first 10 products for slider
+        const limitedProducts = transformedProducts.slice(0, 10);
+        setProducts(limitedProducts);
+      } else {
+        setProducts([]);
+      }
     } catch (error) {
       console.error("Fetch Error:", error);
       setError(error.message || "Failed to fetch new arrivals");
@@ -269,7 +231,7 @@ const NewArrivals = () => {
                   <Link
                     key={product._id.$oid}
                     className="flex-shrink-0 w-48 md:w-56 lg:w-64 group"
-                    to={`/${gender}/product/${product._id.$oid}`}
+                    to={product.link}
                   >
                     {/* Product Card */}
                     <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">

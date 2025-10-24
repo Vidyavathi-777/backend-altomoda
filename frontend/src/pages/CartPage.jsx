@@ -36,11 +36,11 @@ const CartPage = () => {
             className="flex flex-col md:flex-row justify-between items-center border-b pb-6"
           >
             <div className="flex items-center gap-4 w-full md:w-2/3">
-              <img
+              {/* <img
                 src={item.imgs[0].url} // first image
                 alt={item.props?.mnf_code}
                 className="w-24 h-24 object-cover rounded-lg"
-              />
+              /> */}
               <div>
                 <h3 className="font-semibold text-lg">{item.name}</h3>
                 <p className="text-gray-700">₹{item.stock_price}</p>

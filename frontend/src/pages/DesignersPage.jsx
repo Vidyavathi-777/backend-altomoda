@@ -4,6 +4,10 @@ import productsData from '../json/productsData.json';
 
 const DesignersPage = () => {
   const { gender = 'woman' } = useParams();
+    const navitems = {
+    man: "68f86b10734810ab97bb98d1",
+    woman: "68f86b1c734810ab97bb9a2f"
+  };
 
   const getBrandsByGender = (selectedGender) => {
     const products = productsData.productSlider.products;
@@ -60,7 +64,7 @@ const DesignersPage = () => {
                 {groupedBrands[letter].map(brand => (
                   <Link
                     key={brand}
-                    to={`/${gender}/designers/${brand}/products`}
+                    to={`/${navitems[gender]}/${brand}/products`}
                     className="block text-sm md:text-base hover:underline transition-all"
                   >
                     {brand}

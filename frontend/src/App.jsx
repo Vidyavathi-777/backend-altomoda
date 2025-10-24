@@ -37,16 +37,17 @@ function App({ gender: propGender }) {
 
       <Routes>
         <Route path='/:gender?' element={<HomePage />} />
-        <Route path='/:gender/product/:id' element={<ProductDetailPage />} />
+        <Route path='/:gender/product/:sku_parent' element={<ProductDetailPage />} />
         <Route path='/product/:id' element={<ProductDetailPage />} />
            {/* <Route path="/:categoryId/products" element={<ProductsPage />} />
         <Route path='/:gender/discount/products' element={<ProductsPage />} />
         <Route path='/:gender/designers/:brandName/products' element={<ProductsPage />} /> */}
 
-        <Route path='/:gender/:categoryId/:brandName/products' element={<ProductsPage />} />
+        <Route path='/:categoryId/:brandName/products' element={<ProductsPage />} />
         
         {/* gender + categoryId */}
         <Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
+        <Route path='/:gender/:brandName/products' element={<ProductsPage />} />
         
         {/* Just categoryId (for backward compatibility) */}
         <Route path='/:categoryId/products' element={<ProductsPage />} />
@@ -56,9 +57,11 @@ function App({ gender: propGender }) {
        <Route path='/magazine' element={<MagazinePage />}/>
        <Route path='/login' element={<UserLogin/>} />
        <Route path='/search' element={<SearchPage />} />
-       <Route path='/cart' element={<CartPage />} />
+       {/* <Route path='/cart' element={<CartPage />} /> */}
        <Route path='/checkout' element={<CheckoutPage/>} />
        <Route path='/success' element={<SuccessPage />} />
+       <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+       <Route path='/terms&conditions' element={<CancellationsPolicy />} /> 
  
 
 {/* <Route path='/:categoryId/products' element={<ProductsPage />} />
@@ -83,5 +86,7 @@ import SearchPage from './pages/SearchPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import SuccessPage from './pages/SuccessPage';
+import PrivacyPolicy from './pages/PrivacyPage';
+import CancellationsPolicy from './pages/TermsAndConditions';
 
 export default App;

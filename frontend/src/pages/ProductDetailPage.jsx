@@ -4,8 +4,9 @@ import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCart } from '../Context/CartContext';
 
 const ProductDetailPage = () => {
-    const {addToCart} = useCart()
+    // const { addToCart } = useCart();
     const [selectedSize, setSelectedSize] = useState('');
+    const [selectedVariant, setSelectedVariant] = useState(null);
     const [activeTab, setActiveTab] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,64 +16,84 @@ const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);
     const [relatedLoading, setRelatedLoading] = useState(false);
 
-    const { id, gender = 'woman' } = useParams();
+    const { sku_parent, gender = 'woman' } = useParams();
     const sliderRef = useRef(null);
     const mobileImageSliderRef = useRef(null);
-    const TOKEN = "Bearer 55f707f6b49dbbe14ec6354d-68e7881e65cc94067098b7ab:4b02bdd96ac3b665239151aea7b0faf8";
 
-    // Fetch product by ID
+    // Fetch product by parent SKU
     useEffect(() => {
         const fetchProduct = async () => {
             setIsLoading(true);
             setError(null);
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {});
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_URL}/products/productBySku/${sku_parent}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
                 
-                if (!res.ok) throw new Error("Failed to fetch product");
+                console.log('API Response:', data); // Debug log
                 
-                const data = await res.json();
-                console.log('Product data:', data.data);
-                setProduct(data.data); // FIXED: Use data.data instead of data
-                
-                // Set default size from props if available
-                if (data.data?.props?.size) {
-                    setSelectedSize(data.data.props.size);
+                if (data.status === 'success' && data.data) {
+                    console.log('Product data:', data.data);
+                    setProduct(data.data);
+                    
+                    // Set default selected size and variant
+                    if (data.data?.variants?.length > 0) {
+                        const firstInStockVariant = data.data.variants.find(v => v.stock > 0) || data.data.variants[0];
+                        setSelectedSize(firstInStockVariant.size);
+                        setSelectedVariant(firstInStockVariant);
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to fetch product');
                 }
             } catch (err) {
-                console.error(err);
+                console.error('Fetch error:', err);
                 setError(err.message);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchProduct();
-    }, [id]);
+        if (sku_parent) {
+            fetchProduct();
+        }
+    }, [sku_parent]);
 
-    // FIXED: Correct SKU extraction for related products
-    const extractSKU = (sku) => {
-        if (!sku) return '';
-        // Extract base SKU (remove size suffix) - e.g., "008050805N_742-L" -> "008050805N_742"
-        return sku.split('-').slice(0, -1).join('-');
+    // Handle size selection
+    const handleSizeSelect = (size) => {
+        setSelectedSize(size);
+        // Find the corresponding variant
+        const variant = product?.variants?.find(v => v.size === size);
+        setSelectedVariant(variant || null);
     };
 
+    // Fetch related products based on parent SKU
     const fetchRelatedProducts = async () => {
-        if (!product?.sku) {
+        if (!product?.sku_parent) {
             setRelatedLoading(false);
             return;
         }
         
         setRelatedLoading(true);
         try {
-            const baseSku = extractSKU(product.sku);
-            console.log('Fetching related products with base SKU:', baseSku);
+            // Extract base SKU pattern for related products
+            const baseSku = product.sku_parent.split('_')[0]; // Get the base part before color code
             
             const res = await fetch(
-                `https://backend-altomoda.vercel.app/api/products/related/${baseSku}`,
+                `${import.meta.env.VITE_API_URL}/products/related/${baseSku}`,
                 {
                     method: "GET",
                     headers: {
-                        'Authorization': TOKEN,
                         'Content-Type': 'application/json'
                     }
                 }
@@ -84,25 +105,27 @@ const ProductDetailPage = () => {
             
             const data = await res.json();
             
-            const transformedProducts = (data.related || []).map(item => {
-                const mainImage = item.imgs?.[0] || null;
+            // Handle both response formats
+            const relatedData = data.related || data.data || [];
+            const transformedProducts = relatedData.map(item => {
+                const mainImage = item.imgs?.[0] || item.images?.[0] || null;
                 return {
-                    _id: { $oid: item._id?.$oid || item.item_id?.$oid },
+                    _id: item._id || item.item_id,
                     sku: item.sku,
                     brand: item.brand || 'Unknown Brand',
                     title: item.title || 'Product',
-                    price: item.price?.amount || item.stock_price || 0,
+                    price: item.price?.amount || item.stock_price || item.price || 0,
                     imgs: mainImage ? [{ url: mainImage.url }] : [],
                     color: item.color || '',
                     size: item.size || '',
-                    inStock: item.inStock ?? ((item.qty || 0) > 0)
+                    inStock: item.inStock ?? ((item.qty || item.stock || 0) > 0)
                 };
             });
 
             // Remove current product and duplicates, limit to 12
             const uniqueProducts = transformedProducts
-                .filter(p => p._id.$oid !== product._id?.$oid)
-                .filter((p, index, self) => index === self.findIndex(x => x._id.$oid === p._id.$oid))
+                .filter(p => p._id !== product._id)
+                .filter((p, index, self) => index === self.findIndex(x => x._id === p._id))
                 .slice(0, 12);
 
             setRelatedProducts(uniqueProducts);
@@ -124,7 +147,7 @@ const ProductDetailPage = () => {
     // Scroll to top on product change
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [sku_parent]);
 
     // Mobile image slider scroll
     const scrollImageToSlide = (slideIndex) => {
@@ -139,14 +162,14 @@ const ProductDetailPage = () => {
     };
 
     const handleImagePrev = () => scrollImageToSlide(Math.max(currentImageIndex - 1, 0));
-    const handleImageNext = () => scrollImageToSlide(Math.min(currentImageIndex + 1, (product?.imgs?.length || 1) - 1));
+    const handleImageNext = () => scrollImageToSlide(Math.min(currentImageIndex + 1, (product?.images?.length || 1) - 1));
 
     // Desktop slider scroll for related products
     const scrollToSlide = (slideIndex) => {
         if (sliderRef.current) {
-            const slideWidth = 280; // w-64 (256px) + space-x-6 (24px) = 280px
+            const slideWidth = 280;
             sliderRef.current.scrollTo({
-                left: slideIndex * (slideWidth * 4), // Scroll 4 products at a time
+                left: slideIndex * (slideWidth * 4),
                 behavior: 'smooth'
             });
             setCurrentSlide(slideIndex);
@@ -174,74 +197,62 @@ const ProductDetailPage = () => {
     const visibleItems = getVisibleItems();
 
     // Helper function to get localized text
-    const getLocalizedText = (field, fallback = '') => {
-        if (!product?.locs?.singles?.[field]) return fallback;
-
-        const localizedField = product.locs.singles[field];
-        return localizedField.en || localizedField.it || localizedField.zh || Object.values(localizedField)[0] || fallback;
+    const getLocalizedText = (field, language = 'en') => {
+        if (!product || !product[field]) return '';
+        
+        if (typeof product[field] === 'object' && product[field] !== null) {
+            return product[field][language] || product[field]['en'] || Object.values(product[field])[0] || '';
+        }
+        
+        return product[field] || '';
     };
 
-    // Helper function to get localized list
-    const getLocalizedList = (field) => {
-        if (!product?.locs?.lists?.[field]) return [];
-
-        const localizedList = product.locs.lists[field];
-        return localizedList.map(item => item.en || item.it || item.zh || Object.values(item)[0]);
+    // Get localized text for variant size conversion
+    const getSizeConversion = (variant, language = 'en') => {
+        if (!variant?.size_conversion) return '';
+        
+        if (typeof variant.size_conversion === 'object') {
+            return variant.size_conversion[language] || variant.size_conversion['en'] || Object.values(variant.size_conversion)[0] || '';
+        }
+        
+        return variant.size_conversion || '';
     };
 
-    // Extract product details from API response
-    const getProductDetails = () => {
-        if (!product) return null;
-
-        const title = getLocalizedText('title', 'Product');
-        const description = getLocalizedText('desc', 'No description available');
-        const color = getLocalizedText('color', '');
-        const madeIn = getLocalizedText('made', '');
-        const sex = getLocalizedText('sex', '');
-
-        const materials = getLocalizedList('material');
-        const logoPositions = getLocalizedList('logo_position');
-
-        const brand = product.props?.brand || '';
-        const sku = product.sku || '';
-        const stockPrice = product.stock_price || 0;
-        const salePrice = product.sale_price || stockPrice;
-        const quantity = product.qty || 0;
-
-        // Calculate discount if sale price is different from stock price
-        const discount = salePrice < stockPrice ?
-            Math.round(((stockPrice - salePrice) / stockPrice) * 100) : 0;
-
-        // Extract sizes - using the size from props or create default options
-        const sizes = product.props?.size ? [product.props.size] : ['One Size'];
-
-        // Get composition
-        const composition = product.composition?.map(comp => ({
-            material: comp.material?.en || comp.material?.it || comp.material?.zh || Object.values(comp.material || {})[0] || 'Unknown',
-            percentage: comp.perc || 100
-        })) || [];
-
-        return {
-            title,
-            description,
-            color,
-            madeIn,
-            sex,
-            materials,
-            logoPositions,
-            brand,
-            sku,
-            stockPrice,
-            salePrice,
-            quantity,
-            discount,
-            sizes,
-            composition,
-            images: product.imgs || []
-        };
+    // Get current price and stock based on selected variant
+    const getCurrentPrice = () => {
+        return selectedVariant?.price || product?.base_price || 0;
     };
 
-    const productDetails = getProductDetails();
+    const getCurrentStock = () => {
+        return selectedVariant?.stock || 0;
+    };
+
+    const getCurrentBarcode = () => {
+        return selectedVariant?.barcode || '';
+    };
+
+    // Handle add to cart with selected variant
+    // const handleAddToCart = () => {
+    //     if (!selectedVariant) return;
+        
+    //     const cartItem = {
+    //         ...product,
+    //         selectedSize: selectedVariant.size,
+    //         selectedVariant: selectedVariant,
+    //         price: getCurrentPrice(),
+    //         stock: getCurrentStock(),
+    //         barcode: getCurrentBarcode(),
+    //         image: product.images?.[0]?.url || '',
+    //         title: getLocalizedText('title'),
+    //         brand: product.brand
+    //     };
+        
+    //     addToCart(cartItem);
+    // };
+
+    const handleAddToCart =() =>{
+        alert("Product added to cart")
+    }
 
     const maxSlide = Math.max(0, Math.ceil(relatedProducts.length / visibleItems) - 1);
 
@@ -255,8 +266,8 @@ const ProductDetailPage = () => {
     };
 
     if (isLoading) return <div className="min-h-screen flex items-center justify-center pt-[180px]">Loading...</div>;
-    if (error) return <div className="min-h-screen flex items-center justify-center pt-[180px] text-red-500">{error}</div>;
-    if (!product || !productDetails) return <div className="min-h-screen flex items-center justify-center pt-[180px]">Product not found</div>;
+    if (error) return <div className="min-h-screen flex items-center justify-center pt-[180px] text-red-500">Error: {error}</div>;
+    if (!product) return <div className="min-h-screen flex items-center justify-center pt-[180px]">Product not found</div>;
 
     return (
         <div className="min-h-screen bg-white pt-[120px] sm:pt-[140px] md:pt-[160px] lg:pt-[200px]">
@@ -265,11 +276,11 @@ const ProductDetailPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                     {/* Product Images - Desktop */}
                     <div className="hidden lg:block space-y-4">
-                        {productDetails.images.map((img, idx) => (
+                        {product.images?.map((img, idx) => (
                             <div key={idx} className="bg-gray-50 rounded-lg overflow-hidden group">
                                 <img
                                     src={img.url}
-                                    alt={`${productDetails.title} - ${idx + 1}`}
+                                    alt={`${getLocalizedText('title')} - ${idx + 1}`}
                                     className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
                                     style={{ maxHeight: '600px' }}
                                     onError={(e) => {
@@ -282,7 +293,7 @@ const ProductDetailPage = () => {
 
                     {/* Product Images - Mobile */}
                     <div className="lg:hidden relative">
-                        {productDetails.images.length > 1 && (
+                        {product.images?.length > 1 && (
                             <>
                                 <button
                                     onClick={handleImagePrev}
@@ -293,7 +304,7 @@ const ProductDetailPage = () => {
                                 </button>
                                 <button
                                     onClick={handleImageNext}
-                                    disabled={currentImageIndex === productDetails.images.length - 1}
+                                    disabled={currentImageIndex === product.images.length - 1}
                                     className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 border border-gray-300 rounded-full p-2 shadow-lg hover:bg-white disabled:opacity-50"
                                 >
                                     <ChevronRight className="w-4 h-4 text-gray-700" />
@@ -302,12 +313,12 @@ const ProductDetailPage = () => {
                         )}
                         <div ref={mobileImageSliderRef} className="overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                             <div className="flex">
-                                {productDetails.images.map((img, idx) => (
+                                {product.images?.map((img, idx) => (
                                     <div key={idx} className="flex-shrink-0 w-full snap-start">
                                         <div className="bg-gray-50 overflow-hidden aspect-[3/4]">
                                             <img
                                                 src={img.url}
-                                                alt={`${productDetails.title} - ${idx + 1}`}
+                                                alt={`${getLocalizedText('title')} - ${idx + 1}`}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
                                                     e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMjggMTkyTDE2MCAyMjRIMTI4VjE5MloiIGZpbGw9IiM5Q0EzQTYiLz4KPC9zdmc+';
@@ -318,9 +329,9 @@ const ProductDetailPage = () => {
                                 ))}
                             </div>
                         </div>
-                        {productDetails.images.length > 1 && (
+                        {product.images?.length > 1 && (
                             <div className="flex justify-center gap-2 mt-4">
-                                {productDetails.images.map((_, idx) => (
+                                {product.images.map((_, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => scrollImageToSlide(idx)}
@@ -335,43 +346,44 @@ const ProductDetailPage = () => {
                     <div className="lg:sticky lg:top-8 lg:self-start pt-8">
                         {/* Brand */}
                         <h2 className="text-sm uppercase tracking-widest font-bold mb-2 cursor-pointer" style={{ fontFamily: cssVariables.fontAccent }}>
-                            {productDetails.brand}
+                            {product.brand}
                         </h2>
 
                         {/* Title */}
-                        <h1 className="text-3xl mb-6 font-medium " style={{ fontFamily: cssVariables.fontBody}}>
-                            {productDetails.title}
+                        <h1 className="text-3xl mb-6 font-medium" style={{ fontFamily: cssVariables.fontBody}}>
+                            {getLocalizedText('title')}
                         </h1>
 
                         {/* Price */}
                         <div className="mb-2">
                             <span className="text-2xl font-light" style={{ fontFamily: cssVariables.fontBody }}>
-                                Eur {productDetails.salePrice.toFixed(2)}
+                                Eur {getCurrentPrice().toFixed(2)}
                             </span>
-                            {productDetails.discount > 0 && (
-                                <span className="text-sm line-through text-gray-400 ml-2" style={{ fontFamily: cssVariables.fontBody }}>
-                                    ${productDetails.stockPrice.toFixed(2)}
-                                </span>
-                            )}
-                            {productDetails.discount > 0 && (
-                                <span className="text-sm text-red-500 ml-2" style={{ fontFamily: cssVariables.fontBody }}>
-                                    -{productDetails.discount}%
-                                </span>
-                            )}
                         </div>
 
                         {/* Stock Status */}
                         <div className="mb-2">
-                            <span className={`text-sm font-medium ${productDetails.quantity > 10 ? 'text-green-600' : productDetails.quantity > 0 ? 'text-[#FFAA6B]' : 'text-red-600'}`} style={{ fontFamily: cssVariables.fontBody }}>
-                                {productDetails.quantity > 10 ? 'In Stock' : productDetails.quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                            <span className={`text-sm font-medium ${getCurrentStock() > 10 ? 'text-green-600' : getCurrentStock() > 0 ? 'text-[#FFAA6B]' : 'text-red-600'}`} style={{ fontFamily: cssVariables.fontBody }}>
+                                {getCurrentStock() > 10 ? 'In Stock' : getCurrentStock() > 0 ? 'Low Stock' : 'Out of Stock'}
+                                {getCurrentStock() > 0 && ` (${getCurrentStock()} available)`}
                             </span>
                         </div>
 
                         {/* Color */}
-                        {productDetails.color && (
+                        {getLocalizedText('color') && (
                             <div className="mb-2">
                                 <span className="text-sm text-gray-600" style={{ fontFamily: cssVariables.fontBody }}>
-                                    Color: {productDetails.color}
+                                    Color: {getLocalizedText('color')}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Selected Size */}
+                        {selectedSize && (
+                            <div className="mb-2">
+                                <span className="text-sm text-gray-600" style={{ fontFamily: cssVariables.fontBody }}>
+                                    Selected Size: {selectedSize}
+                                    {selectedVariant?.size_conversion && ` (${getSizeConversion(selectedVariant)})`}
                                 </span>
                             </div>
                         )}
@@ -379,43 +391,78 @@ const ProductDetailPage = () => {
                         <p className="text-xs text-gray-500 mb-8" style={{ fontFamily: cssVariables.fontBody }}>Import Duties not included</p>
 
                         {/* Size selection & Add to Cart */}
-                        <div className="mb-4 relative flex justify-between gap-4">
-                            <div className="relative w-full">
-                                <ChevronDown className="w-4 h-4 absolute right-3 top-5 pointer-events-none" style={{ color: cssVariables.neutral }} />
-                                <select
-                                    value={selectedSize}
-                                    onChange={e => setSelectedSize(e.target.value)}
-                                    className="w-full border border-gray-300 px-4 py-5 text-sm appearance-none rounded-md bg-white cursor-pointer"
-                                    style={{ fontFamily: cssVariables.fontBody }}
-                                >
-                                    <option value="">Select size</option>
-                                    {productDetails.sizes.map(size => (
-                                        <option key={size} value={size}>{size}</option>
+                        <div className="mb-4">
+                            {/* Size Selection */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2" style={{ fontFamily: cssVariables.fontBody }}>
+                                    Select Size:
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.variants?.map((variant) => (
+                                        <button
+                                            key={variant._id}
+                                            onClick={() => handleSizeSelect(variant.size)}
+                                            className={`px-4 py-2 border rounded-md text-sm transition-all duration-200 ${
+                                                selectedSize === variant.size
+                                                    ? 'border-black bg-black text-white'
+                                                    : variant.stock > 0
+                                                    ? 'border-gray-300 hover:border-gray-500 hover:bg-gray-50'
+                                                    : 'border-gray-200 bg-gray-100 text-gray-400 '
+                                            }`}
+                                            // disabled={variant.stock === 0}
+                                            style={{ fontFamily: cssVariables.fontBody }}
+                                        >
+                                            {variant.size}
+                                            {variant.size_conversion && ` (${getSizeConversion(variant)})`}
+                                        </button>
                                     ))}
-                                </select>
+                                </div>
                             </div>
-                            <div className="w-full">
-                                <button
-                                    className="w-full rounded-2xl text-white py-5 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
-                                    style={{ backgroundColor: cssVariables.primary, fontFamily: cssVariables.fontAccent }}
-                                    onMouseEnter={e => e.target.style.backgroundColor = cssVariables.secondary}
-                                    onMouseLeave={e => e.target.style.backgroundColor = cssVariables.primary}
-                                    onClick={() => addToCart(product)}
-                                >
-                                    Add to Cart
-                                </button>
-                            </div>
+
+                            {/* Add to Cart Button */}
+                            <button
+                                className="w-full rounded-2xl text-white py-5 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{ backgroundColor: cssVariables.primary, fontFamily: cssVariables.fontAccent }}
+                                onMouseEnter={e => e.target.style.backgroundColor = cssVariables.secondary}
+                                onMouseLeave={e => e.target.style.backgroundColor = cssVariables.primary}
+                                onClick={handleAddToCart}
+                                // disabled={!selectedVariant || getCurrentStock() === 0}
+                            >
+                                {!selectedVariant ? 'Select a Size' : getCurrentStock() === 0 ? 'Out of Stock' : 'Add to Cart'}
+                            </button>
                         </div>
+
+                        {/* Model Measurements */}
+                        {selectedVariant?.model_measurements && (
+                            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                                <h3 className="text-sm font-medium mb-2" style={{ fontFamily: cssVariables.fontBody }}>
+                                    Model Measurements (Size {selectedSize}):
+                                </h3>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                    {Object.entries(selectedVariant.model_measurements).map(([key, value]) => (
+                                        <div key={key} className="flex justify-between">
+                                            <span className="capitalize" style={{ fontFamily: cssVariables.fontBody }}>
+                                                {key}:
+                                            </span>
+                                            <span style={{ fontFamily: cssVariables.fontBody }}>{value} cm</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Accordion */}
                         <div className="space-y-0 border-t border-gray-200">
-                            {['details', 'composition', 'shipping'].map(tab => {
+                            {['details', 'composition', 'care', 'shipping'].map((tab) => {
                                 const isActive = activeTab === tab;
                                 return (
                                     <div key={tab} className="border-b border-gray-200 transition-colors duration-300 hover:bg-gray-50">
                                         <button onClick={() => toggleTab(tab)} className="w-full flex items-center justify-between py-4 text-left transition-colors duration-300">
                                             <span className="text-sm uppercase tracking-widest font-medium" style={{ fontFamily: cssVariables.fontAccent }}>
-                                                {tab === 'details' ? 'Product Details' : tab === 'composition' ? 'Composition' : 'Shipping & Returns'}
+                                                {tab === 'details' ? 'Product Details' : 
+                                                 tab === 'composition' ? 'Composition' : 
+                                                 tab === 'care' ? 'Care Instructions' : 
+                                                 'Shipping & Returns'}
                                             </span>
                                             {isActive ? <ChevronUp className="w-4 h-4" style={{ color: cssVariables.primary }} /> : <ChevronDown className="w-4 h-4" style={{ color: cssVariables.neutral }} />}
                                         </button>
@@ -423,36 +470,39 @@ const ProductDetailPage = () => {
                                             <div className="pb-4 text-sm space-y-2 animate-slideDown" style={{ fontFamily: cssVariables.fontBody, color: cssVariables.neutral }}>
                                                 {tab === 'details' && (
                                                     <div className="space-y-3">
-                                                        <div dangerouslySetInnerHTML={{ __html: productDetails.description }} />
-                                                        <div className="pt-2 border-t border-gray-100">
-                                                            <p><strong>SKU:</strong> {productDetails.sku}</p>
-                                                            {productDetails.madeIn && <p><strong>Made In:</strong> {productDetails.madeIn}</p>}
-                                                            {productDetails.sex && <p><strong>Gender:</strong> {productDetails.sex}</p>}
-                                                            {productDetails.logoPositions.length > 0 && (
-                                                                <div>
-                                                                    <strong>Logo Positions:</strong>
-                                                                    <ul className="list-disc list-inside ml-2">
-                                                                        {productDetails.logoPositions.map((position, idx) => (
-                                                                            <li key={idx}>{position}</li>
-                                                                        ))}
-                                                                    </ul>
-                                                                </div>
-                                                            )}
+                                                        <div dangerouslySetInnerHTML={{ __html: getLocalizedText('description') }} />
+                                                        <div className="pt-2 border-t border-gray-100 space-y-2">
+                                                            <p><strong>SKU Parent:</strong> {product.sku_parent}</p>
+                                                            <p><strong>Variant SKU:</strong> {selectedVariant?.sku}</p>
+                                                            <p><strong>Barcode:</strong> {getCurrentBarcode()}</p>
+                                                            {getLocalizedText('made') && <p><strong>Made In:</strong> {getLocalizedText('made')}</p>}
+                                                            {getLocalizedText('sex') && <p><strong>Gender:</strong> {getLocalizedText('sex')}</p>}
+                                                            {getLocalizedText('fastening') && <p><strong>Fastening:</strong> {getLocalizedText('fastening')}</p>}
+                                                            {product.season && <p><strong>Season:</strong> {product.season}</p>}
                                                         </div>
                                                     </div>
                                                 )}
                                                 {tab === 'composition' && (
                                                     <div>
-                                                        {productDetails.composition.length > 0 ? (
+                                                        {product.composition?.length > 0 ? (
                                                             <ul className="space-y-1">
-                                                                {productDetails.composition.map((comp, idx) => (
+                                                                {product.composition.map((comp, idx) => (
                                                                     <li key={idx}>
-                                                                        {comp.material} {comp.percentage && `- ${comp.percentage}%`}
+                                                                        {getLocalizedText('material', comp.material)} - {comp.perc}%
                                                                     </li>
                                                                 ))}
                                                             </ul>
                                                         ) : (
                                                             <p>No composition information available.</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {tab === 'care' && (
+                                                    <div>
+                                                        {getLocalizedText('care') ? (
+                                                            <p>{getLocalizedText('care')}</p>
+                                                        ) : (
+                                                            <p>No care instructions available.</p>
                                                         )}
                                                     </div>
                                                 )}
@@ -513,7 +563,7 @@ const ProductDetailPage = () => {
                             <div ref={sliderRef} className="overflow-x-auto scrollbar-hide scroll-smooth">
                                 <div className="flex space-x-6 min-w-max pb-4">
                                     {relatedProducts.map((item, idx) => (
-                                        <Link to={`/${gender}/product/${item._id?.$oid}`} key={item._id?.$oid || idx} className="flex-shrink-0 w-64">
+                                        <Link to={`/${gender}/product/${item.sku_parent || item._id}`} key={item._id || idx} className="flex-shrink-0 w-64">
                                             <div className="group cursor-pointer">
                                                 <div className="aspect-[2/3] bg-gray-100 mb-3 overflow-hidden rounded-lg relative">
                                                     <img 
@@ -532,7 +582,7 @@ const ProductDetailPage = () => {
                                                 </div>
                                                 <h4 className="text-xs uppercase tracking-widest mb-1 text-gray-500">{item.brand}</h4>
                                                 <p className="text-sm mb-2 line-clamp-2 text-gray-900">{item.title}</p>
-                                                <p className="text-sm font-medium text-gray-900">${item.price?.amount?.toFixed(2) || '0.00'}</p>
+                                                <p className="text-sm font-medium text-gray-900">${item.price?.toFixed(2) || '0.00'}</p>
                                             </div>
                                         </Link>
                                     ))}
