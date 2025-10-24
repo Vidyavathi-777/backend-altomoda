@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth.route');
-const productRoutes = require("./product.route")
+const productRoutes = require("./product.route");
+const orderRoutes = require('./order.routes');
+const paymentRoutes = require('./payment.routes');
+const webhookRoutes = require('./webhook.routes');
 
 
 // Health check
@@ -26,5 +29,11 @@ router.get('/metrics', (req, res) => {
 router.use('/v1/auth', authRoutes);
 
 router.use('/products', productRoutes); 
+
+router.use('/orders', orderRoutes);
+
+router.use('/payments', paymentRoutes);   
+
+router.use('/webhooks', webhookRoutes);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+// services/cloudstore.service.js
 const axios = require('axios');
 const config = require('../config/env');
 const logger = require('../utils/logger');
@@ -6,21 +7,22 @@ const ApiError = require('../utils/apiError');
 class CloudStoreService {
   constructor() {
     this.client = axios.create({
-      baseURL: config.cloudstore.apiUrl,
+      baseURL: config.cloudstore.baseUrl,
       headers: {
-        'Authorization': `Bearer ${config.cloudstore.apiKey}`,
+        'Authorization': `Bearer ${config.cloudstore.shopAuthToken}`,
         'Content-Type': 'application/json',
       },
-      timeout: 30000,
+      timeout: config.cloudstore.timeoutMs || 30000,
     });
 
-    this.requestQueue = [];
+    // --- Simple rate-limit window ---
     this.requestCount = 0;
     this.windowStart = Date.now();
-    this.maxRequests = 100;
+    this.maxRequests = 100;    // adjust if CloudStore docs specify lower/higher
     this.windowMs = 60000;
   }
 
+  /** --- Internal rate limit window --- **/
   async waitForRateLimit() {
     const now = Date.now();
     if (now - this.windowStart >= this.windowMs) {
@@ -39,119 +41,103 @@ class CloudStoreService {
     this.requestCount++;
   }
 
-  async makeRequest(method, endpoint, data = null, config = {}) {
+  /** --- Generic request wrapper with retry + exponential backoff --- **/
+  async makeRequest(method, endpoint, data = null, options = {}, attempt = 1) {
     await this.waitForRateLimit();
-
     try {
-      const response = await this.client.request({
-        method,
-        url: endpoint,
-        data,
-        ...config,
-      });
-
-      logger.info(`CloudStore ${method} ${endpoint}: ${response.status}`);
+      const response = await this.client.request({ method, url: endpoint, data, ...options });
+      logger.info(`CloudStore ${method.toUpperCase()} ${endpoint} → ${response.status}`);
       return response.data;
     } catch (error) {
-      logger.error(`CloudStore API Error: ${error.message}`, {
+      const status = error.response?.status;
+      const msg = error.response?.data?.message || error.message;
+
+      logger.error(`CloudStore API Error (${status}): ${msg}`, {
         endpoint,
-        status: error.response?.status,
         data: error.response?.data,
       });
 
-      if (error.response?.status === 429) {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        return this.makeRequest(method, endpoint, data, config);
+      // 429 rate limit or network error → backoff retry
+      if ((status === 429 || !status) && attempt < (config.cloudstore.retryAttempts || 3)) {
+        const delay = Math.pow(2, attempt) * 500;
+        logger.warn(`Retrying CloudStore ${endpoint} in ${delay}ms (attempt ${attempt + 1})`);
+        await new Promise(res => setTimeout(res, delay));
+        return this.makeRequest(method, endpoint, data, options, attempt + 1);
       }
 
-      throw new ApiError(
-        error.response?.status || 500,
-        error.response?.data?.message || 'CloudStore API error'
-      );
+      throw new ApiError(status || 500, msg || 'CloudStore API error');
     }
   }
 
+  /* =============================
+   *        CATALOG APIs
+   * ============================= */
 
-async getFullCatalog(pageIndex = 1, pageSize = 20) {
-  const url = `${config.cloudstore.apiUrl}/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
-  logger.info(`Fetching from CloudStore URL: ${url}`);
-  const response = await this.client.get(url, {
-    headers: {
-      Authorization: `Bearer ${config.cloudstore.apiKey}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  return response.data;
-}
+  async getFullCatalog(pageIndex = 1, pageSize = 20) {
+    const endpoint = `/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
+    logger.info(`Fetching CloudStore catalog page ${pageIndex}`);
+    return this.makeRequest('GET', endpoint);
+  }
 
-
-
-  // Get catalog with quantities (delta sync)
   async getCatalogWithQuantities(sinceTimestamp = null, page = 1) {
     const params = { withQuantities: true, page };
-    if (sinceTimestamp) {
-      params.since = sinceTimestamp;
-    }
+    if (sinceTimestamp) params.since = sinceTimestamp;
     return this.makeRequest('GET', `/shop/v1/items`, null, { params });
   }
 
-  // Search items by term
   async searchByTerm(term) {
-    return this.makeRequest('GET', `/shop/v1/items/listBySearchTerm`, null, {
-      params: { term },
-    });
+    return this.makeRequest('GET', `/shop/v1/items/listBySearchTerm`, null, { params: { term } });
   }
 
-  // Find product by SKU code
   async findByCode(sku) {
-    return this.makeRequest('GET', `/shop/v1/items/findByCode`, null, {
-      params: { code: sku },
-    });
+    return this.makeRequest('GET', `/shop/v1/items/findByCode`, null, { params: { code: sku } });
   }
 
-  // Create order in CloudStore
+  /* =============================
+   *        ORDER APIs
+   * ============================= */
+
   async createOrder(orderData) {
+    logger.info(`Creating CloudStore order: ${orderData?.shop_order_id}`);
     return this.makeRequest('POST', `/shop/v1/orders`, orderData);
   }
 
-  // Update order status
   async updateOrder(cloudstoreOrderId, updateData) {
-    return this.makeRequest('PUT', `/shop/v1/orders/${cloudstoreOrderId}`, updateData);
+    logger.info(`Updating CloudStore order ${cloudstoreOrderId}`);
+    return this.makeRequest('PATCH', `/shop/v1/orders/${encodeURIComponent(cloudstoreOrderId)}`, updateData);
   }
 
-  // Confirm order (mark as CONFIRMED)
   async confirmOrder(cloudstoreOrderId) {
-    return this.updateOrder(cloudstoreOrderId, { status: 'CONFIRMED' });
+    return this.updateOrder(cloudstoreOrderId, { order_status: 'CONFIRMED' });
   }
 
-  // Cancel order
   async cancelOrder(cloudstoreOrderId) {
-    return this.updateOrder(cloudstoreOrderId, { status: 'CANCELLED' });
+    return this.updateOrder(cloudstoreOrderId, { order_status: 'CANCELED' });
   }
 
-  // Get events
+  async deleteOrder(cloudstoreOrderId) {
+    logger.info(`Deleting CloudStore order ${cloudstoreOrderId}`);
+    return this.makeRequest('DELETE', `/shop/v1/orders/${encodeURIComponent(cloudstoreOrderId)}`);
+  }
+
+  /* =============================
+   *        EVENT & INVENTORY
+   * ============================= */
+
   async getEvents(sinceTimestamp = null) {
     const params = {};
-    if (sinceTimestamp) {
-      params.since = sinceTimestamp;
-    }
+    if (sinceTimestamp) params.since = sinceTimestamp;
     return this.makeRequest('GET', `/shop/v1/events`, null, { params });
   }
 
-  // Start inventory export
   async startInventoryExport() {
     return this.makeRequest('POST', `/shop/v1/inventory-catalog/start`);
   }
 
-  // Upload inventory page
   async uploadInventoryPage(token, pageData) {
-    return this.makeRequest('POST', `/shop/v1/inventory-catalog/page`, {
-      token,
-      data: pageData,
-    });
+    return this.makeRequest('POST', `/shop/v1/inventory-catalog/page`, { token, data: pageData });
   }
 
-  // Finish inventory export
   async finishInventoryExport(token) {
     return this.makeRequest('POST', `/shop/v1/inventory-catalog/finish`, { token });
   }
