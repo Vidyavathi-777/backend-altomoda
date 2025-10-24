@@ -57,7 +57,7 @@ class ProductImporter {
     try {
       await this.initializeCategoryMappings();
       
-      let page = 105;
+      let page = 235;
       const pageSize = 100;
       let totalPages = 0;
 

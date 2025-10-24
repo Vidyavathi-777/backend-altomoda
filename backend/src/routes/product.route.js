@@ -6,11 +6,11 @@ const { optionalAuth } = require('../../middlewares/auth.middleware');
 // Categories and brands (specific routes first!)
 router.get('/categories', productController.getCategories);
 router.get('/brands', productController.getBrands);
-
+router.get("/new", productController.getNewProducts)
 // Product listing and details
 router.get('/', productController.getAllProducts);
 router.get("/:id",productController.getProductById)
-router.get('/:sku', productController.getProduct);
+// router.get('/:sku', productController.getProduct);
 router.get('/:sku/availability', optionalAuth, productController.getProductAvailability);
 
 router.get('/categories/tree',productController.getCategoryTree)
@@ -18,6 +18,8 @@ router.post('/filter',productController.getProductsWithFilters)
 router.get('/categoryChildren/:categoryId',productController.getChildCategories)
 router.get("/categroyLevels/:id",productController.getCategoryLevelsById)
 router.get("/productbyCategroy/:id",productController.getProductsByCategory)
-router.get("/productsbyBrand/:brand", productController.getProductsByBrand)
+router.get("/productsbyBrand/:categoryId/:brand", productController.getProductsByBrand)
+router.get("/productBySku/:sku",productController.getProductBySkuParent)
+
 
 module.exports = router;
