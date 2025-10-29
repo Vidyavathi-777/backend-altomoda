@@ -8,3 +8,4 @@ router.post('/initiate', protect, paymentController.initiatePayment);
 router.get('/', protect, paymentController.getPayments);
 
 module.exports = router;
+ 

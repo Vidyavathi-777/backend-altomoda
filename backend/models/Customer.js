@@ -24,6 +24,16 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // surname: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
+  // country: {
+  //   type: String,
+  //   default: 'USA',
+  //   required: true,
+  // },
   dob: Date,
   loyalty: {
     points: { type: Number, default: 0 },

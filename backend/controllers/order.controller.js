@@ -12,7 +12,7 @@ exports.createOrder = catchAsync(async (req, res) => {
 
   const order = await Order.create({
     shopOrderId: body.shopOrderId || `od_${Date.now()}`,
-    user: req.user._id,
+    user: req.user._id,  
     items: body.items || [],
     totQty: body.totQty || totQty,
     totAmount: body.totAmount || totAmount,

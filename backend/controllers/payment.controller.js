@@ -17,7 +17,7 @@ exports.initiatePayment = catchAsync(async (req, res) => {
   const amountValue = (typeof amount === 'number' && amount > 0) ? amount : order.totAmount;
   const amountPaise = Math.round(amountValue * 100);
 
-  // create local payment record first
+  // create local payment record first  
   const payment = await Payment.create({
     order: order._id,
     paymentId,

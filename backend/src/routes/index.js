@@ -5,6 +5,7 @@ const productRoutes = require("./product.route");
 const orderRoutes = require('./order.routes');
 const paymentRoutes = require('./payment.routes');
 const webhookRoutes = require('./webhook.routes');
+const cartRoutes = require('./cart.routes')
 
 
 // Health check
@@ -32,8 +33,9 @@ router.use('/products', productRoutes);
 
 router.use('/orders', orderRoutes);
 
-router.use('/payments', paymentRoutes);   
+router.use('/payments', paymentRoutes);    
 
 router.use('/webhooks', webhookRoutes);
+router.use('/cart', cartRoutes);
 
 module.exports = router;

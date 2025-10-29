@@ -1,96 +1,220 @@
 const Cart = require('../models/Cart');
-const Product = require('../models/Product');
-const catchAsync = require('../utils/catchAsync');
+const Product = require('../models/Product'); 
 const ApiError = require('../utils/apiError');
+const catchAsync = require('../utils/catchAsync');
 
-exports.createOrUpdateCart = catchAsync(async (req, res) => {
-  const { cartId, items } = req.body;
-  const userId = req.user?._id;
-  const sessionId = req.sessionID || req.headers['x-session-id'];
+exports.addToCart = catchAsync(async (req, res, next) => {
+  const { userId, sku, qty, priceSnapshot } = req.body;
 
-  const enrichedItems = [];
+  if (!userId || !sku || !qty || !priceSnapshot) {
+    throw new ApiError(400, 'Please provide userId, sku, qty, and priceSnapshot');
+  }
 
-  for (const item of items) {
-    const product = await Product.findOne({ sku: item.sku }).lean();
-    if (!product) throw new ApiError(404, `Product ${item.sku} not found`);
-    if (product.qty < item.qty) throw new ApiError(400, `Insufficient stock for ${item.sku}`);
+  if (qty <= 0) {
+    throw new ApiError(400, 'Quantity must be greater than 0');
+  }
 
-    enrichedItems.push({
-      sku: item.sku,
-      qty: item.qty,
-      addedAt: new Date(),
-      priceSnapshot: product.stock_price,
+  const cartExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+
+  // Find cart by userId
+  let cart = await Cart.findOne({ userId });
+
+  if (cart) {
+    // Check if item already exists in cart
+    const existingItem = cart.items.find(item => item.sku === sku);
+
+    if (existingItem) {
+      // Update quantity of existing item
+      existingItem.qty += qty;
+      existingItem.priceSnapshot = priceSnapshot; // Update to latest price
+      existingItem.addedAt = new Date();
+    } else {
+      // Add new item to cart
+      cart.items.push({
+        sku,
+        qty,
+        priceSnapshot,
+        addedAt: new Date()
+      });
+    }
+
+    cart.expiresAt = cartExpiry;
+    await cart.save();
+  } else {
+    // Create new cart
+    cart = await Cart.create({
+      userId,
+      items: [{
+        sku,
+        qty,
+        priceSnapshot,
+        addedAt: new Date()
+      }],
+      expiresAt: cartExpiry
     });
   }
 
-  let cart;
-  if (cartId) {
-    cart = await Cart.findById(cartId);
-    if (!cart) throw new ApiError(404, 'Cart not found');
-    cart.items = enrichedItems;
-    cart.updatedAt = new Date();
-  } else {
-    const cartData = {
-      items: enrichedItems,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      ...(userId ? { userId } : { sessionId }),
-    };
-    cart = await Cart.create(cartData);
+  // Calculate cart summary
+  const totalItems = cart.items.reduce((sum, item) => sum + item.qty, 0);
+  const subtotal = cart.items.reduce((sum, item) => sum + (item.qty * item.priceSnapshot), 0);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      ...cart.toObject(),
+      totalItems,
+      subtotal
+    }
+  });
+});
+
+
+exports.getCart = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    throw new ApiError(400, 'Please provide userId');
+  }
+
+  const cart = await Cart.findOne({ userId });
+
+  if (!cart) {
+    return res.status(200).json({
+      success: true,
+      data: {
+        items: [],
+        totalItems: 0,
+        subtotal: 0
+      }
+    });
+  }
+
+  // Calculate cart summary
+  const totalItems = cart.items.reduce((sum, item) => sum + item.qty, 0);
+  const subtotal = cart.items.reduce((sum, item) => sum + (item.qty * item.priceSnapshot), 0);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      ...cart.toObject(),
+      totalItems,
+      subtotal
+    }
+  });
+});
+
+
+exports.updateCartItem = catchAsync(async (req, res, next) => {
+  const { sku } = req.params;
+  const { userId, qty } = req.body;
+
+  if (!userId || !qty) {
+    throw new ApiError(400, 'Please provide userId and qty');
+  }
+
+  if (qty <= 0) {
+    throw new ApiError(400, 'Quantity must be greater than 0');
+  }
+
+  const cart = await Cart.findOne({ userId });
+
+  if (!cart) {
+    throw new ApiError(404, 'Cart not found');
+  }
+
+  const item = cart.items.find(item => item.sku === sku);
+
+  if (!item) {
+    throw new ApiError(404, 'Item not found in cart');
+  }
+
+  // Update quantity
+  item.qty = qty;
+  item.addedAt = new Date();
+
+  await cart.save();
+
+  // Calculate cart summary
+  const totalItems = cart.items.reduce((sum, item) => sum + item.qty, 0);
+  const subtotal = cart.items.reduce((sum, item) => sum + (item.qty * item.priceSnapshot), 0);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      ...cart.toObject(),
+      totalItems,
+      subtotal
+    }
+  });
+});
+
+
+exports.removeCartItem = catchAsync(async (req, res, next) => {
+  const { sku } = req.params;
+  const { userId } = req.body;
+
+  if (!userId) {
+    throw new ApiError(400, 'Please provide userId');
+  }
+
+  const cart = await Cart.findOne({ userId });
+
+  if (!cart) {
+    throw new ApiError(404, 'Cart not found');
+  }
+
+  const itemIndex = cart.items.findIndex(item => item.sku === sku);
+
+  if (itemIndex === -1) {
+    throw new ApiError(404, 'Item not found in cart');
+  }
+
+  // Remove item from cart
+  cart.items.splice(itemIndex, 1);
+
+  // If cart is empty, delete it
+  if (cart.items.length === 0) {
+    await Cart.findByIdAndDelete(cart._id);
+    return res.status(200).json({
+      success: true,
+      data: null,
+      message: 'Cart cleared'
+    });
   }
 
   await cart.save();
 
-  const totals = {
-    subtotal: enrichedItems.reduce((sum, i) => sum + i.priceSnapshot * i.qty, 0),
-    itemCount: enrichedItems.reduce((sum, i) => sum + i.qty, 0),
-  };
+  // Calculate cart summary
+  const totalItems = cart.items.reduce((sum, item) => sum + item.qty, 0);
+  const subtotal = cart.items.reduce((sum, item) => sum + (item.qty * item.priceSnapshot), 0);
 
-  res.json({
-    status: 'success',
+  res.status(200).json({
+    success: true,
     data: {
-      cartId: cart._id,
-      items: cart.items,
-      totals,
-    },
+      ...cart.toObject(),
+      totalItems,
+      subtotal
+    }
   });
 });
 
-exports.getCart = catchAsync(async (req, res) => {
-  const { cartId } = req.params;
-  const cart = await Cart.findById(cartId);
-  if (!cart) throw new ApiError(404, 'Cart not found');
 
-  const enrichedItems = [];
+exports.clearCart = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
 
-  for (const item of cart.items) {
-    const product = await Product.findOne({ sku: item.sku }).lean();
-    if (product) {
-      enrichedItems.push({
-        sku: item.sku,
-        qty: item.qty,
-        addedAt: item.addedAt,
-        priceSnapshot: item.priceSnapshot,
-        product: {
-          title: product.locs?.singles?.title?.en || 'Untitled Product',
-          image: product.imgs?.[0]?.url || null,
-          currentPrice: product.stock_price,
-          availableQty: product.qty,
-        },
-      });
-    }
+  if (!userId) {
+    throw new ApiError(400, 'Please provide userId');
   }
 
-  const totals = {
-    subtotal: enrichedItems.reduce((sum, i) => sum + i.priceSnapshot * i.qty, 0),
-    itemCount: enrichedItems.reduce((sum, i) => sum + i.qty, 0),
-  };
+  const cart = await Cart.findOneAndDelete({ userId });
 
-  res.json({
-    status: 'success',
-    data: {
-      cartId: cart._id,
-      items: enrichedItems,
-      totals,
-    },
+  if (!cart) {
+    throw new ApiError(404, 'Cart not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    data: null,
+    message: 'Cart cleared successfully'
   });
 });

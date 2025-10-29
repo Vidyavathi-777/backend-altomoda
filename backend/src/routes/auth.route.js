@@ -11,7 +11,7 @@ const validators = require("../../utils/validators");
 router.post(
   "/signup",
   authLimiter,
-  validate(validators.signupSchema),
+  validate(validators.signupSchema),  
   authController.signup
 );
 router.post(
@@ -25,7 +25,7 @@ router.post("/logout", protect, authController.logout);
 router.get("/me", protect, authController.getMe);
 router.post(
   "/me/addresses",
-  protect,
+  protect,  
   validate(validators.addressSchema),
   authController.addAddress
 );

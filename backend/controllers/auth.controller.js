@@ -16,7 +16,7 @@ const generateToken = (userId) => {
 };
 
 const generateRefreshToken = (userId) => {
-  return jwt.sign({ id: userId }, config.jwt.refreshSecret, {
+  return jwt.sign({ id: userId }, config.jwt.refreshSecret, { 
     expiresIn: config.jwt.refreshExpiresIn,
   });
 };

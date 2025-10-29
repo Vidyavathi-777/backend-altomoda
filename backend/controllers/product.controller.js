@@ -131,60 +131,6 @@ exports.getBrands = catchAsync(async (req, res) => {
 
 
 
-// Controller: Fetch products by filters (categories, brands, pagination, limit)
-// exports.getProductsWithFilters = catchAsync(async (req, res) => {
-//   let {
-//     page = 1,
-//     limit = 20,
-//     sortBy = "createdAt",
-//     sortOrder = "desc",
-//     categories = [],
-//     brands = [],
-//   } = req.body;
-
-//   // Convert to proper types
-//    page = Math.max(parseInt(page) || 1, 1);  // ✅ ensures page >= 1
-//   limit = Math.max(parseInt(limit) || 20, 1); // ✅ ensures limit >= 1
-
-//   const query = {};
-
-//   // 🟡 Filter by categories
-//   if (Array.isArray(categories) && categories.length > 0) {
-//     query.cats = { $in: categories };
-//   }
-
-//   // 🟢 Filter by brands (inside props.brand)
-//   if (Array.isArray(brands) && brands.length > 0) {
-//     query["props.brand"] = { $in: brands };
-//   }
-
-//   // 🧮 Pagination
-//   const skip = (page - 1) * limit;
-
-//   // 🧾 Sorting
-//   const sort = { [sortBy]: sortOrder === "asc" ? 1 : -1 };
-
-//   // ⚡ Fetch products
-//   const [products, totalCount] = await Promise.all([
-//     Product.find(query)
-//       .populate("cats", "name") // optional
-//       .sort(sort)
-//       .skip(skip)
-//       .limit(limit),
-//     Product.countDocuments(query),
-//   ]);
-
-//   res.status(200).json({
-//     success: true,
-//     totalCount,
-//     page,
-//     totalPages: Math.ceil(totalCount / limit),
-//     products,
-//   });
-// });
-
-
-
 exports.getProductById = catchAsync(async (req, res) => {
   const { id } = req.params;
 
@@ -239,98 +185,7 @@ exports.getCategoryById = catchAsync(async (req, res) => {
   });
 });
 
-exports.getProductsGroupedBySku = catchAsync(async (req, res) => {
-  const {
-    page = 1,
-    limit = 20,
-    categories = [],
-    brands = [],
-    colors = [],
-    minPrice,
-    maxPrice,
-    inStock,
-    sortBy = 'createdAt',
-    sortOrder = 'desc',
-  } = req.body;
 
-  const pageNum = parseInt(page);
-  const limitNum = parseInt(limit);
-  const skip = (pageNum - 1) * limitNum;
-
-  const query = {};
-
-  if (categories.length) {
-    query['cats'] = { $in: categories.map(id => mongoose.Types.ObjectId(id)) };
-  }
-
-  if (brands.length) {
-    query['props.brand'] = { $in: brands.map(b => new RegExp(b, 'i')) };
-  }
-
-  if (colors.length) {
-    query['locs.singles.color.en'] = { $in: colors.map(c => new RegExp(c, 'i')) };
-  }
-
-  if (minPrice || maxPrice) {
-    query['stock_price'] = {};
-    if (minPrice) query['stock_price'].$gte = parseFloat(minPrice);
-    if (maxPrice) query['stock_price'].$lte = parseFloat(maxPrice);
-  }
-
-  if (inStock !== undefined) {
-    const stockBool = inStock === true || inStock === 'true';
-    query['qty'] = stockBool ? { $gt: 0 } : { $lte: 0 };
-  }
-
-  const sortConfig = {};
-  const sortField = sortBy === 'price' ? 'stock_price' : sortBy;
-  sortConfig[sortField] = sortOrder === 'asc' ? 1 : -1;
-
-  const products = await Product.find(query)
-    .populate('cats', 'name locs')
-    .sort(sortConfig)
-    .lean();
-
-  const grouped = {};
-  products.forEach(p => {
-    if (!grouped[p.sku]) {
-      grouped[p.sku] = {
-        sku: p.sku,
-        title: p.locs?.singles?.title?.en || 'Untitled',
-        brand: p.props?.brand || null,
-        categories: p.cats,
-        variants: [],
-      };
-    }
-
-    grouped[p.sku].variants.push({
-      _id: p._id,
-      size: p.props?.size || null,
-      color: p.locs?.singles?.color?.en || null,
-      price: p.stock_price,
-      qty: p.qty,
-      images: p.imgs?.map(img => img.url) || [],
-      props: p.props,
-    });
-  });
-
-  const groupedArray = Object.values(grouped);
-  const total = groupedArray.length;
-  const paginated = groupedArray.slice(skip, skip + limitNum);
-
-  res.json({
-    status: 'success',
-    data: paginated,
-    pagination: {
-      currentPage: pageNum,
-      totalPages: Math.ceil(total / limitNum),
-      totalItems: total,
-      itemsPerPage: limitNum,
-      hasNext: pageNum < Math.ceil(total / limitNum),
-      hasPrev: pageNum > 1,
-    },
-  });
-});
 
 
 exports.getAllProducts = async (req, res) => {
@@ -415,7 +270,7 @@ exports.getChildCategories = catchAsync(async (req, res) => {
 });
 
 
-exports.getCategoryLevelsById = async (req, res) => {
+exports.getCategoryLevelsById = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -464,12 +319,10 @@ exports.getCategoryLevelsById = async (req, res) => {
       message: "Server error",
     });
   }
-};
+});
 
 
-
-// Controller: fetch products by category ID with pagination
-exports.getProductsByCategory = async (req, res) => {
+exports.getProductsByCategory = catchAsync(async (req, res) => {
   const getAllCategoryIds = (category) => {
     let ids = [category._id.toString()];
 
@@ -532,6 +385,7 @@ exports.getProductsByCategory = async (req, res) => {
             _id: cat._id,
             name: cat.name?.locs || {}
           })) : [],
+           categoryIds: product.cats ? product.cats.map(cat => cat._id) : [],
           composition: product.composition || [],
           care: product.locs?.singles?.care || {},
           made: product.locs?.singles?.made || {},
@@ -605,9 +459,9 @@ exports.getProductsByCategory = async (req, res) => {
       message: "Server error",
     });
   }
-};
+});
 
-exports.getProductsByBrand = async (req, res) => {
+exports.getProductsByBrand = catchAsync(async (req, res) => {
   try {
      const { categoryId } = req.params; 
     const { brand } = req.params;
@@ -746,28 +600,28 @@ exports.getProductsByBrand = async (req, res) => {
       message: "Server error",
     });
   }
-};
+});
 
 
-// Controller: fetch products with multiple categories and brands
-exports.getProductsWithFilters = async (req, res) => {
+exports.getProductsWithFilters = catchAsync(async (req, res) => {
   const getAllCategoryIds = (category) => {
-  let ids = [category._id.toString()];
-  if (category.children && category.children.length > 0) {
-    category.children.forEach((child) => {
-      ids = ids.concat(getAllCategoryIds(child));
-    });
-  }
-  return ids;
-};
+    let ids = [category._id.toString()];
+    if (category.children && category.children.length > 0) {
+      category.children.forEach((child) => {
+        ids = ids.concat(getAllCategoryIds(child));
+      });
+    }
+    return ids;
+  };
+
   try {
-    const { categoryIds, brands, colors } = req.body; // note plural categoryIds
+    const { categoryIds, brands, colors } = req.body;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
 
     let filter = {};
 
-    // 1️⃣ Handle multiple categories
+    // 🟩 1️⃣ Handle multiple categories
     if (categoryIds && Array.isArray(categoryIds) && categoryIds.length > 0) {
       let allCategoryIds = [];
 
@@ -789,39 +643,106 @@ exports.getProductsWithFilters = async (req, res) => {
       }
     }
 
-    // 2️⃣ Brand filter (multiple brands)
+    // 🟨 2️⃣ Brand filter (multiple brands)
     if (brands && Array.isArray(brands) && brands.length > 0) {
       filter["props.brand"] = { $in: brands };
     }
 
-    // 3️⃣ Color filter (multiple colors)
+    // 🟦 3️⃣ Color filter (multiple colors)
     if (colors && Array.isArray(colors) && colors.length > 0) {
       filter["locs.singles.color.en"] = { $in: colors };
     }
 
-    // 4️⃣ Count total products
-    const totalProducts = await Product.countDocuments(filter);
+    // 🟧 4️⃣ Count distinct sku_parent for correct pagination
+    const distinctSkuParents = await Product.distinct("props.sku_parent", filter);
+    const totalGroupedProducts = distinctSkuParents.length;
+    const totalPages = Math.ceil(totalGroupedProducts / limit);
 
-    // 5️⃣ Calculate total pages
-    const totalPages = Math.ceil(totalProducts / limit);
+    // 🟩 5️⃣ Get paginated sku_parents
+    const paginatedSkuParents = distinctSkuParents.slice((page - 1) * limit, page * limit);
 
-    // 6️⃣ Fetch paginated products
-    const products = await Product.find(filter)
-      .skip((page - 1) * limit)
-      .limit(limit)
+    // 🟨 6️⃣ Fetch products belonging to paginated sku_parents
+    const paginatedFilter = {
+      ...filter,
+      "props.sku_parent": { $in: paginatedSkuParents },
+    };
+
+    const products = await Product.find(paginatedFilter)
+      .populate("cats", "name locs")
       .lean();
+
+    // 🟦 7️⃣ Group by sku_parent
+    const grouped = {};
+
+    products.forEach((product) => {
+      const skuParent = product.props.sku_parent;
+
+      if (!grouped[skuParent]) {
+        grouped[skuParent] = {
+          _id: product._id,
+          sku_parent: skuParent,
+          title: product.locs?.singles?.title || {},
+          description: product.locs?.singles?.desc || {},
+          color: product.locs?.singles?.color || {},
+          brand: product.props.brand,
+          season: product.props.season,
+          category: product.cats?.[0]?.name?.locs || {},
+          cats: product.cats
+            ? product.cats.map((cat) => ({
+                _id: cat._id,
+                name: cat.name?.locs || {},
+              }))
+            : [],
+             categoryIds: product.cats ? product.cats.map(cat => cat._id) : [],
+          composition: product.composition || [],
+          care: product.locs?.singles?.care || {},
+          made: product.locs?.singles?.made || {},
+          fastening: product.locs?.singles?.fastening || {},
+          sex: product.locs?.singles?.sex || {},
+          images: product.imgs || [],
+          base_price: product.stock_price,
+          base_buy_price: product.props.buy_price,
+          variants: [],
+        };
+      }
+
+      grouped[skuParent].variants.push({
+        _id: product._id,
+        sku: product.sku,
+        size: product.props.size,
+        size_conversion: product.locs?.singles?.size_conversion || {},
+        stock: product.qty,
+        price: product.stock_price,
+        buy_price: product.props.buy_price,
+        barcode: product.props.barcode,
+        model_measurements: {
+          waist: product.props.model_size_waistline,
+          hip: product.props.model_size_hip,
+          chest: product.props.model_size_chest,
+          height: product.props.model_size_height,
+        },
+      });
+    });
+
+    // 🟨 8️⃣ Convert to array and maintain correct pagination order
+    const groupedArray = paginatedSkuParents
+      .map((skuParent) => grouped[skuParent])
+      .filter((item) => item !== undefined);
 
     res.status(200).json({
       success: true,
-      data: {
-        totalProducts,
+      pagination: {
+        totalProducts: totalGroupedProducts,
         totalPages,
         currentPage: page,
         perPage: limit,
-        products,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      },
+      data: {
+        products: groupedArray,
       },
     });
-
   } catch (error) {
     console.error("Error fetching products with filters:", error);
     res.status(500).json({
@@ -829,7 +750,8 @@ exports.getProductsWithFilters = async (req, res) => {
       message: "Server error",
     });
   }
-};
+});
+
 
 exports.getProductBySkuParent = catchAsync(async (req, res) => {
   const { sku } = req.params;
@@ -904,124 +826,177 @@ exports.getProductBySkuParent = catchAsync(async (req, res) => {
   });
 });
 
-exports.getNewProducts = async (req, res) => {
+exports.getNewProducts = catchAsync(async (req, res) => {
+  // Helper function to get all category IDs including children
+  const getAllCategoryIds = (category) => {
+    let ids = [category._id.toString()];
+    if (category.children && category.children.length > 0) {
+      category.children.forEach((child) => {
+        ids = ids.concat(getAllCategoryIds(child));
+      });
+    }
+    return ids;
+  };
+
   try {
+    const { categoryId } = req.params; // Compulsory category ID from params
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const years = parseInt(req.query.years) || 1; // Default to last 1 year
 
-    // Calculate date range for new products (last year)
-    const startDate = new Date();
-    startDate.setFullYear(startDate.getFullYear() - years);
+    // Validate compulsory category ID
+    if (!categoryId || !mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid categoryId is required in URL parameters",
+      });
+    }
 
-    // 1️⃣ Fetch products created within the specified time range, sorted by creation date (newest first)
-    const products = await Product.find({ 
-      created_at: { $gte: startDate }
-    })
-      .sort({ created_at: -1 }) // Sort by creation date descending (newest first)
-      .populate("cats", "name.locs")
-      .skip((page - 1) * limit)
-      .limit(limit * 5) // Fetch more to account for grouping
+    let filter = {};
+
+    // 🟩 1️⃣ Handle category hierarchy (compulsory)
+    let allCategoryIds = [];
+
+    const categoryHierarchy = await Category.findById(categoryId).populate({
+      path: "children",
+      populate: { path: "children", populate: { path: "children" } },
+    }).lean();
+
+    if (!categoryHierarchy) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    allCategoryIds = getAllCategoryIds(categoryHierarchy);
+
+    if (allCategoryIds.length > 0) {
+      filter.cats = { $in: allCategoryIds };
+    }
+
+    // 🟧 2️⃣ Count distinct sku_parent for correct pagination
+    const distinctSkuParents = await Product.distinct("props.sku_parent", filter);
+    const totalGroupedProducts = distinctSkuParents.length;
+    const totalPages = Math.ceil(totalGroupedProducts / limit);
+
+    // 🟩 3️⃣ Get paginated sku_parents
+    const paginatedSkuParents = distinctSkuParents.slice((page - 1) * limit, page * limit);
+
+    // If no products found
+    if (paginatedSkuParents.length === 0) {
+      return res.status(200).json({
+        success: true,
+        pagination: {
+          totalProducts: totalGroupedProducts,
+          totalPages,
+          currentPage: page,
+          perPage: limit,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1
+        },
+        data: {
+          products: [],
+        },
+      });
+    }
+
+    // 🟨 4️⃣ Fetch products belonging to paginated sku_parents
+    const paginatedFilter = {
+      ...filter,
+      "props.sku_parent": { $in: paginatedSkuParents },
+    };
+
+    const products = await Product.find(paginatedFilter)
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .populate("cats", "name locs")
       .lean();
 
-    // 2️⃣ Group products by sku_parent
+    // 🟦 5️⃣ Group by sku_parent
     const grouped = {};
-    
+
     products.forEach((product) => {
-      const skuParent = product.props.sku_parent;
-      
+      const skuParent = product.props?.sku_parent || "unknown";
+
       if (!grouped[skuParent]) {
-        // Create main product with common data (use the first variant as base)
+        // Find the first product in this group to get creation date
+        const firstProductInGroup = products.find(p => p.props?.sku_parent === skuParent);
+        
         grouped[skuParent] = {
           _id: product._id,
           sku_parent: skuParent,
           title: product.locs?.singles?.title || {},
           description: product.locs?.singles?.desc || {},
           color: product.locs?.singles?.color || {},
-          brand: product.props.brand,
-          season: product.props.season,
+          brand: product.props?.brand,
+          season: product.props?.season,
           category: product.cats?.[0]?.name?.locs || {},
-          cats: product.cats ? product.cats.map(cat => ({
-            _id: cat._id,
-            name: cat.name?.locs || {}
-          })) : [],
+          cats: product.cats
+            ? product.cats.map((cat) => ({
+                _id: cat._id,
+                name: cat.name?.locs || {},
+              }))
+            : [],
+          categoryIds: product.cats ? product.cats.map(cat => cat._id) : [],
           composition: product.composition || [],
           care: product.locs?.singles?.care || {},
           made: product.locs?.singles?.made || {},
           fastening: product.locs?.singles?.fastening || {},
           sex: product.locs?.singles?.sex || {},
           images: product.imgs || [],
-          created_at: product.created_at, // Keep creation date for sorting
-          // Use average or first variant's pricing as base
           base_price: product.stock_price,
-          base_buy_price: product.props.buy_price,
-          variants: []
+          base_buy_price: product.props?.buy_price,
+          createdAt: firstProductInGroup?.createdAt || product.createdAt, // Use first product's creation date
+          variants: [],
         };
       }
 
-      // Add variant details
+      // Add variant info
       grouped[skuParent].variants.push({
         _id: product._id,
         sku: product.sku,
-        size: product.props.size,
+        size: product.props?.size,
         size_conversion: product.locs?.singles?.size_conversion || {},
         stock: product.qty,
         price: product.stock_price,
-        buy_price: product.props.buy_price,
-        barcode: product.props.barcode,
+        buy_price: product.props?.buy_price,
+        barcode: product.props?.barcode,
         model_measurements: {
-          waist: product.props.model_size_waistline,
-          hip: product.props.model_size_hip,
-          chest: product.props.model_size_chest,
-          height: product.props.model_size_height
-        }
+          waist: product.props?.model_size_waistline,
+          hip: product.props?.model_size_hip,
+          chest: product.props?.model_size_chest,
+          height: product.props?.model_size_height,
+        },
+        variantCreatedAt: product.createdAt, // Keep individual variant creation date
       });
     });
 
-    // 3️⃣ Convert to array and sort by creation date (newest first)
-    const groupedArray = Object.values(grouped)
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    // 🟨 6️⃣ Convert to array and maintain correct pagination order
+    const groupedArray = paginatedSkuParents
+      .map((skuParent) => grouped[skuParent])
+      .filter((item) => item !== undefined);
 
-    // 4️⃣ Get total count for accurate pagination
-    const totalProducts = await Product.countDocuments({ 
-      created_at: { $gte: startDate }
-    });
-    
-    // Count distinct sku_parent values
-    const distinctSkuParents = await Product.distinct('props.sku_parent', { 
-      created_at: { $gte: startDate }
-    });
-    const totalGroupedProducts = distinctSkuParents.length;
-    const totalPages = Math.ceil(totalGroupedProducts / limit);
+    // 🟩 7️⃣ Sort grouped array by creation date (newest first)
+    groupedArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    // 5️⃣ Apply pagination to grouped results
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedResults = groupedArray.slice(startIndex, endIndex);
-
-    // 6️⃣ Return response
     res.status(200).json({
       success: true,
       pagination: {
         totalProducts: totalGroupedProducts,
         totalPages,
         currentPage: page,
-        perPage: limit,  
+        perPage: limit,
         hasNextPage: page < totalPages,
-        hasPrevPage: page > 1,
-        years: years,
-        startDate: startDate.toISOString()
+        hasPrevPage: page > 1
       },
       data: {
-        products: paginatedResults
+        products: groupedArray,
       },
     });
-
   } catch (error) {
-    console.error("Error fetching new products:", error);
+    console.error("❌ Error fetching new products:", error);
     res.status(500).json({
       success: false,
       message: "Server error while fetching new products",
     });
   }
-};
+});
