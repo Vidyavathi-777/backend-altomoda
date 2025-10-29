@@ -40,6 +40,7 @@ function App({ gender: propGender }) {
         <Route path='/:gender?' element={<HomePage />} />
         <Route path='/:gender/product/:sku_parent' element={<ProductDetailPage />} />
         <Route path='/product/:id' element={<ProductDetailPage />} />
+        <Route path='/:gender/:categoryId/new-arrivals/products' element={<ProductsPage/>} />
         <Route path="/:gender/:categoryId/:brandName/products" element={<ProductsPage />} />
 <Route path="/:gender/:categoryId/products" element={<ProductsPage />} />
 <Route path="/:categoryId/:brandName/products" element={<ProductsPage />} />

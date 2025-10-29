@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
-import { useUser } from '../Context/UserContext';
+
 
 const ProductDetailPage = () => {
     const [selectedSize, setSelectedSize] = useState('');
@@ -24,11 +24,8 @@ const ProductDetailPage = () => {
     const mobileImageSliderRef = useRef(null);
     const sizeDropdownRef = useRef(null);
     const { addToCart } = useCart();
-    const { user } = useUser();
 
-    console.log('User in ProductDetailPage:', user);
-    console.log(user.id)
-    // Fetch product by parent SKU
+
     useEffect(() => {
         const fetchProduct = async () => {
             setIsLoading(true);
@@ -259,10 +256,7 @@ const ProductDetailPage = () => {
     };
 
   const handleAddToCart = async () => {
-        if (!user.id) {
-            alert('Please login to add items to cart');
-            return;
-        }
+
 
         if (!selectedVariant) {
             alert('Please select a size.');

@@ -172,7 +172,7 @@ const ProductsPage = () => {
             
             let typesData = [];
             if (typesCategoryId) {
-                typesData = await fetchCategoryChildren(navitems.gender);
+                typesData = await fetchCategoryChildren(navitems[actualGender]);
             }
             
             let categoriesData = [];

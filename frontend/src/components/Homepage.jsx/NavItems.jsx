@@ -285,7 +285,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             return (
               <div key={mainCategory.id}>
                 <Link
-                  to={`/${currentGender}/${mainCategory.id}/products`}
+                  to={`/${currentGender}/${mainCategory.id}/new-arrivals/products`}
                   onClick={closeDesktopMenu}
                   className="font-bold uppercase tracking-wide text-gray-900 block  mb-4 text-sm hover:text-black hover:underline"
                 >
@@ -295,7 +295,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                   {mainCategory.subs?.map((sub) => (
                     <Link
                       key={sub.id}
-                      to={`/${currentGender}/${sub.id}/products`}
+                      to={`/${currentGender}/${sub.id}/new-arrivals/products`}
                       onClick={closeDesktopMenu}
                       className="block  hover:text-black hover:underline transition"
                     >

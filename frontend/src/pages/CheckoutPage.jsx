@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from  "../Context/CartContext"
-import { useUser } from  "../Context/UserContext"
+import { useCart } from "../Context/CartContext";
+import { useUser } from "../Context/UserContext";
 
 const CheckoutPage = () => {
-  const { cart, loading: cartLoading } = useCart();
+  const { cart, loading: cartLoading, clearCart } = useCart();
   const { user, addresses, getToken, refreshAddresses } = useUser();
   const [currentStep, setCurrentStep] = useState('information');
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -125,6 +125,7 @@ const CheckoutPage = () => {
       const token = getToken();
       const authHeader = token?.startsWith('Bearer ') ? token : `Bearer ${token}`;
 
+      // 1️⃣ Create Order
       const orderPayload = {
         items: cart.items.map(item => ({
           sku: item.sku,
@@ -150,7 +151,7 @@ const CheckoutPage = () => {
         }
       };
 
-      const res = await fetch(`${API_URL}/orders`, {
+      const orderRes = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: { 
           Authorization: authHeader, 
@@ -159,76 +160,63 @@ const CheckoutPage = () => {
         body: JSON.stringify(orderPayload),
       });
 
-      const result = await res.json();
+      const orderResult = await orderRes.json();
       
-      if (res.ok && result.success) {
-        setOrderDetails(result.data);
-        // Clear the cart after successful order
+      if (!orderRes.ok || !orderResult.success) {
+        throw new Error(orderResult.message || 'Failed to create order');
+      }
+
+      const createdOrder = orderResult.data;
+      setOrderDetails(createdOrder);
+
+      // 2️⃣ Initiate Payment
+      const payRes = await fetch(`${API_URL}/payments/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: authHeader,
+        },
+        body: JSON.stringify({
+          orderId: createdOrder._id,
+          amount: createdOrder.totAmount,
+        }),
+      });
+
+      const payResult = await payRes.json();
+      
+      if (!payRes.ok || !payResult.success) {
+        throw new Error(payResult.message || 'Payment initialization failed');
+      }
+
+      const redirectUrl = payResult.data?.redirectUrl;
+      
+      if (redirectUrl) {
+        // Clear cart before redirecting to payment
         try {
-          await fetch(`${API_URL}/cart/${user.id}`, {
-            method: 'DELETE',
-            headers: { 
-              Authorization: authHeader, 
-              'Content-Type': 'application/json' 
-            }
-          });
+          await clearCart();
         } catch (clearErr) {
           console.error('Error clearing cart:', clearErr);
         }
-        setCurrentStep('success');
+        
+        // Redirect to PhonePe payment page
+        window.location.href = redirectUrl;
       } else {
-        setError(result.message || 'Failed to place order. Please try again.');
+        throw new Error('No redirect URL received from payment gateway');
       }
+
     } catch (err) {
       console.error('Error placing order:', err);
-      setError('Failed to place order. Please try again.');
+      setError(err.message || 'Failed to place order. Please try again.');
     } finally {
       setOrderLoading(false);
     }
   };
 
-  if (currentStep === 'success') {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 pt-[250px]">
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h1>
-          <p className="text-gray-600 mb-6">Thank you for your order. We'll send you a confirmation email shortly.</p>
-          {orderDetails && (
-            <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
-              <h3 className="font-semibold text-gray-900 mb-3">Order Details</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Order ID:</span>
-                  <span className="font-medium">{orderDetails.orderId || orderDetails._id || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Total Amount:</span>
-                  <span className="font-medium">€{((cart?.subtotal || 0) + 50).toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="flex gap-3 justify-center">
-
-            <button 
-              onClick={() => window.location.href = '/'}
-              className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              Continue Shopping
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Don't show success page here anymore - it will be handled by SuccessPage component
+  // after payment completion
 
   return (
-    <div className="min-h-screen bg-gray-50  pb-12 pt-[250px]">
+    <div className="min-h-screen bg-gray-50 pb-12 pt-[250px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">THE CORNER.COM</h1>

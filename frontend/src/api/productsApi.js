@@ -127,6 +127,42 @@ export const fetchProductsByBrand = async (brand, categoryId , page = 1, limit =
     }
 };
 
+export const fetchNewArrivalsByCategory = async (categoryId, page = 1, limit = 20) => {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/products/new-arrivals/${categoryId}?page=${page}&limit=${limit}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            return {
+                products: data.data.products || [],
+                pagination: data.pagination || {
+                    totalProducts: 0,
+                    totalPages: 0,
+                    currentPage: page,
+                    perPage: limit
+                }
+            };
+        }
+        
+        throw new Error(data.message || 'Failed to fetch new arrivals');
+    } catch (error) {
+        console.error("Error fetching new arrivals:", error);
+        throw error;
+    }
+};
+
 // Fetch product by SKU (individual variant)
 export const fetchProductBySku = async (sku) => {
     try {
