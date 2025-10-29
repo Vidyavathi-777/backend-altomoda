@@ -11,19 +11,40 @@ import {
 } from "../../src/api/productsApi";
 
 const ProductsPage = () => {
-    const { gender, categoryId, brandName } = useParams();
+
+      const navitems = {
+    man: "68f86b10734810ab97bb98d1",
+    woman: "68f86b1c734810ab97bb9a2f"
+  };
+    // Handle flexible route params - could be gender/categoryId/brandName in any combination
+    const params = useParams();
+    
+    // Extract params - they might be named param1, param2, param3 or gender, categoryId, brandName
+    const gender = params.gender || params.param1;
+    const categoryId = params.categoryId || params.param2;
+    const brandName = params.brandName || params.param3;
     
     console.log("URL Params:", { gender, categoryId, brandName });
+    console.log("All params:", params);
     
-    // Validate if a string is a valid MongoDB ObjectId (24 hex characters)
     const isValidObjectId = (str) => {
         return str && /^[0-9a-fA-F]{24}$/.test(str);
     };
     
-    // Parse URL parameters based on different URL patterns
     const parseUrlParams = () => {
-        // Pattern 1: /woman/68f86b1c734810ab97bb9a31/products (gender + categoryId)
-        if (gender && isValidObjectId(categoryId) && !brandName) {
+        console.log("Parsing params:", { gender, categoryId, brandName });
+        
+        // Check what we have
+        const hasGender = gender !== undefined;
+        const hasCategoryId = categoryId !== undefined;
+        const hasBrandName = brandName !== undefined;
+        
+        const genderIsObjectId = hasGender && isValidObjectId(gender);
+        const categoryIdIsObjectId = hasCategoryId && isValidObjectId(categoryId);
+        const brandNameIsObjectId = hasBrandName && isValidObjectId(brandName);
+        
+        // Pattern 1: /:gender/:categoryId/products (e.g., /woman/68f86b1c734810ab97bb9a31/products)
+        if (hasGender && !genderIsObjectId && hasCategoryId && categoryIdIsObjectId && !hasBrandName) {
             return {
                 actualGender: gender,
                 actualCategoryId: categoryId,
@@ -31,26 +52,8 @@ const ProductsPage = () => {
             };
         }
         
-        // Pattern 2: /68f86b1c734810ab97bb9a2f/products (categoryId only)
-        if (isValidObjectId(gender) && !categoryId && !brandName) {
-            return {
-                actualGender: 'woman', // default gender
-                actualCategoryId: gender,
-                actualBrandName: null
-            };
-        }
-        
-        // Pattern 3: /68f86b1c734810ab97bb9a2f/Etro/products (categoryId + brandName)
-        if (isValidObjectId(gender) && categoryId && !isValidObjectId(categoryId) && !brandName) {
-            return {
-                actualGender: 'woman', // default gender
-                actualCategoryId: gender,
-                actualBrandName: categoryId
-            };
-        }
-        
-        // Pattern 4: /woman/68f86b1c734810ab97bb9a31/Etro/products (gender + categoryId + brandName)
-        if (gender && isValidObjectId(categoryId) && brandName) {
+        // Pattern 2: /:gender/:categoryId/:brandName/products (e.g., /woman/68f86b1c734810ab97bb9a31/Etro/products)
+        if (hasGender && !genderIsObjectId && hasCategoryId && categoryIdIsObjectId && hasBrandName && !brandNameIsObjectId) {
             return {
                 actualGender: gender,
                 actualCategoryId: categoryId,
@@ -58,11 +61,60 @@ const ProductsPage = () => {
             };
         }
         
-        // Default fallback
+        // Pattern 3: /:categoryId/products (e.g., /68f86b1c734810ab97bb9a2f/products)
+        if (hasGender && genderIsObjectId && !hasCategoryId && !hasBrandName) {
+            return {
+                actualGender: null,
+                actualCategoryId: gender,
+                actualBrandName: null
+            };
+        }
+        
+        // Pattern 4: /:categoryId/:brandName/products (e.g., /68f86b1c734810ab97bb9a2f/Etro/products)
+        if (hasGender && genderIsObjectId && hasCategoryId && !categoryIdIsObjectId && !hasBrandName) {
+            return {
+                actualGender: null,
+                actualCategoryId: gender,
+                actualBrandName: categoryId
+            };
+        }
+        
+        // Fallback - try to intelligently parse
+        let actualGender = null;
+        let actualCategoryId = null;
+        let actualBrandName = null;
+        
+        // Check each param
+        if (hasGender) {
+            if (genderIsObjectId) {
+                actualCategoryId = gender;
+            } else if (['man', 'woman', 'men', 'women', 'unisex'].includes(gender?.toLowerCase())) {
+                actualGender = gender;
+            } else {
+                actualBrandName = gender;
+            }
+        }
+        
+        if (hasCategoryId) {
+            if (categoryIdIsObjectId) {
+                actualCategoryId = categoryId;
+            } else {
+                actualBrandName = actualBrandName || categoryId;
+            }
+        }
+        
+        if (hasBrandName) {
+            if (brandNameIsObjectId) {
+                actualCategoryId = actualCategoryId || brandName;
+            } else {
+                actualBrandName = brandName;
+            }
+        }
+        
         return {
-            actualGender: gender || 'woman',
-            actualCategoryId: isValidObjectId(categoryId) ? categoryId : null,
-            actualBrandName: brandName || (!isValidObjectId(categoryId) ? categoryId : null)
+            actualGender,
+            actualCategoryId,
+            actualBrandName
         };
     };
     
@@ -80,51 +132,29 @@ const ProductsPage = () => {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [error, setError] = useState(null);
     
-    // Client-side filters (color only)
-    const [clientFilters, setClientFilters] = useState({
-        color: []
-    });
-    
-    // API filters (brand, category, type)
-    const [apiFilters, setApiFilters] = useState({
-        brand: [],
-        category: [],
-        type: []
-    });
-    
-    // Temporary API filters (before applying)
-    const [tempApiFilters, setTempApiFilters] = useState({
-        brand: [],
-        category: [],
-        type: []
-    });
-
-    const [filterOptions, setFilterOptions] = useState({
-        brands: [],
-        colors: [],
-        types: [], 
-        categories: [] 
-    });
+    const [clientFilters, setClientFilters] = useState({ color: [] });
+    const [apiFilters, setApiFilters] = useState({ brand: [], category: [], type: [] });
+    const [tempApiFilters, setTempApiFilters] = useState({ brand: [], category: [], type: [] });
+    const [filterOptions, setFilterOptions] = useState({ brands: [], colors: [], types: [], categories: [] });
 
     const pageSize = 20;
 
-    // Get the base category ID based on gender
     const getBaseCategoryId = () => {
-        return actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+        if (actualGender && !actualCategoryId) {
+            return actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+        }
+        return null;
     };
 
-    // Fetch brands and categories on component mount
     useEffect(() => {
         loadFilterOptions();
     }, [actualGender, actualCategoryId]);
 
-    // Fetch products when URL params or API filters change
     useEffect(() => {
         setCurrentPage(1);
         loadProducts(1);
     }, [actualCategoryId, actualBrandName, apiFilters]);
 
-    // Fetch products when page changes
     useEffect(() => {
         if (currentPage > 1) {
             loadProducts(currentPage);
@@ -133,17 +163,26 @@ const ProductsPage = () => {
 
     const loadFilterOptions = async () => {
         try {
-            // Fetch brands
             const brandsData = await fetchBrands();
             
-            // Fetch types using gender base category ID
-            const genderCategoryId = getBaseCategoryId();
-            const typesData = await fetchCategoryChildren(genderCategoryId);
+            let typesCategoryId = actualCategoryId;
+            if (!typesCategoryId && actualGender) {
+                typesCategoryId = actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+            }
             
-            // Fetch categories using the actual category ID from URL (if exists)
+            let typesData = [];
+            if (typesCategoryId) {
+                typesData = await fetchCategoryChildren(navitems.gender);
+            }
+            
             let categoriesData = [];
             if (actualCategoryId) {
-                categoriesData = await fetchCategoryChildren(actualCategoryId);
+                const baseMaleId = '68f86b10734810ab97bb98d1';
+                const baseFemaleId = '68f86b1c734810ab97bb9a2f';
+                
+                if (actualCategoryId !== baseMaleId && actualCategoryId !== baseFemaleId) {
+                    categoriesData = await fetchCategoryChildren(actualCategoryId);
+                }
             }
             
             setFilterOptions({
@@ -164,37 +203,34 @@ const ProductsPage = () => {
         try {
             let result;
             
-            // Determine which API to use based on filters and URL params
             const hasActiveApiFilters = apiFilters.brand.length > 0 || 
                                     apiFilters.category.length > 0 || 
                                     apiFilters.type.length > 0;
             
             if (hasActiveApiFilters) {
-                // Use filter API when API filters are applied
                 const filterPayload = buildFilterPayload();
                 console.log("Using filter API with payload:", filterPayload);
                 result = await fetchProductsWithFilters(filterPayload, page, pageSize);
             } else if (actualCategoryId && actualBrandName) {
-                // Use brand API when brand is in URL (with category)
                 console.log("Using brand API:", actualBrandName, "with category:", actualCategoryId);
                 result = await fetchProductsByBrand(actualBrandName, actualCategoryId, page, pageSize);
             } else if (actualCategoryId) {
-                // Use category API when only category is in URL
                 console.log("Using category API:", actualCategoryId);
                 result = await fetchProductsByCategory(actualCategoryId, page, pageSize);
             } else {
-                // Use base category for gender
                 const baseCategoryId = getBaseCategoryId();
-                console.log("Using base category API:", baseCategoryId);
-                result = await fetchProductsByCategory(baseCategoryId, page, pageSize);
+                if (baseCategoryId) {
+                    console.log("Using base category API:", baseCategoryId);
+                    result = await fetchProductsByCategory(baseCategoryId, page, pageSize);
+                } else {
+                    throw new Error("No category specified");
+                }
             }
 
-            // Check if result is valid and has products
             if (!result) {
                 throw new Error("No data received from API");
             }
 
-            // Handle different response structures
             const products = result.products || [];
             const pagination = result.pagination || {
                 totalPages: 1,
@@ -203,14 +239,12 @@ const ProductsPage = () => {
                 perPage: pageSize
             };
 
-            // Transform products
             const transformedProducts = products.map(transformProduct);
 
             setAllProducts(transformedProducts);
             setTotalPages(pagination.totalPages || 1);
             setTotalItems(pagination.totalProducts || transformedProducts.length);
 
-            // Extract color options from products
             extractColorOptions(transformedProducts);
             
         } catch (error) {
@@ -226,14 +260,9 @@ const ProductsPage = () => {
 
     const buildFilterPayload = () => {
         const payload = {};
-
-        // Category IDs - combine URL category and filter categories
         const categoryIds = [];
         
-        if (actualCategoryId) {
-            categoryIds.push(actualCategoryId);
-        }
-        
+
         if (apiFilters.type?.length > 0) {
             apiFilters.type.forEach(catName => {
                 const categoryObj = filterOptions.types.find(c => c.name === catName);
@@ -251,12 +280,14 @@ const ProductsPage = () => {
                 }
             });
         }
+        if (actualCategoryId && !categoryIds.includes(actualCategoryId)) {
+  categoryIds.push(actualCategoryId);
+}
         
         if (categoryIds.length > 0) {
             payload.categoryIds = categoryIds;
         }
 
-        // Brands - combine URL brand and filter brands
         const brands = [];
         
         if (actualBrandName) {
@@ -271,7 +302,7 @@ const ProductsPage = () => {
         }
         
         if (brands.length > 0) {
-            payload.brands = brands;
+            payload.brands = [...apiFilters.brand, actualBrandName];
         }
 
         if (clientFilters.color?.length > 0) {
@@ -282,11 +313,9 @@ const ProductsPage = () => {
         return payload;
     };
 
-    // Client-side filtered products (only color filter applied client-side)
     const filteredProducts = useMemo(() => {
         let filtered = [...allProducts];
 
-        // Apply color filter client-side
         if (clientFilters.color.length > 0) {
             filtered = filtered.filter(p => 
                 clientFilters.color.some(color => 
@@ -317,15 +346,9 @@ const ProductsPage = () => {
         setTempApiFilters(prev => {
             const currentBrands = prev.brand || [];
             if (currentBrands.includes(value)) {
-                return {
-                    ...prev,
-                    brand: currentBrands.filter(v => v !== value)
-                };
+                return { ...prev, brand: currentBrands.filter(v => v !== value) };
             } else {
-                return {
-                    ...prev,
-                    brand: [...currentBrands, value]
-                };
+                return { ...prev, brand: [...currentBrands, value] };
             }
         });
     };
@@ -334,15 +357,9 @@ const ProductsPage = () => {
         setTempApiFilters(prev => {
             const currentCategories = prev.category || [];
             if (currentCategories.includes(value)) {
-                return {
-                    ...prev,
-                    category: currentCategories.filter(v => v !== value)
-                };
+                return { ...prev, category: currentCategories.filter(v => v !== value) };
             } else {
-                return {
-                    ...prev,
-                    category: [...currentCategories, value]
-                };
+                return { ...prev, category: [...currentCategories, value] };
             }
         });
     };
@@ -351,15 +368,9 @@ const ProductsPage = () => {
         setTempApiFilters(prev => {
             const currentTypes = prev.type || [];
             if (currentTypes.includes(value)) {
-                return {
-                    ...prev,
-                    type: currentTypes.filter(v => v !== value)
-                };
+                return { ...prev, type: currentTypes.filter(v => v !== value) };
             } else {
-                return {
-                    ...prev,
-                    type: [...currentTypes, value]
-                };
+                return { ...prev, type: [...currentTypes, value] };
             }
         });
     };
@@ -373,33 +384,17 @@ const ProductsPage = () => {
         setClientFilters(prev => {
             const currentColors = prev.color || [];
             if (currentColors.includes(value)) {
-                return {
-                    ...prev,
-                    color: currentColors.filter(v => v !== value)
-                };
+                return { ...prev, color: currentColors.filter(v => v !== value) };
             } else {
-                return {
-                    ...prev,
-                    color: [...currentColors, value]
-                };
+                return { ...prev, color: [...currentColors, value] };
             }
         });
     };
 
     const clearAllFilters = () => {
-        setClientFilters({
-            color: []
-        });
-        setApiFilters({
-            brand: [],
-            category: [],
-            type: []
-        });
-        setTempApiFilters({
-            brand: [],
-            category: [],
-            type: []
-        });
+        setClientFilters({ color: [] });
+        setApiFilters({ brand: [], category: [], type: [] });
+        setTempApiFilters({ brand: [], category: [], type: [] });
     };
 
     const handlePageChange = (newPage) => {
@@ -422,7 +417,13 @@ const ProductsPage = () => {
         }
     ];
 
-    // Find description based on actual category ID or gender
+    const getDisplayTitle = () => {
+        if (actualGender) {
+            return actualGender.charAt(0).toUpperCase() + actualGender.slice(1);
+        }
+        return 'Products';
+    };
+
     const filterDescription = description.find(item => 
         item.id === actualCategoryId || item.gender === actualGender
     )?.description || "";
@@ -515,21 +516,23 @@ const ProductsPage = () => {
         <div className="min-h-screen bg-white pt-[100px] sm:pt-[140px] md:pt-[100px] lg:pt-[200px]">
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="mb-8">
-                    {/* <h1 className="text-2xl font-bold mb-4 uppercase">{actualGender}</h1> */}
+                    {actualGender && (
+                        <h1 className="text-2xl font-bold mb-4 uppercase">{getDisplayTitle()}</h1>
+                    )}
                     {actualBrandName && (
                         <h2 className="text-xl font-medium mb-4 text-gray-600">{actualBrandName}</h2>
                     )}
-                    <div className="text-lg text-gray-900 font-medium leading-relaxed">
-                        <p className={`${!showMore ? "line-clamp-3" : ""}`}>{filterDescription}</p>
-                        {filterDescription && (
+                    {filterDescription && (
+                        <div className="text-lg text-gray-900 font-medium leading-relaxed">
+                            <p className={`${!showMore ? "line-clamp-3" : ""}`}>{filterDescription}</p>
                             <button
                                 onClick={() => setShowMore(!showMore)}
                                 className="text-black font-medium underline mt-2 text-sm hover:no-underline"
                             >
                                 {showMore ? "show less" : "show more"}
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
 
                 {error && (
@@ -705,7 +708,7 @@ const ProductsPage = () => {
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-4 gap-y-8">
                                     {filteredProducts.map((product) => (
                                         <Link 
-                                            to={`/${actualGender}/product/${product.sku}`}
+                                            to={`/${actualGender || 'woman'}/product/${product.sku}`}
                                             key={product.sku} 
                                             className="group cursor-pointer"
                                         >

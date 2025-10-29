@@ -246,7 +246,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             <div className="grid grid-cols-1 gap-y-2 text-gray-700">
               {designerBrands.woman.map((brand) => (
                 <Link
-                  to={`/${navitems.woman}/${brand}/products`}
+                  to={`/woman/${navitems.woman}/${brand}/products`}
                   key={brand}
                   onClick={closeDesktopMenu}
                   className="hover:text-black hover:underline transition"
@@ -264,7 +264,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             <div className="grid grid-cols-1 gap-y-2 text-gray-700">
               {designerBrands.man.map((brand) => (
                 <Link
-                  to={`/${navitems.man}/${brand}/products`}
+                  to={`/man/${navitems.man}/${brand}/products`}
                   key={brand}
                   onClick={closeDesktopMenu}
                   className="hover:text-black transition"
@@ -334,7 +334,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             return (
               <div key={mainCategory.id}>
                 <Link
-                  to={`/${mainCategory.id}/products`}
+                  to={`/${activeDesktopMenu}/${mainCategory.id}/products`}
                   onClick={closeDesktopMenu}
                   className="font-semibold uppercase tracking-wide text-gray-900 block mb-4 text-sm hover:text-black hover:underline"
                 >
@@ -344,7 +344,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                   {mainCategory.subs?.map((sub) => (
                     <Link
                       key={sub.id}
-                      to={`/${sub.id}/products`}
+                      to={`/${activeDesktopMenu}/${sub.id}/products`}
                       onClick={closeDesktopMenu}
                       className="block hover:text-black hover:underline transition"
                     >

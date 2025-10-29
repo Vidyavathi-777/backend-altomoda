@@ -1,25 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Search, ShoppingBag, Menu, X, User, ChevronRight } from 'lucide-react';
 import NavItems from './NavItems';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../Context/CartContext';
+import { useUser } from  "../../Context/UserContext"
 
 
 const Header = ({ currentGender, onGenderChange }) => {
-    const {totalQuantity} = useCart()
-    const [itemCount, setItemCount] = useState(totalQuantity);
+    const { getCartItemCount } = useCart()
+    const [itemCount, setItemCount] = useState(getCartItemCount());
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const { user, logout } = useUser();
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            setIsScrolled(scrollPosition > 100);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     useEffect(() => {
         const updateHeaderHeight = () => {
@@ -30,9 +23,9 @@ const Header = ({ currentGender, onGenderChange }) => {
         updateHeaderHeight();
     }, [isScrolled]);
 
-useEffect(() => {
-  setItemCount(totalQuantity); 
-}, [totalQuantity]); 
+    useEffect(() => {
+        setItemCount(getCartItemCount());
+    }, [getCartItemCount()]);
 
     return (
         <header className="w-full bg-white  font-[var(--font-body)] ">
@@ -45,12 +38,18 @@ useEffect(() => {
                     TAXES AND CUSTOMS DUTIES ARE NOT INCLUDED AND MAY BE CHARGED UPON DELIVERY
                 </div>
                 <div className="flex items-center text-sm gap-4 ">
-                    <Link to="/login" className="hover:opacity-70 transition">
-                        Account: Log in
-                    </Link>
-                    <Link 
-                    to={"/cart"}
-                    className="hover:opacity-70 transition">
+                    {user ? (
+                        <Link to={"/auth"} className="hover:opacity-70 transition">
+                            Account: Log Out
+                        </Link>
+                    ) : (
+                        <Link to="/auth" className="hover:opacity-70 transition">
+                            Account: Log in
+                        </Link>
+                    )}
+                    <Link
+                        to={"/cart"}
+                        className="hover:opacity-70 transition">
                         Bag: ({itemCount})
                     </Link>
                     <Link
@@ -87,9 +86,9 @@ useEffect(() => {
                         </a>
 
                         <div className="flex items-center gap-2">
-                            <Link 
-                            to={"/search"}
-                            className="p-2">
+                            <Link
+                                to={"/search"}
+                                className="p-2">
                                 <Search className="w-5 h-5" />
                             </Link>
                             <button className="p-2">

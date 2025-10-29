@@ -8,14 +8,27 @@ const NewArrivals = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const sliderRef = useRef(null);
+  
+  // Category IDs for man and woman
+  const navitems = {
+    man: "68f86b10734810ab97bb98d1",
+    woman: "68f86b1c734810ab97bb9a2f"
+  };
 
-  // Fetch new arrival products from API
+  // Fetch new arrival products from API using gender category ID
   const fetchNewArrivals = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/new?page=1&limit=20`);
+      const categoryId = navitems[gender];
+      if (!categoryId) {
+        throw new Error(`Invalid gender: ${gender}`);
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/products/new-arrivals/${categoryId}?page=1&limit=20`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -43,14 +56,16 @@ const NewArrivals = () => {
 
           return {
             _id: { $oid: product._id || Math.random().toString() },
+            sku_parent: product.sku_parent || '',
+            sku: product.sku || '',
             name: product.brand || 'Unknown Brand',
             title: title,
             description: product.description?.en || '',
             price: {
               amount: product.base_price || 0,
-              currency: 'EUR' // Changed from USD to EUR based on your product data
+              currency: 'EUR'
             },
-            imgs: mainImage ? [{ url: mainImage.url }] : [],
+            imgs: product.images || [], // Use all images array
             brand: product.brand || 'Unknown',
             category: category,
             subcategory: '',
@@ -231,7 +246,7 @@ const NewArrivals = () => {
                   <Link
                     key={product._id.$oid}
                     className="flex-shrink-0 w-48 md:w-56 lg:w-64 group"
-                    to={product.link}
+                    to={`/${navitems.gender}/product/${product.sku_parent}`}
                   >
                     {/* Product Card */}
                     <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
@@ -247,7 +262,7 @@ const NewArrivals = () => {
                                     <img
                                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                       src={product.imgs[0].url}
-                                      alt={product.name}
+                                      alt={product.title}
                                       loading="lazy"
                                     />
                                   ) : (

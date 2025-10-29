@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
+import { useUser } from '../Context/UserContext';
 
 const ProductDetailPage = () => {
-    // const { addToCart } = useCart();
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [activeTab, setActiveTab] = useState(null);
@@ -15,11 +15,19 @@ const ProductDetailPage = () => {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [product, setProduct] = useState(null);
     const [relatedLoading, setRelatedLoading] = useState(false);
+    const [sizeDropdownOpen, setSizeDropdownOpen] = useState(false);
+    const [quantity, setQuantity] = useState(1);
+    const [addingToCart, setAddingToCart] = useState(false);
 
     const { sku_parent, gender = 'woman' } = useParams();
     const sliderRef = useRef(null);
     const mobileImageSliderRef = useRef(null);
+    const sizeDropdownRef = useRef(null);
+    const { addToCart } = useCart();
+    const { user } = useUser();
 
+    console.log('User in ProductDetailPage:', user);
+    console.log(user.id)
     // Fetch product by parent SKU
     useEffect(() => {
         const fetchProduct = async () => {
@@ -49,9 +57,9 @@ const ProductDetailPage = () => {
                     
                     // Set default selected size and variant
                     if (data.data?.variants?.length > 0) {
-                        const firstInStockVariant = data.data.variants.find(v => v.stock > 0) || data.data.variants[0];
-                        setSelectedSize(firstInStockVariant.size);
-                        setSelectedVariant(firstInStockVariant);
+                        const firstVariant = data.data.variants[0];
+                        setSelectedSize(firstVariant.size);
+                        setSelectedVariant(firstVariant);
                     }
                 } else {
                     throw new Error(data.message || 'Failed to fetch product');
@@ -69,12 +77,31 @@ const ProductDetailPage = () => {
         }
     }, [sku_parent]);
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sizeDropdownRef.current && !sizeDropdownRef.current.contains(event.target)) {
+                setSizeDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     // Handle size selection
     const handleSizeSelect = (size) => {
         setSelectedSize(size);
         // Find the corresponding variant
         const variant = product?.variants?.find(v => v.size === size);
         setSelectedVariant(variant || null);
+        setSizeDropdownOpen(false);
+    };
+
+    // Handle quantity change
+    const handleQuantityChange = (newQuantity) => {
+        if (newQuantity < 1) return;
+        setQuantity(newQuantity);
     };
 
     // Fetch related products based on parent SKU
@@ -231,28 +258,39 @@ const ProductDetailPage = () => {
         return selectedVariant?.barcode || '';
     };
 
-    // Handle add to cart with selected variant
-    // const handleAddToCart = () => {
-    //     if (!selectedVariant) return;
-        
-    //     const cartItem = {
-    //         ...product,
-    //         selectedSize: selectedVariant.size,
-    //         selectedVariant: selectedVariant,
-    //         price: getCurrentPrice(),
-    //         stock: getCurrentStock(),
-    //         barcode: getCurrentBarcode(),
-    //         image: product.images?.[0]?.url || '',
-    //         title: getLocalizedText('title'),
-    //         brand: product.brand
-    //     };
-        
-    //     addToCart(cartItem);
-    // };
+  const handleAddToCart = async () => {
+        if (!user.id) {
+            alert('Please login to add items to cart');
+            return;
+        }
 
-    const handleAddToCart =() =>{
-        alert("Product added to cart")
-    }
+        if (!selectedVariant) {
+            alert('Please select a size.');
+            return;
+        }
+
+        setAddingToCart(true);
+
+        try {
+            // Get the variant SKU and current price
+            const sku = selectedVariant.sku || product.sku_parent;
+            const priceSnapshot = getCurrentPrice();
+
+            // Call addToCart from CartContext with correct parameters
+            await addToCart(sku, quantity, priceSnapshot);
+            
+            // Show success message
+            alert(`Added ${quantity} item(s) to cart!`);
+            
+            // Reset quantity after adding to cart
+            setQuantity(1);
+        } catch (err) {
+            console.error('Failed to add to cart:', err);
+            alert(err.message || 'Failed to add item to cart');
+        } finally {
+            setAddingToCart(false);
+        }
+    };
 
     const maxSlide = Math.max(0, Math.ceil(relatedProducts.length / visibleItems) - 1);
 
@@ -363,8 +401,8 @@ const ProductDetailPage = () => {
 
                         {/* Stock Status */}
                         <div className="mb-2">
-                            <span className={`text-sm font-medium ${getCurrentStock() > 10 ? 'text-green-600' : getCurrentStock() > 0 ? 'text-[#FFAA6B]' : 'text-red-600'}`} style={{ fontFamily: cssVariables.fontBody }}>
-                                {getCurrentStock() > 10 ? 'In Stock' : getCurrentStock() > 0 ? 'Low Stock' : 'Out of Stock'}
+                            <span className={`text-sm font-medium ${getCurrentStock() > 10 ? 'text-green-600' : getCurrentStock() > 0 ? 'text-[#FFAA6B]' : 'text-gray-600'}`} style={{ fontFamily: cssVariables.fontBody }}>
+                                {getCurrentStock() > 10 ? 'In Stock' : getCurrentStock() > 0 ? 'Low Stock' : 'Available for Order'}
                                 {getCurrentStock() > 0 && ` (${getCurrentStock()} available)`}
                             </span>
                         </div>
@@ -378,58 +416,116 @@ const ProductDetailPage = () => {
                             </div>
                         )}
 
-                        {/* Selected Size */}
-                        {selectedSize && (
-                            <div className="mb-2">
-                                <span className="text-sm text-gray-600" style={{ fontFamily: cssVariables.fontBody }}>
-                                    Selected Size: {selectedSize}
-                                    {selectedVariant?.size_conversion && ` (${getSizeConversion(selectedVariant)})`}
-                                </span>
-                            </div>
-                        )}
-
                         <p className="text-xs text-gray-500 mb-8" style={{ fontFamily: cssVariables.fontBody }}>Import Duties not included</p>
 
                         {/* Size selection & Add to Cart */}
-                        <div className="mb-4">
-                            {/* Size Selection */}
-                            <div className="mb-4">
+                        <div className="mb-4 space-y-4">
+                            {/* Size Selection Dropdown */}
+                            <div className="relative" ref={sizeDropdownRef}>
                                 <label className="block text-sm font-medium mb-2" style={{ fontFamily: cssVariables.fontBody }}>
                                     Select Size:
                                 </label>
-                                <div className="flex flex-wrap gap-2">
-                                    {product.variants?.map((variant) => (
-                                        <button
-                                            key={variant._id}
-                                            onClick={() => handleSizeSelect(variant.size)}
-                                            className={`px-4 py-2 border rounded-md text-sm transition-all duration-200 ${
-                                                selectedSize === variant.size
-                                                    ? 'border-black bg-black text-white'
-                                                    : variant.stock > 0
-                                                    ? 'border-gray-300 hover:border-gray-500 hover:bg-gray-50'
-                                                    : 'border-gray-200 bg-gray-100 text-gray-400 '
-                                            }`}
-                                            // disabled={variant.stock === 0}
-                                            style={{ fontFamily: cssVariables.fontBody }}
-                                        >
-                                            {variant.size}
-                                            {variant.size_conversion && ` (${getSizeConversion(variant)})`}
-                                        </button>
-                                    ))}
-                                </div>
+                                <button
+                                    onClick={() => setSizeDropdownOpen(!sizeDropdownOpen)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-md text-left flex justify-between items-center hover:border-gray-500 transition-colors"
+                                    style={{ fontFamily: cssVariables.fontBody }}
+                                >
+                                    <span>
+                                        {selectedSize ? (
+                                            <>
+                                                {selectedSize}
+                                                {selectedVariant?.size_conversion && ` (${getSizeConversion(selectedVariant)})`}
+                                            </>
+                                        ) : (
+                                            'Choose a size'
+                                        )}
+                                    </span>
+                                    <ChevronDown className={`w-4 h-4 transition-transform ${sizeDropdownOpen ? 'rotate-180' : ''}`} />
+                                </button>
+                                
+                                {sizeDropdownOpen && (
+                                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                                        {product.variants?.map((variant) => (
+                                            <button
+                                                key={variant._id}
+                                                onClick={() => handleSizeSelect(variant.size)}
+                                                className={`w-full px-4 py-3 text-left border-b border-gray-100 last:border-b-0 transition-colors ${
+                                                    selectedSize === variant.size
+                                                        ? 'bg-gray-100 text-black'
+                                                        : 'hover:bg-gray-50 text-gray-700'
+                                                }`}
+                                                style={{ fontFamily: cssVariables.fontBody }}
+                                            >
+                                                <div className="flex justify-between items-center">
+                                                    <span>
+                                                        {variant.size}
+                                                        {variant.size_conversion && ` (${getSizeConversion(variant)})`}
+                                                    </span>
+                                                    <span className={`text-xs ${
+                                                        variant.stock > 10 ? 'text-green-600' : 
+                                                        variant.stock > 0 ? 'text-[#FFAA6B]' : 
+                                                        'text-gray-400'
+                                                    }`}>
+                                                        {variant.stock > 0 ? `${variant.stock} available` : 'Available for order'}
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
+                            {/* Quantity Selector */}
+                            {selectedSize && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-2" style={{ fontFamily: cssVariables.fontBody }}>
+                                        Quantity:
+                                    </label>
+                                    <div className="flex items-center space-x-3">
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity - 1)}
+                                            disabled={quantity <= 1}
+                                            className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-500 transition-colors"
+                                        >
+                                            <span className="text-lg">-</span>
+                                        </button>
+                                        <span className="w-12 text-center text-lg" style={{ fontFamily: cssVariables.fontBody }}>
+                                            {quantity}
+                                        </span>
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity + 1)}
+                                            disabled={getCurrentStock() > 0 && quantity >= getCurrentStock()}
+                                            className="w-10 h-10 border border-gray-300 rounded-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-500 transition-colors"
+                                        >
+                                            <span className="text-lg">+</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Add to Cart Button */}
-                            <button
-                                className="w-full rounded-2xl text-white py-5 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
-                                style={{ backgroundColor: cssVariables.primary, fontFamily: cssVariables.fontAccent }}
-                                onMouseEnter={e => e.target.style.backgroundColor = cssVariables.secondary}
-                                onMouseLeave={e => e.target.style.backgroundColor = cssVariables.primary}
-                                onClick={handleAddToCart}
-                                // disabled={!selectedVariant || getCurrentStock() === 0}
-                            >
-                                {!selectedVariant ? 'Select a Size' : getCurrentStock() === 0 ? 'Out of Stock' : 'Add to Cart'}
-                            </button>
+
+<button
+    className="w-full rounded-2xl text-white py-5 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center"
+    style={{ backgroundColor: cssVariables.primary, fontFamily: cssVariables.fontAccent }}
+    onMouseEnter={e => !addingToCart && (e.target.style.backgroundColor = cssVariables.secondary)}
+    onMouseLeave={e => e.target.style.backgroundColor = cssVariables.primary}
+    onClick={handleAddToCart}
+    disabled={!selectedSize || addingToCart}
+>
+    {addingToCart ? (
+        <>
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Adding to Cart...
+        </>
+    ) : (
+        !selectedSize ? 'Select a Size' : 'Add to Cart'
+    )}
+</button>
+
                         </div>
 
                         {/* Model Measurements */}
