@@ -61,6 +61,29 @@ exports.createOrder = catchAsync(async (req, res) => {
   res.status(201).json({ success: true, data: order });
 });
 
+exports.getOrdersByUserId = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  
+  const orders = await Order.find({ user: userId })
+    .sort({ createdAt: -1 })
+    .populate('user', 'firstName lastName email'); // Optional: populate user details
+
+  if (!orders || orders.length === 0) {
+    return res.json({ 
+      success: true, 
+      count: 0, 
+      data: [],
+      message: 'No orders found for this user'
+    });
+  }
+
+  res.json({ 
+    success: true, 
+    count: orders.length, 
+    data: orders 
+  });
+});
+
 exports.getOrders = catchAsync(async (req, res) => {
   const query = req.admin ? {} : { user: req.user._id };
   const orders = await Order.find(query).sort({ createdAt: -1 });

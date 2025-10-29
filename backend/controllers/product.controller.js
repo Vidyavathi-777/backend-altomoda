@@ -188,7 +188,7 @@ exports.getCategoryById = catchAsync(async (req, res) => {
 
 
 
-exports.getAllProducts = async (req, res) => {
+exports.getAllProducts = catchAsync( async (req, res) => {
   try {
     let { page = 1, limit = 100, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
 
@@ -227,9 +227,9 @@ exports.getAllProducts = async (req, res) => {
     console.error(error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
-};
+});
 
-exports.getCategoryTree = async (req, res) => {
+exports.getCategoryTree = catchAsync (async (req, res) => {
   function buildCategoryTree(categories, parentId = null) {
     return categories
       .filter(cat => String(cat.parent_id) === String(parentId))
@@ -254,7 +254,7 @@ exports.getCategoryTree = async (req, res) => {
     console.error('Error fetching category tree:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+});
 
 exports.getChildCategories = catchAsync(async (req, res) => {
   const { categoryId } = req.params;
@@ -753,79 +753,6 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
 });
 
 
-exports.getProductBySkuParent = catchAsync(async (req, res) => {
-  const { sku } = req.params;
-  console.log("Parent SKU:", sku);
-
-  // Ensure sku is a string
-  if (!sku || typeof sku !== "string") {
-    throw new ApiError(400, "Invalid SKU format");
-  }
-
-  // Find all products with this sku_parent (no ObjectId check)
-  const products = await Product.find({ "props.sku_parent": sku })
-    .populate("cats", "name locs")
-    .lean();
-
-  if (!products || products.length === 0) {
-    throw new ApiError(404, "No products found for this parent SKU");
-  }
-
-  const baseProduct = products[0];
-
-  const groupedProduct = {
-    _id: baseProduct._id,
-    sku_parent: baseProduct.props.sku_parent,
-    title: baseProduct.locs?.singles?.title || {},
-    description: baseProduct.locs?.singles?.desc || {},
-    color: baseProduct.locs?.singles?.color || {},
-    brand: baseProduct.props.brand,
-    season: baseProduct.props.season,
-    category: baseProduct.cats?.[0]?.name?.locs || {},
-    cats: baseProduct.cats
-      ? baseProduct.cats.map((cat) => ({
-          _id: cat._id,
-          name: cat.name?.locs || {},
-        }))
-      : [],
-    categoryIds: baseProduct.cats ? baseProduct.cats.map((cat) => cat._id) : [],
-    composition: baseProduct.composition || [],
-    care: baseProduct.locs?.singles?.care || {},
-    made: baseProduct.locs?.singles?.made || {},
-    fastening: baseProduct.locs?.singles?.fastening || {},
-    sex: baseProduct.locs?.singles?.sex || {},
-    images: baseProduct.imgs || [],
-    base_price: baseProduct.stock_price,
-    base_buy_price: baseProduct.props.buy_price,
-    variants: [],
-  };
-
-  // Group all size variants
-  for (const product of products) {
-    groupedProduct.variants.push({
-      _id: product._id,
-      sku: product.sku,
-      size: product.props.size,
-      size_conversion: product.locs?.singles?.size_conversion || {},
-      stock: product.qty,
-      price: product.stock_price,
-      buy_price: product.props.buy_price,
-      barcode: product.props.barcode,
-      model_measurements: {
-        waist: product.props.model_size_waistline,
-        hip: product.props.model_size_hip,
-        chest: product.props.model_size_chest,
-        height: product.props.model_size_height,
-      },
-    });
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: groupedProduct,
-  });
-});
-
 exports.getNewProducts = catchAsync(async (req, res) => {
   // Helper function to get all category IDs including children
   const getAllCategoryIds = (category) => {
@@ -999,4 +926,77 @@ exports.getNewProducts = catchAsync(async (req, res) => {
       message: "Server error while fetching new products",
     });
   }
+});
+
+exports.getProductBySkuParent = catchAsync(async (req, res) => {
+  const { sku } = req.params;
+  console.log("Parent SKU:", sku);
+
+  // Ensure sku is a string
+  if (!sku || typeof sku !== "string") {
+    throw new ApiError(400, "Invalid SKU format");
+  }
+
+  // Find all products with this sku_parent (no ObjectId check)
+  const products = await Product.find({ "props.sku_parent": sku })
+    .populate("cats", "name locs")
+    .lean();
+
+  if (!products || products.length === 0) {
+    throw new ApiError(404, "No products found for this parent SKU");
+  }
+
+  const baseProduct = products[0];
+
+  const groupedProduct = {
+    _id: baseProduct._id,
+    sku_parent: baseProduct.props.sku_parent,
+    title: baseProduct.locs?.singles?.title || {},
+    description: baseProduct.locs?.singles?.desc || {},
+    color: baseProduct.locs?.singles?.color || {},
+    brand: baseProduct.props.brand,
+    season: baseProduct.props.season,
+    category: baseProduct.cats?.[0]?.name?.locs || {},
+    cats: baseProduct.cats
+      ? baseProduct.cats.map((cat) => ({
+          _id: cat._id,
+          name: cat.name?.locs || {},
+        }))
+      : [],
+    categoryIds: baseProduct.cats ? baseProduct.cats.map((cat) => cat._id) : [],
+    composition: baseProduct.composition || [],
+    care: baseProduct.locs?.singles?.care || {},
+    made: baseProduct.locs?.singles?.made || {},
+    fastening: baseProduct.locs?.singles?.fastening || {},
+    sex: baseProduct.locs?.singles?.sex || {},
+    images: baseProduct.imgs || [],
+    base_price: baseProduct.stock_price,
+    base_buy_price: baseProduct.props.buy_price,
+    variants: [],
+  };
+
+  // Group all size variants
+  for (const product of products) {
+    groupedProduct.variants.push({
+      _id: product._id,
+      sku: product.sku,
+      size: product.props.size,
+      size_conversion: product.locs?.singles?.size_conversion || {},
+      stock: product.qty,
+      price: product.stock_price,
+      buy_price: product.props.buy_price,
+      barcode: product.props.barcode,
+      model_measurements: {
+        waist: product.props.model_size_waistline,
+        hip: product.props.model_size_hip,
+        chest: product.props.model_size_chest,
+        height: product.props.model_size_height,
+      },
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: groupedProduct,
+  });
 });

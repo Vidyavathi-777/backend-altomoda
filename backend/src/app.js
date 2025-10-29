@@ -38,4 +38,12 @@ app.use((req, res) => {
 // Global error handler
 app.use(errorMiddleware);
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "connect-src 'self' https://sentry.phonepe.com https://dgq88cldibal5.cloudfront.net https://api-preprod.phonepe.com https://d32dgd8o7pwmnt.cloudfront.net https://mercurystatic.phonepe.com https://imgstatic.phonepe.com https://mercury-uat.phonepe.com https://stg-sentry.phonepe.com https://wa-uat.phonepe.com https://stg-linchpin.phonepe.com"
+  );
+  next();
+});
+
 module.exports = app;
