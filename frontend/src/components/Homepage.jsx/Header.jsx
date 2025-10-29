@@ -91,9 +91,9 @@ const Header = ({ currentGender, onGenderChange }) => {
                                 className="p-2">
                                 <Search className="w-5 h-5" />
                             </Link>
-                            <button className="p-2">
+                            <Link to={"/cart"} className="p-2">
                                 <ShoppingBag className="w-5 h-5" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
 

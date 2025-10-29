@@ -285,7 +285,7 @@ const AddressManagement = () => {
                     name="label" 
                     value={formData.label} 
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     placeholder="Home / Work (optional)" 
                   />
                 </div>
@@ -299,7 +299,7 @@ const AddressManagement = () => {
                     required 
                     value={formData.line1} 
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     placeholder="Street address" 
                   />
                 </div>
@@ -312,7 +312,7 @@ const AddressManagement = () => {
                     name="line2" 
                     value={formData.line2} 
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     placeholder="Apartment, suite, etc. (optional)" 
                   />
                 </div>
@@ -327,7 +327,7 @@ const AddressManagement = () => {
                       required 
                       value={formData.city} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     />
                   </div>
                   <div>
@@ -339,7 +339,7 @@ const AddressManagement = () => {
                       required 
                       value={formData.state} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     />
                   </div>
                   <div>
@@ -351,7 +351,7 @@ const AddressManagement = () => {
                       required 
                       value={formData.pincode} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     />
                   </div>
                 </div>
@@ -365,7 +365,7 @@ const AddressManagement = () => {
                       name="country" 
                       value={formData.country} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                     />
                   </div>
                   <div className="flex items-center pt-6">
@@ -374,7 +374,7 @@ const AddressManagement = () => {
                       name="isDefault" 
                       checked={formData.isDefault} 
                       onChange={handleInputChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-gray-500"
                       id="isDefault"
                     />
                     <label htmlFor="isDefault" className="ml-2 text-sm text-gray-700">
@@ -392,7 +392,7 @@ const AddressManagement = () => {
                       name="lat" 
                       value={formData.geo.lat} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                       placeholder="e.g., 12.9716"
                       type="number"
                       step="any"
@@ -406,7 +406,7 @@ const AddressManagement = () => {
                       name="lng" 
                       value={formData.geo.lng} 
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                       placeholder="e.g., 77.5946"
                       type="number"
                       step="any"
@@ -460,12 +460,12 @@ const AddressManagement = () => {
                         key={address._id} 
                         className={`border rounded-lg p-4 transition-colors ${
                           address.isDefault 
-                            ? 'border-blue-500 bg-blue-50' 
+                            ? 'border-green-500 bg-blue-50' 
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         {address.isDefault && (
-                          <span className="inline-flex px-2 py-0.5 text-xs bg-blue-600 text-white rounded-full font-medium mb-2">
+                          <span className="inline-flex px-2 py-0.5 text-xs bg-gray-600 text-white rounded-full font-medium mb-2">
                             Default
                           </span>
                         )}

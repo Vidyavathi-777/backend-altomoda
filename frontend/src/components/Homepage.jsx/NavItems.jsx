@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Search, ShoppingBag, Menu, X, User, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useCategories } from '../../Context/CategoriesContext';
+import { useUser } from '../../Context/UserContext';
 
 const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderChange }) => {
   const navitems = {
@@ -10,8 +11,10 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
     woman: "68f86b1c734810ab97bb9a2f"
   };
 
+  const { user } = useUser();
+
     const { womanCategories, manCategories, newArrivals } = useCategories();
-    console.log(womanCategories)
+    // console.log(womanCategories)
 
     const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
     const [mobileGender, setMobileGender] = useState('woman');
@@ -461,14 +464,20 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                             </div>
                                         );
                                     })}
-
-                                    <button
-                                        onClick={() => openMobileSubView('designers')}
+                                    <div className='w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200'>
+                                                                          <Link to={"/"+mobileGender+"/designers"}
+                                        onClick={() => setMobileMenuOpen(false)}
                                         className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
                                     >
                                         Designers
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                          </Link>
+                                    <ChevronRight
+                                        onClick={() => openMobileSubView('designers')}
+                                        className="w-5 h-5"
+                                    />
+
+                                    </div>
+
 
                                     <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
                                         <Link
@@ -497,25 +506,46 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                     >
                                         Up To 50% Off
                                     </Link>
-
-                                    <button
-                                        onClick={() => openMobileSubView('magazine')}
+                                    <div className='w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200'>
+                                                                          <Link to={"/magazine"}
+                                                                          onClick={() => setMobileMenuOpen(false)}
+                                        
                                         className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200"
                                     >
                                         TCZ_TheCornerZine
-                                        <ChevronRight className="w-5 h-5" />
-                                    </button>
+                                         </Link>
+                                        <ChevronRight
+                                        onClick={() => openMobileSubView('magazine')}
+                                         className="w-5 h-5" />
+
+                                    </div>
+
+
+                                   
 
                                     <a href="#" className="block py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
                                         Product Finder
                                     </a>
 
+                                  {user ? (
                                     <div className="mt-8 pt-6 border-t border-gray-200">
-                                        <a href="#" className="flex items-center gap-3 text-sm py-2">
+                                        <Link to={"/auth"} 
+                                          onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-3 text-sm py-2">
+                                            <User className="w-5 h-5" />
+                                            Log out
+                                        </Link>
+                                    </div>
+                                    ) : (
+                                    <div className="mt-8 pt-6 border-t border-gray-200">
+                                        <Link to={"/auth"} 
+                                          onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-3 text-sm py-2">
                                             <User className="w-5 h-5" />
                                             Log in
-                                        </a>
+                                        </Link>
                                     </div>
+                                    )}
                                 </nav>
                             </>
                         ) : (
@@ -572,7 +602,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                                 return (
                                                     <div key={mainCategory.id}>
                                                         <Link
-                                                            to={`/${mobileGender}/${mainCategory.id}/products`}
+                                                            to={`/${mobileGender}/${mainCategory.id}/new-arrivals/products`}
                                                             onClick={() => setMobileMenuOpen(false)}
                                                             className="block w-full text-left py-3 text-sm font-semibold border-b border-gray-200"
                                                         >
@@ -617,13 +647,25 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                                             ))}
                                         </div>
                                     )}
-
+                                    {user ? (
                                     <div className="mt-8 pt-6 border-t border-gray-200">
-                                        <a href="#" className="flex items-center gap-3 text-sm py-2">
+                                        <Link to={"/auth"} 
+                                          onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-3 text-sm py-2">
+                                            <User className="w-5 h-5" />
+                                            Log out
+                                        </Link>
+                                    </div>
+                                    ) : (
+                                    <div className="mt-8 pt-6 border-t border-gray-200">
+                                        <Link to={"/auth"} 
+                                          onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-3 text-sm py-2">
                                             <User className="w-5 h-5" />
                                             Log in
-                                        </a>
+                                        </Link>
                                     </div>
+                                    )}
                                 </div>
                             </>
                         )}

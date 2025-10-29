@@ -89,7 +89,7 @@ const handleSignupSubmit = async (e) => {
       console.error('Logout error:', err);
     }
     logout();
-    navigate('/login');
+    navigate('/auth');
   };
 
   if (user) {
