@@ -9,7 +9,7 @@ class CloudStoreService {
     this.client = axios.create({
       baseURL: config.cloudstore.baseUrl,
       headers: {
-        'Authorization': `Bearer ${config.cloudstore.shopAuthToken}`,
+        'Authorization': `Bearer ${config.cloudstore.shopAuthToken}`, 
         'Content-Type': 'application/json',
       },
       timeout: config.cloudstore.timeoutMs || 30000,
@@ -73,12 +73,22 @@ class CloudStoreService {
    *        CATALOG APIs
    * ============================= */
 
-  async getFullCatalog(pageIndex = 1, pageSize = 20) {
-    const endpoint = `/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
-    logger.info(`Fetching CloudStore catalog page ${pageIndex}`);
-    return this.makeRequest('GET', endpoint);
-  }
-
+async getFullCatalog(pageIndex = 1, pageSize = 20) {
+  const url = `${config.cloudstore.baseUrl}/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
+  logger.info(`Fetching from CloudStore URL: ${url}`);
+  
+  const response = await this.client.get(url, {
+    headers: {
+      Authorization: `Bearer ${config.cloudstore.shopAuthToken}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Encoding': 'gzip, deflate, br', // Match Postman
+      'User-Agent': 'YourApp/1.0', // Custom user agent
+    },
+    timeout: 30000, // Increase timeout
+  });
+  return response.data;
+}
   async getCatalogWithQuantities(sinceTimestamp = null, page = 1) {
     const params = { withQuantities: true, page };
     if (sinceTimestamp) params.since = sinceTimestamp;
@@ -97,15 +107,29 @@ class CloudStoreService {
    *        ORDER APIs
    * ============================= */
 
-  async createOrder(orderData) {
-    logger.info(`Creating CloudStore order: ${orderData?.shop_order_id}`);
-    return this.makeRequest('POST', `/shop/v1/orders`, orderData);
-  }
+// In services/cloudstore.service.js - KEEP THE WRAPPING
 
-  async updateOrder(cloudstoreOrderId, updateData) {
-    logger.info(`Updating CloudStore order ${cloudstoreOrderId}`);
-    return this.makeRequest('PATCH', `/shop/v1/orders/${encodeURIComponent(cloudstoreOrderId)}`, updateData);
-  }
+async createOrder(orderData) {
+  logger.info(`Creating CloudStore order: ${orderData?.shop_order_id}`);
+  
+  // The API expects the order data wrapped in "order" property
+  const payload = {
+    order: orderData
+  };
+  
+  return this.makeRequest('POST', `/shop/v1/orders`, payload);
+}
+
+async updateOrder(cloudstoreOrderId, updateData) {
+  logger.info(`Updating CloudStore order ${cloudstoreOrderId}`);
+  
+  // For PATCH, also wrap the update data
+  const payload = {
+    order: updateData
+  };
+  
+  return this.makeRequest('PATCH', `/shop/v1/orders/${encodeURIComponent(cloudstoreOrderId)}`, payload);
+}
 
   async confirmOrder(cloudstoreOrderId) {
     return this.updateOrder(cloudstoreOrderId, { order_status: 'CONFIRMED' });

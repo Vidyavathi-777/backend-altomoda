@@ -76,7 +76,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
     throw new ApiError(400, 'Please provide userId');
   }
 
-  const cart = await Cart.findOne({ userId });
+  const cart = await Cart.findOne({ userId });  
 
   if (!cart) {
     return res.status(200).json({
@@ -89,6 +89,27 @@ exports.getCart = catchAsync(async (req, res, next) => {
     });
   }
 
+  const skus = cart.items.map(item => item.sku);
+  const products = await Product.find({ sku: { $in: skus } }).lean();
+    const enrichedItems = cart.items.map(item => {
+    const product = products.find(p => p.sku === item.sku);
+    return {
+      _id: item._id,
+      sku: item.sku,
+      qty: item.qty,
+      priceSnapshot: item.priceSnapshot,
+      addedAt: item.addedAt,
+      product: product ? {
+        title: product.locs?.singles?.title?.en || 'Product',
+        brand: product.props?.brand || 'Brand',
+        image: product.imgs?.[0]?.url || '',
+        size: product.props?.size || 'N/A',
+        color: product.locs?.singles?.color?.en || ''
+      } : null
+    };
+  });
+
+
   // Calculate cart summary
   const totalItems = cart.items.reduce((sum, item) => sum + item.qty, 0);
   const subtotal = cart.items.reduce((sum, item) => sum + (item.qty * item.priceSnapshot), 0);
@@ -96,9 +117,12 @@ exports.getCart = catchAsync(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: {
-      ...cart.toObject(),
+      _id: cart._id,
+      userId: cart.userId,
+      items: enrichedItems,
       totalItems,
-      subtotal
+      subtotal,
+      expiresAt: cart.expiresAt
     }
   });
 });

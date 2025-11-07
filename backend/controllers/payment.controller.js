@@ -61,6 +61,7 @@ exports.getPayments = catchAsync(async (req, res) => {
 });
 
 exports.initiatePayment = catchAsync(async (req, res) => {
+  console.log('Initiate payment request body:', req.body);
   const { orderId, amount } = req.body;
 
   const order = await Order.findById(orderId);
@@ -86,7 +87,7 @@ exports.initiatePayment = catchAsync(async (req, res) => {
   // Update order.payment summary
   order.payment = {
     paymentId,
-    status: 'INITIATED',
+    status: 'INITIATED', 
     amount: amountValue,
     currency: 'INR',
   };
@@ -99,13 +100,15 @@ exports.initiatePayment = catchAsync(async (req, res) => {
     amount: amountPaise,
     currency: 'INR',
     merchantUserId: String(order.user),
-    redirectUrl: config.phonepe.redirectUrl,
+    redirectUrl: `${config.phonepe.redirectUrl}/${paymentId}`,
     redirectMode: 'REDIRECT',
     callbackUrl: config.phonepe.webhookUrl,
     paymentInstrument: {
       type: 'PAY_PAGE'  // This is required for payment page flow
     }
   };
+    const payloadBase64 = phonepeService.base64Encode(payload);
+  console.log('Generated Base64 payload:', payloadBase64);
 
   try {
     const phonepeResp = await phonepeService.createPayment(payload);
@@ -118,6 +121,7 @@ exports.initiatePayment = catchAsync(async (req, res) => {
         redirectUrl: phonepeResp.data?.instrumentResponse?.redirectInfo?.url 
       } 
     });
+    console.log('PhonePe payment initiation response:', phonepeResp);
   } catch (error) {
     // Update payment status to failed
     payment.status = 'FAILED';

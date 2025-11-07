@@ -18,6 +18,7 @@ module.exports = {
     webhookUrl: process.env.PHONEPE_WEBHOOK_URL,
     redirectUrl: process.env.PHONEPE_REDIRECT_URL,
     payEndpointPath: process.env.PHONEPE_PAY_ENDPOINT_PATH || '/pg/v1/pay',
+    statusEndpointPath: '/pg/v1/status',
   },
 
   cloudstore: {
@@ -27,6 +28,6 @@ module.exports = {
     retryAttempts: Number(process.env.CLOUDSTORE_RETRY_ATTEMPTS || 3),
   },
   axiosDefaults: {
-    timeout: Number(process.env.AXIOS_TIMEOUT_MS || 10000),
+    timeout: Number(process.env.AXIOS_TIMEOUT_MS || 10000), 
   },
 };

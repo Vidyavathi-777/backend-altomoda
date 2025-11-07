@@ -7,6 +7,7 @@ const { optionalAuth } = require('../../middlewares/auth.middleware');
 router.get('/categories', productController.getCategories);
 router.get('/brands', productController.getBrands);
 router.get("/new-arrivals/:categoryId", productController.getNewProducts)
+router.get("/related/:sku", productController.getRelatedProducts)
 // Product listing and details
 router.get('/', productController.getAllProducts);
 router.get("/:id",productController.getProductById)

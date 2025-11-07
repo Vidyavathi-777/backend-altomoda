@@ -25,6 +25,17 @@ app.use('/api', apiLimiter);
 // Routes
 app.use('/api', routes);
 
+app.use((req, res, next) => {
+  console.log('🔵 INCOMING REQUEST:', {
+    method: req.method,
+    url: req.url,
+    path: req.path,
+    originalUrl: req.originalUrl,
+    timestamp: new Date().toISOString()
+  });
+  next();
+});
+
 
 
 // 404 handler
@@ -37,6 +48,8 @@ app.use((req, res) => {
 
 // Global error handler
 app.use(errorMiddleware);
+app.set('trust proxy', 1);
+
 
 app.use((req, res, next) => {
   res.setHeader(
