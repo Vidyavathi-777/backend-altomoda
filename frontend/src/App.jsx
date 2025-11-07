@@ -40,7 +40,9 @@ function App({ gender: propGender }) {
         <Route path='/:gender?' element={<HomePage />} />
         <Route path='/:gender/product/:sku_parent' element={<ProductDetailPage />} />
         <Route path='/product/:id' element={<ProductDetailPage />} />
-        <Route path='/:gender/:categoryId/new-arrivals/products' element={<ProductsPage/>} />
+        <Route path="/products/search" element={<ProductsPage />} />
+        <Route path='/:gender/:newArrival/new-arrivals/products' element={<ProductsPage/>} />
+        <Route path='/:gender/:discountId/Discount/products' element={<ProductsPage />} />
         <Route path="/:gender/:categoryId/:brandName/products" element={<ProductsPage />} />
 <Route path="/:gender/:categoryId/products" element={<ProductsPage />} />
 <Route path="/:categoryId/:brandName/products" element={<ProductsPage />} />
@@ -67,10 +69,11 @@ function App({ gender: propGender }) {
        <Route path='/search' element={<SearchPage />} />
        <Route path='/cart' element={<CartPage />} />
        <Route path='/checkout' element={<CheckoutPage/>} />
-       <Route path='/success' element={<SuccessPage />} />
+       <Route path='/paymentCheck' element={<SuccessPage />} />
        <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
        <Route path='/terms&conditions' element={<CancellationsPolicy />} /> 
        <Route path='/addresses' element={<AddressManagement />} />
+       <Route path='/orders' element={<OrdersPage />} />
  
 
 {/* <Route path='/:categoryId/products' element={<ProductsPage />} />
@@ -103,5 +106,6 @@ import LoginPage from "./components/LoginPage";
 import SignupPage from './components/SignUpPage';
 import { UserProvider } from './Context/UserContext';
 import AddressManagement from './pages/AddressManagement';
+import OrdersPage from './pages/OrdersPage';
 
 export default App;

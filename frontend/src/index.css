@@ -1,3 +1,28 @@
+/* @import "tailwindcss";
+
+
+
+:root {
+  --primary: #30486B;
+  --secondary: #FFAA6B;
+  --neutral: #30486B;
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-accent: 'Inter', sans-serif;
+}
+
+.font-heading {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-body {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-accent {
+  font-family: 'Inter', sans-serif;
+} */
+
 @import "tailwindcss";
 
 :root {

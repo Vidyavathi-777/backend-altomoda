@@ -49,6 +49,7 @@ export const fetchCategoryChildren = async (categoryId) => {
         return [];
     }
 };
+
 // Fetch products by category
 export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20) => {
     try {
@@ -86,15 +87,10 @@ export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20) 
     }
 };
 
-// Fetch products by brand (updated for new grouped structure)
-export const fetchProductsByBrand = async (brand, categoryId , page = 1, limit = 20) => {
+// Fetch products by brand
+export const fetchProductsByBrand = async (brand, categoryId, page = 1, limit = 20) => {
     try {
-        let url = `${API_BASE_URL}/products/productsbyBrand/${categoryId}/${brand}/?page=${page}&limit=${limit}`;
-        
-        // Add categoryId if provided
-        // if (categoryId) {
-        //     url += `&categoryId=${categoryId}`;
-        // }
+        let url = `${API_BASE_URL}/products/productsbyBrand/${categoryId}/${brand}?page=${page}&limit=${limit}`;
 
         const response = await fetch(url, {
             headers: {
@@ -127,6 +123,7 @@ export const fetchProductsByBrand = async (brand, categoryId , page = 1, limit =
     }
 };
 
+// Fetch new arrivals by category
 export const fetchNewArrivalsByCategory = async (categoryId, page = 1, limit = 20) => {
     try {
         const response = await fetch(
@@ -249,10 +246,10 @@ export const fetchProductsWithFilters = async (filters, page = 1, limit = 20) =>
             return {
                 products: data.data.products || [],
                 pagination: {
-                    totalProducts: data.data.totalProducts || 0,
-                    totalPages: data.data.totalPages || 0,
-                    currentPage: data.data.currentPage || page,
-                    perPage: data.data.perPage || limit
+                    totalProducts: data.pagination.totalProducts || 0,
+                    totalPages: data.pagination.totalPages || 0,
+                    currentPage: data.pagination.currentPage || page,
+                    perPage: data.pagination.perPage || limit
                 }
             };
         }
@@ -264,134 +261,160 @@ export const fetchProductsWithFilters = async (filters, page = 1, limit = 20) =>
     }
 };
 
+// Fetch related products by SKU
+export const fetchRelatedProducts = async (sku) => {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/products/related/${sku}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            return {
+                products: data.data.products || []
+            };
+        }
+        
+        throw new Error(data.message || 'Failed to fetch related products');
+    } catch (error) {
+        console.error("Error fetching related products:", error);
+        throw error;
+    }
+};
+
 // Transform grouped product data to frontend format
 export const transformProduct = (product) => {
-    // Handle grouped product structure (with variants) or single product
+    // Helper function to extract localized text
+    const getLocalizedValue = (field, defaultValue = '') => {
+        if (!field) return defaultValue;
+        
+        if (typeof field === 'string') return field;
+        
+        if (typeof field === 'object' && field !== null) {
+            return field.en || field.it || field.es || field.nl || field.zh || 
+                   Object.values(field)[0] || defaultValue;
+        }
+        
+        return String(field || defaultValue);
+    };
+
+    // Check if product has variants (grouped structure)
     const isGrouped = product.variants && product.variants.length > 0;
     
-    // Use first variant for main product info, or the product itself if not grouped
-    const baseProduct = isGrouped ? product : product;
-    const firstVariant = isGrouped ? product.variants[0] : product;
-
-    // Handle different image formats
-    let mainImage = '';
-    let additionalImages = [];
+    // Handle image formats - check both 'images' and 'imgs' fields
+    let productImages = [];
     
-    if (baseProduct.images && baseProduct.images.length > 0) {
-        baseProduct.images.forEach(img => {
-            if (typeof img === 'string') {
-                if (!mainImage) mainImage = img;
-                else additionalImages.push(img);
-            } else if (img.url) {
-                if (!mainImage) mainImage = img.url;
-                else additionalImages.push(img.url);
-            }
-        });
-    } else if (baseProduct.imgs && baseProduct.imgs.length > 0) {
-        baseProduct.imgs.forEach(img => {
-            if (typeof img === 'string') {
-                if (!mainImage) mainImage = img;
-                else additionalImages.push(img);
-            } else if (img.url) {
-                if (!mainImage) mainImage = img.url;
-                else additionalImages.push(img.url);
-            }
-        });
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+        productImages = product.images.map(img => {
+            if (typeof img === 'string') return img;
+            if (img.url) return img.url;
+            return null;
+        }).filter(Boolean);
+    } else if (product.imgs && Array.isArray(product.imgs) && product.imgs.length > 0) {
+        productImages = product.imgs.map(img => {
+            if (typeof img === 'string') return img;
+            if (img.url) return img.url;
+            return null;
+        }).filter(Boolean);
     }
 
-    const color = baseProduct.locs?.singles?.color?.en || 
-                baseProduct.color?.en ||
-                baseProduct.locs?.lists?.colors?.[0]?.en || 
-                baseProduct.props?.color || '';
-
-    const title = baseProduct.locs?.singles?.title?.en || 
-                baseProduct.title?.en ||
-                baseProduct.props?.model_name || 
-                baseProduct.sku_parent || 
-                baseProduct.sku || 
-                'Product';
-
-    const description = baseProduct.locs?.singles?.desc?.en || 
-                      baseProduct.description?.en ||
-                      baseProduct.locs?.singles?.description?.en || '';
-
-    // Get category name from populated cats array
-    const category = baseProduct.cats?.[0]?.name?.locs?.en || 
-                   baseProduct.cats?.[0]?.name?.en ||
-                   baseProduct.category?.en ||
-                   baseProduct.props?.category || 
-                   'Clothing';
+    // Extract localized fields
+    const color = getLocalizedValue(product.color);
+    const title = getLocalizedValue(product.title, product.sku_parent || 'Product');
+    const description = getLocalizedValue(product.description);
+    const category = getLocalizedValue(product.category) || 
+                    getLocalizedValue(product.cats?.[0]?.name) || 
+                    'Clothing';
+    const gender = getLocalizedValue(product.sex, 'Unisex');
+    const madeIn = getLocalizedValue(product.made);
+    const care = getLocalizedValue(product.care);
+    const fastening = getLocalizedValue(product.fastening);
 
     // Get all available sizes from variants
     const availableSizes = isGrouped 
         ? product.variants.map(variant => ({
             size: variant.size,
             sku: variant.sku,
-            stock: variant.stock,
-            price: variant.price,
+            stock: variant.stock || 0,
+            price: variant.price || 0,
             inStock: (variant.stock || 0) > 0,
             barcode: variant.barcode,
-            modelMeasurements: variant.model_measurements
+            sizeConversion: getLocalizedValue(variant.size_conversion),
+            modelMeasurements: variant.model_measurements || {}
         }))
         : [{
-            size: baseProduct.props?.size || '',
-            sku: baseProduct.sku,
-            stock: baseProduct.qty || 0,
-            price: baseProduct.stock_price || 0,
-            inStock: (baseProduct.qty || 0) > 0,
-            barcode: baseProduct.props?.barcode,
-            modelMeasurements: {
-                waist: baseProduct.props?.model_size_waistline,
-                hip: baseProduct.props?.model_size_hip,
-                chest: baseProduct.props?.model_size_chest,
-                height: baseProduct.props?.model_size_height
-            }
+            size: product.size || '',
+            sku: product.sku,
+            stock: product.stock || 0,
+            price: product.base_price || 0,
+            inStock: (product.stock || 0) > 0,
+            barcode: product.barcode || '',
+            sizeConversion: '',
+            modelMeasurements: {}
         }];
 
-    // Calculate price range if multiple variants
+    // Calculate price range from variants
     const prices = availableSizes.map(size => size.price).filter(price => price > 0);
-    const minPrice = prices.length > 0 ? Math.min(...prices) : baseProduct.base_price || baseProduct.stock_price || 0;
-    const maxPrice = prices.length > 0 ? Math.max(...prices) : baseProduct.base_price || baseProduct.stock_price || 0;
-    const displayPrice = minPrice === maxPrice ? minPrice : `${minPrice} - ${maxPrice}`;
+    const minPrice = prices.length > 0 ? Math.min(...prices) : product.base_price || 0;
+    const maxPrice = prices.length > 0 ? Math.max(...prices) : product.base_price || 0;
 
-    // Check overall stock availability
+    // Calculate total stock
     const totalStock = availableSizes.reduce((sum, size) => sum + (size.stock || 0), 0);
     const inStock = totalStock > 0;
 
+    // Handle composition - ensure it's properly formatted
+    let composition = [];
+    if (Array.isArray(product.composition)) {
+        composition = product.composition.map(comp => ({
+            material: getLocalizedValue(comp.material),
+            perc: comp.perc || 0
+        }));
+    }
+
     return {
-        id: baseProduct._id || Math.random().toString(),
-        sku: baseProduct.sku_parent || baseProduct.sku,
-        name: baseProduct.brand || baseProduct.props?.brand || 'Unknown Brand',
+        id: product._id || Math.random().toString(),
+        sku: product.sku_parent || product.sku,
+        name: product.brand || 'Unknown Brand',
         productName: title,
         description: description,
-        price: displayPrice,
-        originalPrice: displayPrice, // You might want to calculate this differently if you have discount logic
+        price: minPrice === maxPrice ? minPrice : `${minPrice} - ${maxPrice}`,
         minPrice: minPrice,
         maxPrice: maxPrice,
-        discount: 0,
-        images: [mainImage, ...additionalImages].filter(img => img !== ''),
-        brand: baseProduct.brand || baseProduct.props?.brand || 'Unknown',
+        images: productImages,
+        brand: product.brand || 'Unknown',
         category: category,
         color: color,
-        type: baseProduct.props?.type || category,
-        gender: baseProduct.locs?.singles?.sex?.en || baseProduct.sex?.en || 'Unisex',
+        type: getLocalizedValue(product.type) || category,
+        gender: gender,
         sizes: availableSizes,
-        madeIn: baseProduct.locs?.singles?.made?.en || baseProduct.made?.en || '',
-        composition: baseProduct.composition || [],
-        care: baseProduct.locs?.singles?.care?.en || baseProduct.care?.en || '',
-        fastening: baseProduct.locs?.singles?.fastening?.en || baseProduct.fastening?.en || '',
+        madeIn: madeIn,
+        composition: composition,
+        care: care,
+        fastening: fastening,
         qty: totalStock,
         inStock: inStock,
-        tag: baseProduct.tag,
+        tag: product.tag,
         // Additional grouped product info
         isGrouped: isGrouped,
         variantCount: isGrouped ? product.variants.length : 1,
-        basePrice: baseProduct.base_price || baseProduct.stock_price || 0,
-        baseBuyPrice: baseProduct.base_buy_price || baseProduct.props?.buy_price || 0,
+        basePrice: product.base_price || 0,
+        baseBuyPrice: product.base_buy_price || 0,
         variants: isGrouped ? product.variants : undefined,
-        // Additional product details
-        season: baseProduct.season || baseProduct.props?.season,
-        sizeConversion: baseProduct.locs?.singles?.size_conversion?.en || baseProduct.size_conversion?.en || ''
+        season: product.season || '',
+        sizeConversion: '',
+        // Category IDs for filtering
+        categoryIds: product.categoryIds || (product.cats ? product.cats.map(cat => cat._id) : []),
+        cats: product.cats || []
     };
 };
 
@@ -415,42 +438,36 @@ export const getAvailableSizes = (product) => {
         }));
     }
     return [{
-        size: product.props?.size || '',
+        size: product.size || '',
         sku: product.sku,
-        inStock: (product.qty || 0) > 0,
-        price: product.stock_price || 0,
-        stock: product.qty || 0
+        inStock: (product.stock || 0) > 0,
+        price: product.base_price || 0,
+        stock: product.stock || 0
     }];
 };
 
 // Helper to find product by any SKU (searches through variants)
 export const findProductByAnySku = async (sku) => {
     try {
-        // First try to get the individual product by SKU
+        // First try to get by SKU parent
+        try {
+            const groupedProduct = await fetchProductBySkuParent(sku);
+            if (groupedProduct.product) {
+                const transformed = transformProduct(groupedProduct.product);
+                return transformed;
+            }
+        } catch (error) {
+            console.log('Product not found by SKU parent, trying individual SKU...');
+        }
+
+        // If not found, try individual product
         try {
             const individualProduct = await fetchProductBySku(sku);
             if (individualProduct.product) {
                 return transformProduct(individualProduct.product);
             }
         } catch (error) {
-            console.log('Product not found by individual SKU, trying SKU parent...');
-        }
-
-        // If individual product not found, try to extract SKU parent and fetch grouped product
-        const skuParent = sku.split('-').slice(0, -1).join('-');
-        if (skuParent && skuParent !== sku) {
-            const groupedProduct = await fetchProductBySkuParent(skuParent);
-            if (groupedProduct.product) {
-                const transformed = transformProduct(groupedProduct.product);
-                // Find the specific variant within the grouped product
-                const variant = getVariantBySku(transformed, sku);
-                if (variant) {
-                    return {
-                        ...transformed,
-                        selectedVariant: variant
-                    };
-                }
-            }
+            console.log('Product not found by individual SKU either');
         }
 
         throw new Error('Product not found');

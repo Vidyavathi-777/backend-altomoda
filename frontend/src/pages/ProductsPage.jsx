@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { ChevronDown, ChevronUp, Loader2, Filter, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, Filter, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { 
     fetchBrands, 
@@ -7,84 +7,67 @@ import {
     fetchProductsByCategory,
     fetchProductsByBrand,
     fetchProductsWithFilters,
+    fetchNewArrivalsByCategory,
     transformProduct 
 } from "../../src/api/productsApi";
 
 const ProductsPage = () => {
+    const navitems = {
+        man: "68f86b10734810ab97bb98d1",
+        woman: "68f86b1c734810ab97bb9a2f"
+    };
 
-      const navitems = {
-    man: "68f86b10734810ab97bb98d1",
-    woman: "68f86b1c734810ab97bb9a2f"
-  };
-    // Handle flexible route params - could be gender/categoryId/brandName in any combination
     const params = useParams();
-    
-    // Extract params - they might be named param1, param2, param3 or gender, categoryId, brandName
     const gender = params.gender || params.param1;
     const categoryId = params.categoryId || params.param2;
     const brandName = params.brandName || params.param3;
-    
-    console.log("URL Params:", { gender, categoryId, brandName });
-    console.log("All params:", params);
+    const newArrival = params.newArrival || params.param4;
     
     const isValidObjectId = (str) => {
         return str && /^[0-9a-fA-F]{24}$/.test(str);
     };
     
     const parseUrlParams = () => {
-        console.log("Parsing params:", { gender, categoryId, brandName });
-        
-        // Check what we have
         const hasGender = gender !== undefined;
         const hasCategoryId = categoryId !== undefined;
         const hasBrandName = brandName !== undefined;
-        
+        const hasNewArrivalId = newArrival !== undefined;
+
         const genderIsObjectId = hasGender && isValidObjectId(gender);
         const categoryIdIsObjectId = hasCategoryId && isValidObjectId(categoryId);
         const brandNameIsObjectId = hasBrandName && isValidObjectId(brandName);
+        const newArrivalObjectId = hasNewArrivalId && isValidObjectId(newArrival);
         
-        // Pattern 1: /:gender/:categoryId/products (e.g., /woman/68f86b1c734810ab97bb9a31/products)
         if (hasGender && !genderIsObjectId && hasCategoryId && categoryIdIsObjectId && !hasBrandName) {
-            return {
-                actualGender: gender,
-                actualCategoryId: categoryId,
-                actualBrandName: null
-            };
+            return { actualGender: gender, actualCategoryId: categoryId, actualBrandName: null, actualNewArrival: null };
         }
         
-        // Pattern 2: /:gender/:categoryId/:brandName/products (e.g., /woman/68f86b1c734810ab97bb9a31/Etro/products)
         if (hasGender && !genderIsObjectId && hasCategoryId && categoryIdIsObjectId && hasBrandName && !brandNameIsObjectId) {
-            return {
-                actualGender: gender,
-                actualCategoryId: categoryId,
-                actualBrandName: brandName
-            };
+            return { actualGender: gender, actualCategoryId: categoryId, actualBrandName: brandName, actualNewArrival: null };
         }
         
-        // Pattern 3: /:categoryId/products (e.g., /68f86b1c734810ab97bb9a2f/products)
         if (hasGender && genderIsObjectId && !hasCategoryId && !hasBrandName) {
+            return { actualGender: null, actualCategoryId: gender, actualBrandName: null, actualNewArrival: null };
+        }
+        
+        if (hasGender && genderIsObjectId && hasCategoryId && !categoryIdIsObjectId && !hasBrandName) {
+            return { actualGender: null, actualCategoryId: gender, actualBrandName: categoryId, actualNewArrival: null };
+        }
+
+        if (hasNewArrivalId && newArrivalObjectId) {
             return {
-                actualGender: null,
-                actualCategoryId: gender,
+                actualNewArrival: newArrival,
+                actualGender: gender,
+                actualCategoryId: null,
                 actualBrandName: null
             };
         }
-        
-        // Pattern 4: /:categoryId/:brandName/products (e.g., /68f86b1c734810ab97bb9a2f/Etro/products)
-        if (hasGender && genderIsObjectId && hasCategoryId && !categoryIdIsObjectId && !hasBrandName) {
-            return {
-                actualGender: null,
-                actualCategoryId: gender,
-                actualBrandName: categoryId
-            };
-        }
-        
-        // Fallback - try to intelligently parse
+
         let actualGender = null;
         let actualCategoryId = null;
         let actualBrandName = null;
-        
-        // Check each param
+        let actualNewArrival = null;
+
         if (hasGender) {
             if (genderIsObjectId) {
                 actualCategoryId = gender;
@@ -111,33 +94,48 @@ const ProductsPage = () => {
             }
         }
         
-        return {
-            actualGender,
-            actualCategoryId,
-            actualBrandName
-        };
-    };
-    
-    const { actualGender, actualCategoryId, actualBrandName } = parseUrlParams();
-    
-    console.log("Parsed Params:", { actualGender, actualCategoryId, actualBrandName });
+        if (hasNewArrivalId) {
+            if (newArrivalObjectId) {
+                actualNewArrival = actualNewArrival || newArrival;
+            } else {
+                actualNewArrival = newArrival;
+            }
+        }
 
-    const [openFilters, setOpenFilters] = useState({});
+        return { actualGender, actualCategoryId, actualBrandName, actualNewArrival };
+    };
+
+    const { actualGender, actualCategoryId, actualBrandName, actualNewArrival } = parseUrlParams();
+
     const [showMore, setShowMore] = useState(false);
     const [loading, setLoading] = useState(false);
     const [allProducts, setAllProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
     const [error, setError] = useState(null);
+    const [hoveredProduct, setHoveredProduct] = useState(null);
+    const [productImageIndex, setProductImageIndex] = useState({});
+    const [isNewArrivalMode, setIsNewArrivalMode] = useState(false);
     
     const [clientFilters, setClientFilters] = useState({ color: [] });
     const [apiFilters, setApiFilters] = useState({ brand: [], category: [], type: [] });
     const [tempApiFilters, setTempApiFilters] = useState({ brand: [], category: [], type: [] });
     const [filterOptions, setFilterOptions] = useState({ brands: [], colors: [], types: [], categories: [] });
 
-    const pageSize = 20;
+    const pageSize = 30;
+
+    // Reset everything when URL parameters change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setCurrentPage(1);
+        setClientFilters({ color: [] });
+        setApiFilters({ brand: [], category: [], type: [] });
+        setTempApiFilters({ brand: [], category: [], type: [] });
+        setIsNewArrivalMode(!!actualNewArrival);
+        setShowFilters(false);
+    }, [actualGender, actualCategoryId, actualBrandName, actualNewArrival]);
 
     const getBaseCategoryId = () => {
         if (actualGender && !actualCategoryId) {
@@ -148,12 +146,12 @@ const ProductsPage = () => {
 
     useEffect(() => {
         loadFilterOptions();
-    }, [actualGender, actualCategoryId]);
+    }, [actualGender, actualCategoryId, actualNewArrival]);
 
     useEffect(() => {
         setCurrentPage(1);
         loadProducts(1);
-    }, [actualCategoryId, actualBrandName, apiFilters]);
+    }, [actualCategoryId, actualBrandName, actualNewArrival, apiFilters]);
 
     useEffect(() => {
         if (currentPage > 1) {
@@ -164,27 +162,27 @@ const ProductsPage = () => {
     const loadFilterOptions = async () => {
         try {
             const brandsData = await fetchBrands();
-            
-            let typesCategoryId = actualCategoryId;
+
+            let typesCategoryId = actualCategoryId || actualNewArrival;
             if (!typesCategoryId && actualGender) {
                 typesCategoryId = actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
             }
-            
+
             let typesData = [];
             if (typesCategoryId) {
                 typesData = await fetchCategoryChildren(navitems[actualGender]);
             }
-            
+
             let categoriesData = [];
             if (actualCategoryId) {
                 const baseMaleId = '68f86b10734810ab97bb98d1';
                 const baseFemaleId = '68f86b1c734810ab97bb9a2f';
-                
+
                 if (actualCategoryId !== baseMaleId && actualCategoryId !== baseFemaleId) {
                     categoriesData = await fetchCategoryChildren(actualCategoryId);
                 }
             }
-            
+
             setFilterOptions({
                 brands: brandsData,
                 types: typesData,
@@ -207,20 +205,20 @@ const ProductsPage = () => {
                                     apiFilters.category.length > 0 || 
                                     apiFilters.type.length > 0;
             
-            if (hasActiveApiFilters) {
+            if (hasActiveApiFilters || isNewArrivalMode) {
                 const filterPayload = buildFilterPayload();
-                console.log("Using filter API with payload:", filterPayload);
+                console.log("Filter Payload:", filterPayload);
                 result = await fetchProductsWithFilters(filterPayload, page, pageSize);
             } else if (actualCategoryId && actualBrandName) {
-                console.log("Using brand API:", actualBrandName, "with category:", actualCategoryId);
                 result = await fetchProductsByBrand(actualBrandName, actualCategoryId, page, pageSize);
             } else if (actualCategoryId) {
-                console.log("Using category API:", actualCategoryId);
                 result = await fetchProductsByCategory(actualCategoryId, page, pageSize);
+            } else if (actualNewArrival) {
+                console.log("Using New-arrivals", actualNewArrival);
+                result = await fetchNewArrivalsByCategory(actualNewArrival, page, pageSize);
             } else {
                 const baseCategoryId = getBaseCategoryId();
                 if (baseCategoryId) {
-                    console.log("Using base category API:", baseCategoryId);
                     result = await fetchProductsByCategory(baseCategoryId, page, pageSize);
                 } else {
                     throw new Error("No category specified");
@@ -261,7 +259,11 @@ const ProductsPage = () => {
     const buildFilterPayload = () => {
         const payload = {};
         const categoryIds = [];
-        
+
+        if (isNewArrivalMode) {
+            payload.isNewArrival = true;
+            payload.days = 7;
+        }
 
         if (apiFilters.type?.length > 0) {
             apiFilters.type.forEach(catName => {
@@ -280,9 +282,13 @@ const ProductsPage = () => {
                 }
             });
         }
-        if (actualCategoryId && !categoryIds.includes(actualCategoryId)) {
-  categoryIds.push(actualCategoryId);
-}
+        
+        if (actualCategoryId || actualNewArrival) {
+            const baseCatId = actualCategoryId || actualNewArrival;
+            if (!categoryIds.includes(baseCatId)) {
+                categoryIds.push(baseCatId);
+            }
+        }
         
         if (categoryIds.length > 0) {
             payload.categoryIds = categoryIds;
@@ -302,14 +308,13 @@ const ProductsPage = () => {
         }
         
         if (brands.length > 0) {
-            payload.brands = [...apiFilters.brand, actualBrandName];
+            payload.brands = brands;
         }
 
         if (clientFilters.color?.length > 0) {
             payload.colors = clientFilters.color;
         }
 
-        console.log("Filter Payload:", payload);
         return payload;
     };
 
@@ -332,13 +337,6 @@ const ProductsPage = () => {
         setFilterOptions(prev => ({
             ...prev,
             colors: colors.length > 0 ? colors : prev.colors
-        }));
-    };
-
-    const toggleFilter = (filterName) => {
-        setOpenFilters((prev) => ({
-            ...prev,
-            [filterName]: !prev[filterName],
         }));
     };
 
@@ -377,7 +375,6 @@ const ProductsPage = () => {
     
     const applyApiFilters = () => {
         setApiFilters(tempApiFilters);
-        setShowMobileFilters(false);
     };
 
     const handleColorFilterChange = (value) => {
@@ -395,6 +392,11 @@ const ProductsPage = () => {
         setClientFilters({ color: [] });
         setApiFilters({ brand: [], category: [], type: [] });
         setTempApiFilters({ brand: [], category: [], type: [] });
+    };
+
+    const closeFiltersAndApply = () => {
+        setApiFilters(tempApiFilters);
+        setShowFilters(false);
     };
 
     const handlePageChange = (newPage) => {
@@ -418,6 +420,9 @@ const ProductsPage = () => {
     ];
 
     const getDisplayTitle = () => {
+        if (isNewArrivalMode) {
+            return 'New Arrivals';
+        }
         if (actualGender) {
             return actualGender.charAt(0).toUpperCase() + actualGender.slice(1);
         }
@@ -435,10 +440,34 @@ const ProductsPage = () => {
         ...clientFilters.color
     ].length;
 
-    const hasPendingApiFilters = JSON.stringify(tempApiFilters) !== JSON.stringify(apiFilters);
+    const nextImage = (productId, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const product = filteredProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        setProductImageIndex(prev => {
+            const current = prev[productId] || 0;
+            const next = (current + 1) % product.images.length;
+            return { ...prev, [productId]: next };
+        });
+    };
 
-    const FilterSection = ({ title, filterKey, options, isApiFilter = false }) => {
-        const displayOptions = Array.isArray(options) ? options : [];
+    const prevImage = (productId, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const product = filteredProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        setProductImageIndex(prev => {
+            const current = prev[productId] || 0;
+            const next = current === 0 ? product.images.length - 1 : current - 1;
+            return { ...prev, [productId]: next };
+        });
+    };
+
+    const FilterSection = ({ title, filterKey, options }) => {
+        const [isOpen, setIsOpen] = useState(true);
 
         const getCheckedValue = (option) => {
             const optionName = typeof option === 'string' ? option : option.name;
@@ -465,45 +494,43 @@ const ProductsPage = () => {
         };
 
         return (
-            <div className="border-b border-gray-200">
+            <div className="border-b border-gray-300 py-4 md:py-6">
                 <button
-                    onClick={() => toggleFilter(filterKey)}
-                    className="w-full flex items-center justify-between py-4 text-left hover:bg-gray-50 px-2 -mx-2 rounded transition-colors"
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="w-full flex items-center justify-between text-left"
+                    style={{ fontFamily: 'Didot, serif' }}
                 >
-                    <span className="text-sm uppercase tracking-wider text-black font-medium">{title}</span>
-                    {openFilters[filterKey] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    <span className="text-xs md:text-sm uppercase tracking-[0.2em] font-light">{title}</span>
+                    {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
-                {openFilters[filterKey] && (
-                    <div className="pb-4 space-y-2 max-h-60 overflow-y-auto">
-                        {displayOptions.length > 0 ? (
-                            displayOptions.map((option) => {
+                {isOpen && (
+                    <div className="mt-3 md:mt-4 space-y-2 md:space-y-3 max-h-60 md:max-h-80 overflow-y-auto">
+                        {options && options.length > 0 ? (
+                            options.map((option) => {
                                 const optionName = typeof option === 'string' ? option : option.name;
                                 const optionKey = typeof option === 'string' ? option : option.id;
-                                
-                                const count = filteredProducts.filter(p => {
-                                    if (filterKey === 'brand') return p.brand === optionName;
-                                    if (filterKey === 'color') return p.color === optionName;
-                                    if (filterKey === 'type') return p.type === optionName;
-                                    if (filterKey === 'category') return p.category === optionName;
-                                    return false;
-                                }).length;
 
                                 return (
-                                    <label key={optionKey} className="flex items-center gap-3 text-sm cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                    <label 
+                                        key={optionKey} 
+                                        className="flex items-center gap-2 md:gap-3 cursor-pointer group"
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={getCheckedValue(option)}
                                             onChange={() => handleChange(option)}
-                                            className="cursor-pointer w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
+                                            className="w-3 h-3 md:w-4 md:h-4 border-2 border-black flex-shrink-0"
                                         />
-                                        <span className="flex-1 select-none">{optionName}</span>
-                                        <span className="text-xs text-gray-500">({count})</span>
+                                        <span className="text-xs md:text-sm tracking-wide group-hover:opacity-60 transition-opacity">
+                                            {optionName}
+                                        </span>
                                     </label>
                                 );
                             })
                         ) : (
-                            <div className="text-sm text-gray-500 italic p-2">
-                                No {title.toLowerCase()} options available
+                            <div className="text-xs md:text-sm text-gray-500 italic">
+                                No {title.toLowerCase()} available
                             </div>
                         )}
                     </div>
@@ -513,301 +540,461 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white pt-[100px] sm:pt-[140px] md:pt-[100px] lg:pt-[200px]">
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="mb-8">
-                    {actualGender && (
-                        <h1 className="text-2xl font-bold mb-4 uppercase">{getDisplayTitle()}</h1>
-                    )}
-                    {actualBrandName && (
-                        <h2 className="text-xl font-medium mb-4 text-gray-600">{actualBrandName}</h2>
-                    )}
-                    {filterDescription && (
-                        <div className="text-lg text-gray-900 font-medium leading-relaxed">
-                            <p className={`${!showMore ? "line-clamp-3" : ""}`}>{filterDescription}</p>
-                            <button
-                                onClick={() => setShowMore(!showMore)}
-                                className="text-black font-medium underline mt-2 text-sm hover:no-underline"
+        <div className="min-h-screen bg-white pt-32 md:pt-[200px] lg:pt-[180px]">
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+                
+                @font-face {
+                    font-family: 'Didot';
+                    src: local('Didot'), local('Didot LT STD');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+            `}</style>
+
+            {/* Header Section */}
+            <div className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 border-b border-gray-200">
+                <div className="max-w-[1800px] mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-6 md:mb-8">
+                        <div>
+                            <h1 
+                                className="text-3xl md:text-4xl lg:text-5xl mb-2 md:mb-4 tracking-wider font-light"
+                                style={{ fontFamily: 'Didot, serif' }}
                             >
-                                {showMore ? "show less" : "show more"}
-                            </button>
+                                {getDisplayTitle()}
+                            </h1>
+                            {actualBrandName && (
+                                <h2 
+                                    className="text-lg md:text-xl lg:text-2xl tracking-[0.2em] md:tracking-[0.3em] font-light text-gray-700"
+                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                >
+                                    {actualBrandName.toUpperCase()}
+                                </h2>
+                            )}
                         </div>
-                    )}
-                </div>
-
-                {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <p className="text-red-700 text-sm font-medium mb-2">Error Loading Products</p>
-                        <p className="text-red-600 text-sm mb-3">{error}</p>
+                        
                         <button
-                            onClick={() => loadProducts(1)}
-                            className="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
+                            onClick={() => setShowFilters(true)}
+                            className="flex items-center gap-2 md:gap-3 px-4 md:px-6 lg:px-8 py-3 md:py-4 border border-black hover:bg-black hover:text-white transition-all duration-300 w-full md:w-auto justify-center"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
                         >
-                            Try Again
-                        </button>
-                    </div>
-                )}
-
-                <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setShowMobileFilters(true)}
-                            className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
-                        >
-                            <Filter className="w-4 h-4" />
-                            <span className="text-sm">Filters</span>
+                            <Filter className="w-3 h-3 md:w-4 md:h-4" />
+                            <span className="text-xs md:text-sm tracking-[0.2em] uppercase">Filters</span>
                             {totalActiveFilters > 0 && (
-                                <span className="bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                <span className="bg-black text-white px-2 py-0.5 text-xs">
                                     {totalActiveFilters}
                                 </span>
                             )}
                         </button>
-                        
-                        <div className="text-sm text-gray-600">
-                            {loading ? "Loading..." : `${filteredProducts.length} of ${totalItems} products`}
-                        </div>
-                        
-                        {totalActiveFilters > 0 && (
-                            <button onClick={clearAllFilters} className="text-xs underline hover:no-underline text-gray-600">
-                                Clear all filters
-                            </button>
-                        )}
                     </div>
-                </div>
 
-                {totalActiveFilters > 0 && (
-                    <div className="mb-6 flex flex-wrap gap-2">
-                        {[...(apiFilters.brand || []).map(v => ({ key: 'brand', value: v, isApi: true })),
-                          ...(apiFilters.category || []).map(v => ({ key: 'category', value: v, isApi: true })),
-                          ...(apiFilters.type || []).map(v => ({ key: 'type', value: v, isApi: true })),
-                          ...clientFilters.color.map(v => ({ key: 'color', value: v, isApi: false }))
-                        ].map(({ key, value, isApi }) => (
-                            <span key={`${key}-${value}`} className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 text-xs rounded-full">
+                    {filterDescription && (
+                        <div 
+                            className="text-sm md:text-base leading-relaxed max-w-3xl"
+                            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                        >
+                            <p className={`${!showMore ? "line-clamp-2" : ""}`}>
+                                {filterDescription}
+                            </p>
+                            <button
+                                onClick={() => setShowMore(!showMore)}
+                                className="underline mt-2 text-xs md:text-sm hover:no-underline"
+                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                            >
+                                {showMore ? "SHOW LESS" : "SHOW MORE"}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Active Filters */}
+            {totalActiveFilters > 0 && (
+                <div className="w-full px-4 md:px-6 lg:px-8 py-4 md:py-6 border-b border-gray-200">
+                    <div className="max-w-[1800px] mx-auto flex flex-wrap gap-2 md:gap-3 items-center">
+                        <span 
+                            className="text-xs md:text-sm tracking-[0.2em] uppercase"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                            Active Filters:
+                        </span>
+                        {[...(apiFilters.brand || []).map(v => ({ key: 'brand', value: v })),
+                          ...(apiFilters.category || []).map(v => ({ key: 'category', value: v })),
+                          ...(apiFilters.type || []).map(v => ({ key: 'type', value: v })),
+                          ...clientFilters.color.map(v => ({ key: 'color', value: v }))
+                        ].map(({ key, value }) => (
+                            <span 
+                                key={`${key}-${value}`} 
+                                className="inline-flex items-center gap-1 md:gap-2 border border-black px-2 md:px-4 py-1 md:py-2 text-[10px] md:text-xs tracking-wider"
+                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                            >
                                 {value}
                                 <button
                                     onClick={() => {
-                                        if (isApi) {
-                                            if (key === 'brand') {
-                                                const newBrands = apiFilters.brand.filter(b => b !== value);
-                                                setApiFilters(prev => ({ ...prev, brand: newBrands }));
-                                                setTempApiFilters(prev => ({ ...prev, brand: newBrands }));
-                                            } else if (key === 'category') {
-                                                const newCategories = apiFilters.category.filter(c => c !== value);
-                                                setApiFilters(prev => ({ ...prev, category: newCategories }));
-                                                setTempApiFilters(prev => ({ ...prev, category: newCategories }));
-                                            } else if (key === 'type') {
-                                                const newTypes = apiFilters.type.filter(t => t !== value);
-                                                setApiFilters(prev => ({ ...prev, type: newTypes }));
-                                                setTempApiFilters(prev => ({ ...prev, type: newTypes }));
-                                            }
-                                        } else {
+                                        if (key === 'brand') {
+                                            const newBrands = apiFilters.brand.filter(b => b !== value);
+                                            setApiFilters(prev => ({ ...prev, brand: newBrands }));
+                                            setTempApiFilters(prev => ({ ...prev, brand: newBrands }));
+                                        } else if (key === 'category') {
+                                            const newCategories = apiFilters.category.filter(c => c !== value);
+                                            setApiFilters(prev => ({ ...prev, category: newCategories }));
+                                            setTempApiFilters(prev => ({ ...prev, category: newCategories }));
+                                        } else if (key === 'type') {
+                                            const newTypes = apiFilters.type.filter(t => t !== value);
+                                            setApiFilters(prev => ({ ...prev, type: newTypes }));
+                                            setTempApiFilters(prev => ({ ...prev, type: newTypes }));
+                                        } else if (key === 'color') {
                                             handleColorFilterChange(value);
                                         }
                                     }}
-                                    className="hover:text-red-500"
+                                    className="hover:opacity-60"
                                 >
-                                    <X className="w-3 h-3" />
+                                    <X className="w-2 h-2 md:w-3 md:h-3" />
                                 </button>
                             </span>
                         ))}
+                        <button
+                            onClick={clearAllFilters}
+                            className="ml-2 md:ml-4 text-[10px] md:text-xs tracking-wider underline hover:no-underline"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                            CLEAR ALL
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Products Count */}
+            <div className="w-full px-4 md:px-6 lg:px-8 py-3 md:py-4">
+                <div className="max-w-[1800px] mx-auto">
+                    <p 
+                        className="text-xs md:text-sm tracking-wider"
+                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                    >
+                        {loading ? "Loading..." : `${filteredProducts.length} OF ${totalItems} PRODUCTS`}
+                    </p>
+                </div>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+                <div className="w-full px-4 md:px-6 lg:px-8 py-4 md:py-6">
+                    <div className="max-w-[1800px] mx-auto">
+                        <div className="border border-red-300 bg-red-50 p-4 md:p-8">
+                            <p 
+                                className="text-red-900 mb-2 md:mb-4 tracking-wider text-sm md:text-base"
+                                style={{ fontFamily: 'Didot, serif' }}
+                            >
+                                Error Loading Products
+                            </p>
+                            <p 
+                                className="text-red-700 text-xs md:text-sm mb-4 md:mb-6"
+                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                            >
+                                {error}
+                            </p>
+                            <button
+                                onClick={() => loadProducts(1)}
+                                className="px-4 md:px-8 py-2 md:py-3 bg-black text-white text-xs md:text-sm tracking-[0.2em] hover:bg-gray-800 transition"
+                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                            >
+                                TRY AGAIN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Products Grid */}
+{/* Products Grid */}
+<div className="w-full px-4 md:px-6 lg:px-8 pb-8 md:pb-16">
+    <div className="max-w-[1800px] mx-auto">
+        {loading && allProducts.length === 0 ? (
+            <div className="flex flex-col md:flex-row items-center justify-center h-64 md:h-96">
+                <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin" />
+                <span 
+                    className="ml-0 md:ml-4 mt-4 md:mt-0 text-xs md:text-sm tracking-wider"
+                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                >
+                    LOADING PRODUCTS...
+                </span>
+            </div>
+        ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-16 md:py-24">
+                <p 
+                    className="text-xl md:text-2xl mb-4 md:mb-6 tracking-wider"
+                    style={{ fontFamily: 'Didot, serif' }}
+                >
+                    No Products Found
+                </p>
+                {totalActiveFilters > 0 && (
+                    <button 
+                        onClick={clearAllFilters} 
+                        className="text-xs md:text-sm tracking-wider underline hover:no-underline"
+                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                    >
+                        CLEAR ALL FILTERS
+                    </button>
+                )}
+            </div>
+        ) : (
+            <>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+                    {filteredProducts.map((product) => {
+                        const currentImageIndex = productImageIndex[product.id] || 0;
+                        const displayImage = hoveredProduct === product.id && product.images.length > 1
+                            ? product.images[currentImageIndex]
+                            : product.images[0];
+
+                        return (
+                            <Link 
+                                to={`/${actualGender || 'woman'}/product/${product.sku}`}
+                                key={product.sku} 
+                                className="group cursor-pointer"
+                            >
+                                <div 
+                                    className="relative aspect-[3/4] bg-gray-50 mb-3 md:mb-4 overflow-hidden"
+                                    onMouseEnter={() => setHoveredProduct(product.id)}
+                                    onMouseLeave={() => {
+                                        setHoveredProduct(null);
+                                        setProductImageIndex(prev => ({ ...prev, [product.id]: 0 }));
+                                    }}
+                                    onTouchStart={() => {
+                                        // For mobile touch devices, show navigation immediately
+                                        if (product.images.length > 1) {
+                                            setHoveredProduct(product.id);
+                                        }
+                                    }}
+                                >
+                                    {displayImage ? (
+                                        <>
+                                            <img
+                                                src={displayImage}
+                                                alt={product.productName}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                loading="lazy"
+                                            />
+                                            
+                                            {/* Image Navigation - All devices */}
+                                            {hoveredProduct === product.id && product.images.length > 1 && (
+                                                <div className="flex absolute inset-0 items-center justify-between px-2 md:px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                                    <button
+                                                        onClick={(e) => prevImage(product.id, e)}
+                                                        className="w-8 h-8 md:w-10 md:h-10 bg-white/90 flex items-center justify-center hover:bg-white transition-colors pointer-events-auto"
+                                                    >
+                                                        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => nextImage(product.id, e)}
+                                                        className="w-8 h-8 md:w-10 md:h-10 bg-white/90 flex items-center justify-center hover:bg-white transition-colors pointer-events-auto"
+                                                    >
+                                                        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {/* Image Indicators - All devices */}
+                                            {product.images.length > 1 && (
+                                                <div className="flex absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 gap-1 md:gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                                    {product.images.map((_, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full transition-all ${
+                                                                idx === currentImageIndex ? 'bg-white w-4 md:w-6' : 'bg-white/60'
+                                                            }`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-xs">
+                                            No Image
+                                        </div>
+                                    )}
+                                    
+                                    {!product.inStock && (
+                                        <div 
+                                            className="absolute top-2 md:top-4 right-2 md:right-4 bg-white px-2 md:px-4 py-1 md:py-2 text-[10px] md:text-xs tracking-[0.2em] pointer-events-none"
+                                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                        >
+                                            OUT OF STOCK
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1 md:space-y-2 px-1 md:px-2">
+                                    <h3 
+                                        className="text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase font-medium"
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                    >
+                                        {product.name}
+                                    </h3>
+                                    <p 
+                                        className="text-xs md:text-sm leading-relaxed line-clamp-2"
+                                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                                    >
+                                        {product.productName}
+                                    </p>
+                                    <div className="pt-1 md:pt-2">
+                                        <p 
+                                            className="text-xs md:text-sm tracking-wider"
+                                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                        >
+                                            {product.minPrice === product.maxPrice 
+                                                ? `EUR ${product.minPrice.toFixed(2)}`
+                                                : `EUR ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
+                                            }
+                                        </p>
+                                    </div>
+                                    {product.variantCount > 1 && (
+                                        <p 
+                                            className="text-[10px] md:text-xs text-gray-600 tracking-wider"
+                                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                        >
+                                            {product.variantCount} SIZES AVAILABLE
+                                        </p>
+                                    )}
+                                </div>
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="mt-8 md:mt-16 flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1 || loading}
+                            className="w-full md:w-auto px-6 md:px-8 py-2 md:py-3 border border-black text-xs tracking-[0.2em] uppercase disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white transition-all duration-300"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                            Previous
+                        </button>
+                        
+                        <div className="flex gap-1 md:gap-2">
+                            {[...Array(Math.min(5, totalPages))].map((_, idx) => {
+                                let pageNum;
+                                if (totalPages <= 5) {
+                                    pageNum = idx + 1;
+                                } else if (currentPage < 3) {
+                                    pageNum = idx + 1;
+                                } else if (currentPage > totalPages - 3) {
+                                    pageNum = totalPages - 5 + idx + 1;
+                                } else {
+                                    pageNum = currentPage - 2 + idx + 1;
+                                }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handlePageChange(pageNum)}
+                                        disabled={loading}
+                                        className={`w-10 h-10 md:w-12 md:h-12 border text-xs tracking-wider ${
+                                            currentPage === pageNum
+                                                ? 'bg-black text-white border-black'
+                                                : 'border-black hover:bg-black hover:text-white'
+                                        } disabled:opacity-30 transition-all duration-300`}
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages || loading}
+                            className="w-full md:w-auto px-6 md:px-8 py-2 md:py-3 border border-black text-xs tracking-[0.2em] uppercase disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white transition-all duration-300"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                            Next
+                        </button>
                     </div>
                 )}
+            </>
+        )}
+    </div>
+</div>
 
-                <div className="flex gap-8">
-                    <aside className="hidden lg:block w-64 flex-shrink-0">
-                        <div className="space-y-0 sticky top-24">
-                            <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} isApiFilter={true} />
-                            <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
-                            <FilterSection title="Type" filterKey="type" options={filterOptions.types} isApiFilter={true} />
-                            <FilterSection title="Category" filterKey="category" options={filterOptions.categories} isApiFilter={true} />
+            {/* Filters Overlay */}
+            {showFilters && (
+                <div className="fixed inset-0 z-50 flex">
+                    <div 
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+                        onClick={() => setShowFilters(false)} 
+                    />
+                    
+                    <div className="relative bg-white w-full md:max-w-xl lg:max-w-2xl h-full overflow-y-auto shadow-2xl ml-auto">
+                        <div className="sticky top-0 bg-white border-b border-gray-300 px-6 md:px-12 py-6 md:py-8 flex items-center justify-between z-10">
+                            <h3 
+                                className="text-xl md:text-2xl tracking-[0.2em] md:tracking-[0.3em] font-light"
+                                style={{ fontFamily: 'Didot, serif' }}
+                            >
+                                FILTERS
+                            </h3>
+                            <button 
+                                onClick={() => setShowFilters(false)} 
+                                className="p-2 hover:bg-gray-100 transition-colors"
+                            >
+                                <X className="w-5 h-5 md:w-6 md:h-6" />
+                            </button>
+                        </div>
+                        
+                        <div className="px-6 md:px-12 py-6 md:py-8">
+                            <FilterSection 
+                                title="Designers" 
+                                filterKey="brand" 
+                                options={filterOptions.brands} 
+                            />
+                            <FilterSection 
+                                title="Color" 
+                                filterKey="color" 
+                                options={filterOptions.colors} 
+                            />
+                            <FilterSection 
+                                title="Type" 
+                                filterKey="type" 
+                                options={filterOptions.types} 
+                            />
+                            <FilterSection 
+                                title="Category" 
+                                filterKey="category" 
+                                options={filterOptions.categories} 
+                            />
                             
-                            {hasPendingApiFilters && (
-                                <div className="pt-4 space-y-2 border-t border-gray-200 mt-4">
+                            <div className="sticky bottom-0 bg-white border-t border-gray-300 mt-8 md:mt-12 py-6 md:py-8 -mx-6 md:-mx-12 px-6 md:px-12">
+                                <div className="grid grid-cols-2 gap-3 md:gap-4">
                                     <button
                                         onClick={applyApiFilters}
-                                        className="w-full bg-black text-white py-2 px-4 rounded text-sm uppercase tracking-wider hover:bg-gray-800 transition"
+                                        className="py-3 md:py-4 bg-black text-white text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-gray-800 transition-all duration-300"
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
                                     >
                                         Apply Filters
                                     </button>
                                     <button
-                                        onClick={() => setTempApiFilters(apiFilters)}
-                                        className="w-full border border-gray-300 py-2 px-4 rounded text-sm uppercase tracking-wider hover:bg-gray-50 transition"
+                                        onClick={clearAllFilters}
+                                        className="py-3 md:py-4 border border-black text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-all duration-300"
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
                                     >
-                                        Cancel
+                                        Clear All
                                     </button>
                                 </div>
-                            )}
-                        </div>
-                    </aside>
-
-                    {showMobileFilters && (
-                        <div className="fixed inset-0 z-50 lg:hidden">
-                            <div className="absolute inset-0  bg-opacity-50" onClick={() => setShowMobileFilters(false)} />
-                            <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
-                                <div className="p-4 border-b border-gray-200">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="text-lg font-medium">Filters</h3>
-                                        <button onClick={() => setShowMobileFilters(false)} className="p-2 hover:bg-gray-100 rounded">
-                                            <X className="w-5 h-5" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="p-4">
-                                    <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} isApiFilter={true} />
-                                    <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
-                                    <FilterSection title="Type" filterKey="type" options={filterOptions.types} isApiFilter={true} />
-                                    <FilterSection title="Category" filterKey="category" options={filterOptions.categories} isApiFilter={true} />
-                                    
-                                    <div className="mt-6 space-y-3">
-                                        <button
-                                            onClick={applyApiFilters}
-                                            className="w-full bg-black text-white font-medium py-3 rounded text-sm uppercase tracking-wider"
-                                        >
-                                            Apply Filters
-                                        </button>
-                                        <button
-                                            onClick={() => setShowMobileFilters(false)}
-                                            className="w-full border text-black font-medium border-gray-300 py-3 rounded text-sm uppercase tracking-wider"
-                                        >
-                                            Close
-                                        </button>
-                                        {totalActiveFilters > 0 && (
-                                            <button
-                                                onClick={() => {
-                                                    clearAllFilters();
-                                                    setShowMobileFilters(false);
-                                                }}
-                                                className="w-full border border-red-300 text-red-600 py-3 rounded text-sm uppercase tracking-wider"
-                                            >
-                                                Clear All
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
+                                
+                                <button
+                                    onClick={closeFiltersAndApply}
+                                    className="w-full mt-3 md:mt-4 py-3 md:py-4 bg-gray-900 text-white text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-black transition-all duration-300"
+                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                >
+                                    Close & Apply Filters
+                                </button>
                             </div>
                         </div>
-                    )}
-
-                    <div className="flex-1">
-                        {loading && allProducts.length === 0 ? (
-                            <div className="flex items-center justify-center h-96">
-                                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-                                <span className="ml-2 text-gray-600">Loading products...</span>
-                            </div>
-                        ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-12">
-                                <p className="text-gray-500 text-lg mb-4">No products found</p>
-                                {totalActiveFilters > 0 && (
-                                    <button onClick={clearAllFilters} className="text-sm underline hover:no-underline">
-                                        Clear all filters
-                                    </button>
-                                )}
-                            </div>
-                        ) : (
-                            <>
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-4 gap-y-8">
-                                    {filteredProducts.map((product) => (
-                                        <Link 
-                                            to={`/${actualGender || 'woman'}/product/${product.sku}`}
-                                            key={product.sku} 
-                                            className="group cursor-pointer"
-                                        >
-                                            <div className="relative aspect-[2/3] bg-gray-50 mb-3 overflow-hidden">
-                                                {product.images[0] ? (
-                                                    <img
-                                                        src={product.images[0]}
-                                                        alt={product.productName}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                        loading="lazy"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-                                                        No Image
-                                                    </div>
-                                                )}
-                                                {!product.inStock && (
-                                                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-1 text-xs uppercase tracking-wider">
-                                                        Out of Stock
-                                                    </div>
-                                                )}
-                                                {product.variantCount > 1 && (
-                                                    <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 text-xs">
-                                                        {product.variantCount} sizes
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="space-y-1">
-                                                <h3 className="text-base uppercase tracking-wider group-hover:underline font-medium">
-                                                    {product.name}
-                                                </h3>
-                                                <p className="text-md text-gray-900 line-clamp-2">{product.productName}</p>
-                                                <div className="flex items-center gap-2 pt-1">
-                                                    <p className="text-base font-semibold">
-                                                        {product.minPrice === product.maxPrice 
-                                                            ? `Eur ${product.minPrice.toFixed(2)}`
-                                                            : `Eur ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
-                                                        }
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-
-                                {totalPages > 1 && (
-                                    <div className="mt-12 flex justify-center items-center gap-2">
-                                        <button
-                                            onClick={() => handlePageChange(currentPage - 1)}
-                                            disabled={currentPage === 1 || loading}
-                                            className="px-5 py-2 border border-gray-300 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                                        >
-                                            Previous
-                                        </button>
-                                        
-                                        <div className="flex gap-1">
-                                            {[...Array(Math.min(5, totalPages))].map((_, idx) => {
-                                                let pageNum;
-                                                if (totalPages <= 5) {
-                                                    pageNum = idx + 1;
-                                                } else if (currentPage < 3) {
-                                                    pageNum = idx + 1;
-                                                } else if (currentPage > totalPages - 3) {
-                                                    pageNum = totalPages - 5 + idx + 1;
-                                                } else {
-                                                    pageNum = currentPage - 2 + idx + 1;
-                                                }
-
-                                                return (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => handlePageChange(pageNum)}
-                                                        disabled={loading}
-                                                        className={`px-4 py-2 border text-sm ${
-                                                            currentPage === pageNum
-                                                                ? 'bg-black text-white border-black'
-                                                                : 'border-gray-300 hover:bg-gray-50'
-                                                        } disabled:opacity-50 transition`}
-                                                    >
-                                                        {pageNum}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-
-                                        <button
-                                            onClick={() => handlePageChange(currentPage + 1)}
-                                            disabled={currentPage === totalPages || loading}
-                                            className="px-5 py-2 border border-gray-300 text-sm uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                                        >
-                                            Next
-                                        </button>
-                                    </div>
-                                )}
-                            </>
-                        )}
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

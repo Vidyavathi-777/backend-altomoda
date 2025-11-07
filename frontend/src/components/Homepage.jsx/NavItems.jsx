@@ -140,7 +140,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     onMouseLeave={handleMenuLeave}
                 >
                     <Link
-                        to={`/${navitems[currentGender]}/products`}
+                        to={`/${currentGender}/${navitems[currentGender]}/new-arrivals/products`}
                         onClick={closeDesktopMenu}
                         className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         New Arrivals
@@ -178,12 +178,12 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                 </div>
 
                 {/* Boutiques */}
-                <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
+                {/* <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                     Boutiques
-                </a>
+                </a> */}
 
                 {/* Up To 50% Off */}
-                <div
+                {/* <div
                     className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('upto50%off')}
                     onMouseLeave={handleMenuLeave}
@@ -191,10 +191,10 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                     <button className="text-lg font-medium text-red-600 tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         Up To 50% Off
                     </button>
-                </div>
+                </div> */}
 
                 {/* Magazine */}
-                <div
+                {/* <div
                     className="relative h-full"
                     onMouseEnter={() => handleMenuEnter('magazine')}
                     onMouseLeave={handleMenuLeave}
@@ -204,12 +204,12 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
                         className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                         TCZ_TheCornerZine
                     </Link>
-                </div>
+                </div> */}
 
                 {/* Product Finder */}
-                <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
+                {/* <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
                     Product Finder
-                </a>
+                </a> */}
             </nav>
 
             {/* Mega Menu Dropdowns - Portal Style */}
@@ -318,7 +318,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
           <div>
             <h4 className="font-bold uppercase tracking-wide text-gray-900 hover:text-black hover:underline mb-6">
               <Link
-                to={`/${navitems[activeDesktopMenu]}/products`}
+                to={`/${activeDesktopMenu}/${navitems[activeDesktopMenu]}/products`}
                 onClick={closeDesktopMenu}
                 className="hover:underline"
               >
@@ -368,14 +368,14 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
             Upto 50% Off
           </h4>
           <Link
-            to="/man/discount/products"
+            to={`/man/${navitems.man}/Discount/products`}
             onClick={closeDesktopMenu}
             className="block hover:text-black transition"
           >
             Man
           </Link>
           <Link
-            to="/woman/discount/products"
+            to={`/woman/${navitems.woman}/Discount/products`}
             onClick={closeDesktopMenu}
             className="block hover:text-black transition"
           >
@@ -481,7 +481,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen, currentGender, onGenderCh
 
                                     <div className="w-full flex items-center justify-between py-3 text-sm uppercase tracking-wider font-medium border-b border-gray-200">
                                         <Link
-                                            to={`/${mobileGender}/${navitems[mobileGender]}/products`}
+                                            to={`/${mobileGender}/${navitems[mobileGender]}/new-arrivals/products`}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className="flex-1"
                                         >

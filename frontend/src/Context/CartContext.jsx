@@ -39,6 +39,11 @@ export const CartProvider = ({ children }) => {
       });
 
       if (!response.ok) {
+        // If cart not found, create empty cart
+        if (response.status === 404) {
+          setCart({ items: [], totalItems: 0, subtotal: 0 });
+          return;
+        }
         throw new Error(`Failed to fetch cart: ${response.status}`);
       }
 
@@ -179,6 +184,11 @@ export const CartProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        // If item not found or cart not found, just clear local state
+        if (response.status === 404) {
+          setCart({ items: [], totalItems: 0, subtotal: 0 });
+          return { items: [], totalItems: 0, subtotal: 0 };
+        }
         throw new Error(errorData.message || `Failed to remove item from cart: ${response.status}`);
       }
 
@@ -193,50 +203,78 @@ export const CartProvider = ({ children }) => {
     } catch (err) {
       console.error('Error removing from cart:', err);
       setError(err.message);
+      // Even on error, clear local state
+      setCart({ items: [], totalItems: 0, subtotal: 0 });
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  // Clear entire cart
+  // Clear entire cart - IMPROVED VERSION
   const clearCart = async () => {
+    // Always clear local state first for immediate UI update
+    const emptyCart = { items: [], totalItems: 0, subtotal: 0 };
+    setCart(emptyCart);
+
+    // If no user, we're done (local state is cleared)
     if (!user?.id) {
-      throw new Error('Please login to clear cart');
+      console.log('No user logged in, cart cleared locally');
+      return true;
     }
 
     setLoading(true);
     setError(null);
 
     try {
+      const token = getToken();
+      if (!token) {
+        console.warn('No token available, cart cleared locally only');
+        return true;
+      }
+
       const response = await fetch(`${API_URL}/cart/${user.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getToken()}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
+      // Handle 404 - cart already doesn't exist on server
+      if (response.status === 404) {
+        console.log('Cart not found on server (already cleared)');
+        return true;
+      }
+
+      // Handle other error responses
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to clear cart: ${response.status}`);
+        console.warn(`Failed to clear cart on server (${response.status}), but local state is cleared`);
+        return true; // Still return true since local state is cleared
       }
 
       const data = await response.json();
-
+      
       if (data.success) {
-        setCart({ items: [], totalItems: 0, subtotal: 0 });
+        console.log('Cart cleared successfully on server and locally');
         return true;
       } else {
-        throw new Error(data.message || 'Failed to clear cart');
+        console.warn('Server returned unsuccessful response, but local state is cleared');
+        return true;
       }
     } catch (err) {
-      console.error('Error clearing cart:', err);
-      setError(err.message);
-      throw err;
+      console.error('Error clearing cart on server:', err);
+      // Local state is already cleared, so we still consider this successful
+      return true;
     } finally {
       setLoading(false);
     }
+  };
+
+  // Clear only local cart state (alias for backward compatibility)
+  const clearLocalCart = () => {
+    console.log('Clearing local cart state');
+    setCart({ items: [], totalItems: 0, subtotal: 0 });
   };
 
   // Get cart item count
@@ -268,6 +306,7 @@ export const CartProvider = ({ children }) => {
     updateCartItem,
     removeFromCart,
     clearCart,
+    clearLocalCart,
     fetchCart,
     getCartItemCount,
     getCartSubtotal,

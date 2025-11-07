@@ -1,21 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { transformProduct } from '../../api/productsApi';
 
 const NewArrivals = () => {
   const { gender = 'woman' } = useParams();
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [hoveredProduct, setHoveredProduct] = useState(null);
   const sliderRef = useRef(null);
   
-  // Category IDs for man and woman
   const navitems = {
     man: "68f86b10734810ab97bb98d1",
     woman: "68f86b1c734810ab97bb9a2f"
   };
 
-  // Fetch new arrival products from API using gender category ID
   const fetchNewArrivals = async () => {
     setIsLoading(true);
     setError(null);
@@ -27,7 +27,7 @@ const NewArrivals = () => {
       }
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/products/new-arrivals/${categoryId}?page=1&limit=20`
+        `${import.meta.env.VITE_API_URL}/products/new-arrivals/${categoryId}?page=1&limit=40`
       );
 
       if (!response.ok) {
@@ -37,53 +37,8 @@ const NewArrivals = () => {
       const data = await response.json();
 
       if (data.success && data.data && Array.isArray(data.data.products)) {
-        // Transform the API response to match your component's expected format
-        const transformedProducts = data.data.products.map((product) => {
-          const mainImage = product.images?.[0] || null;
-          
-          // Get localized title (default to English)
-          const title = product.title?.en || 
-                       product.title?.it || 
-                       product.title?.zh || 
-                       Object.values(product.title || {})[0] || 
-                       'Product';
-
-          // Get localized category
-          const category = product.category?.en || 
-                          product.category?.it || 
-                          Object.values(product.category || {})[0] || 
-                          'Clothing';
-
-          return {
-            _id: { $oid: product._id || Math.random().toString() },
-            sku_parent: product.sku_parent || '',
-            sku: product.sku || '',
-            name: product.brand || 'Unknown Brand',
-            title: title,
-            description: product.description?.en || '',
-            price: {
-              amount: product.base_price || 0,
-              currency: 'EUR'
-            },
-            imgs: product.images || [], // Use all images array
-            brand: product.brand || 'Unknown',
-            category: category,
-            subcategory: '',
-            color: product.color?.en || product.color?.it || Object.values(product.color || {})[0] || '',
-            type: '',
-            gender: product.sex?.en || gender,
-            size: product.variants?.[0]?.size || '',
-            madeIn: product.made?.en || '',
-            composition: product.composition || [],
-            qty: product.variants?.[0]?.stock || 0,
-            inStock: (product.variants?.[0]?.stock || 0) > 0,
-            lastUpdated: new Date().toISOString(),
-            link: `/${gender}/product/${product.sku_parent}` // Using sku_parent instead of _id
-          };
-        });
-
-        // Take only first 10 products for slider
-        const limitedProducts = transformedProducts.slice(0, 10);
+        const transformedProducts = data.data.products.map(product => transformProduct(product));
+        const limitedProducts = transformedProducts.slice(0, 20);
         setProducts(limitedProducts);
       } else {
         setProducts([]);
@@ -101,58 +56,58 @@ const NewArrivals = () => {
     fetchNewArrivals();
   }, [gender]);
 
-  const scrollLeft = () => {
+  const scrollByCards = (count) => {
     if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: -300, behavior: 'smooth' });
-      setCurrentSlide(prev => Math.max(0, prev - 1));
+      const firstCard = sliderRef.current.querySelector('.product-card');
+      if (firstCard) {
+        const cardWidth = firstCard.offsetWidth + 32; // 32px gap
+        sliderRef.current.scrollBy({ left: cardWidth * count, behavior: 'smooth' });
+      }
     }
   };
 
-  const scrollRight = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-      setCurrentSlide(prev => Math.min(products.length - 1, prev + 1));
+  const scrollLeft = () => scrollByCards(-5);
+  const scrollRight = () => scrollByCards(5);
+
+  // Function to get the image to display based on hover state
+  const getDisplayImage = (product) => {
+    const isHovered = hoveredProduct === product.id;
+    
+    if (!isHovered) {
+      // Default state: always show first image
+      return product.images[0];
+    } else {
+      // Hover state: show third image if available, otherwise second image
+      if (product.images.length >= 3) {
+        return product.images[2]; // Third image
+      } else if (product.images.length === 2) {
+        return product.images[1]; // Second image
+      } else {
+        return product.images[0]; // Only one image available
+      }
     }
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US').format(price);
-  };
-
-  // Show loading skeletons
   if (isLoading) {
     return (
-      <div className="home-page-section bg-white py-12 md:py-16 lg:py-20">
-        <div className="max-w-8xl mx-auto px-4">
-          {/* Header Section */}
-          <div className="slider-products-border border-b border-gray-200 mb-8">
-            <div className="slider-products-card-container mb-8">
-              <div className="card-text">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-wide text-gray-900">
-                  NEW ARRIVALS // SHOP NOW
-                </h3>
-              </div>
-            </div>
+      <div className="bg-white py-16 border-t border-gray-200 w-full">
+        <div className="w-full">
+          <div className="mb-12 pb-8 border-b border-gray-200 px-8">
+            <h3 
+              className="text-4xl tracking-wider font-light"
+              style={{ fontFamily: 'Didot, serif' }}
+            >
+              New Arrivals
+            </h3>
           </div>
-
-          {/* Loading Skeletons */}
-          <div className="flex space-x-4 md:space-x-6 lg:space-x-8 pb-4 overflow-hidden">
-            {[...Array(7)].map((_, index) => (
-              <div key={index} className="flex-shrink-0 w-48 md:w-56 lg:w-64">
-                <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm">
-                  <div className="product-card relative overflow-hidden">
-                    <div className="w-full overflow-hidden relative pt-[150%]">
-                      <div className="absolute inset-0">
-                        <div className="skeleton-animated-background w-full h-full bg-gray-200"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="product-info p-4 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-full"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
+          
+          <div className="flex gap-8 overflow-hidden px-8">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="flex-shrink-0 w-64 animate-pulse">
+                <div className="aspect-[3/4] bg-gray-200 mb-4"></div>
+                <div className="h-3 bg-gray-200 rounded mb-2 w-1/2"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
               </div>
             ))}
           </div>
@@ -161,25 +116,29 @@ const NewArrivals = () => {
     );
   }
 
-  // Show error state
   if (error) {
     return (
-      <div className="home-page-section bg-white py-12 md:py-16 lg:py-20">
-        <div className="max-w-8xl mx-auto px-4">
-          <div className="slider-products-border border-b border-gray-200 mb-8">
-            <div className="slider-products-card-container mb-8">
-              <div className="card-text">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-wide text-gray-900">
-                  NEW ARRIVALS // SHOP NOW
-                </h3>
-              </div>
-            </div>
+      <div className="bg-white py-16 border-t border-gray-200 w-full">
+        <div className="w-full">
+          <div className="mb-12 pb-8 border-b border-gray-200 px-8">
+            <h3 
+              className="text-4xl tracking-wider font-light"
+              style={{ fontFamily: 'Didot, serif' }}
+            >
+              New Arrivals
+            </h3>
           </div>
           <div className="text-center py-12">
-            <p className="text-red-600 text-lg mb-4">Error loading new arrivals</p>
+            <p 
+              className="text-red-600 mb-6 tracking-wider"
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
+            >
+              Error loading new arrivals
+            </p>
             <button
               onClick={fetchNewArrivals}
-              className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+              className="px-8 py-3 bg-black text-white text-sm tracking-[0.2em] uppercase hover:bg-gray-800 transition-colors"
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
             >
               Try Again
             </button>
@@ -190,153 +149,17 @@ const NewArrivals = () => {
   }
 
   return (
-    <div className="home-page-section bg-white py-12 md:py-16 lg:py-20">
-      <div className="max-w-8xl mx-auto px-4">
-
-        {/* Header Section */}
-        <div className="slider-products-border border-b border-gray-200 mb-8">
-          <div className="slider-products-card-container mb-8">
-            <div className="card-text">
-              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase tracking-wide text-gray-900">
-                NEW ARRIVALS // SHOP NOW
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        {/* Slider Container */}
-        <div className="slider-products-container relative">
-
-          {/* Navigation Buttons - Only show if there are products */}
-          {products.length > 0 && (
-            <>
-              <button
-                onClick={scrollLeft}
-                disabled={currentSlide === 0}
-                className={`slider-button-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border border-gray-300 rounded-full p-3 shadow-lg hover:bg-gray-50 transition-all duration-300 ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
-                  }`}
-              >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <button
-                onClick={scrollRight}
-                disabled={currentSlide === products.length - 1}
-                className={`slider-button-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border border-gray-300 rounded-full p-3 shadow-lg hover:bg-gray-50 transition-all duration-300 ${currentSlide === products.length - 1 ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
-                  }`}
-              >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-
-          {/* Products Slider */}
-          <div
-            ref={sliderRef}
-            className="slider-products overflow-x-auto scrollbar-hide scroll-smooth"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            <div className="flex space-x-4 md:space-x-6 lg:space-x-8 pb-4">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <Link
-                    key={product._id.$oid}
-                    className="flex-shrink-0 w-48 md:w-56 lg:w-64 group"
-                    to={`/${navitems.gender}/product/${product.sku_parent}`}
-                  >
-                    {/* Product Card */}
-                    <div className="product-card-container bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
-
-                      {/* Product Image */}
-                      <div className="product-card relative overflow-hidden">
-                        <div className="block">
-                          <div className="product-card-image relative">
-                            <div className="w-full overflow-hidden relative pt-[150%]">
-                              <div className="absolute inset-0">
-                                <div className="image-wrapper relative w-full h-full">
-                                  {product.imgs[0] ? (
-                                    <img
-                                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                      src={product.imgs[0].url}
-                                      alt={product.title}
-                                      loading="lazy"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
-                                      No Image
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Product Info */}
-                      <div className="product-info p-4">
-                        <div className="product-info-wrapper space-y-2">
-
-                          {/* Brand */}
-                          <div className="product-vendor">
-                            <h2 className="vendor-title text-xs uppercase tracking-wider text-gray-500 font-medium">
-                              {product.brand}
-                            </h2>
-                          </div>
-
-                          {/* Product Name */}
-                          <div className="product-title">
-                            <h3 className="product-description text-sm font-medium text-gray-900 leading-tight line-clamp-2 hover:text-gray-700 transition-colors">
-                              {product.title}
-                            </h3>
-                          </div>
-
-                          {/* Price */}
-                          <div className="product-price-data">
-                            <div className="price-compare-container">
-                              <div className="price-height">
-                                <span className="price-sale">
-                                  <div className="price-format left-currency">
-                                    <span className="simbol text-gray-900 font-semibold">{product.price.currency}</span>
-                                    <span className="text-gray-900 font-semibold ml-1">
-                                      {formatPrice(product.price.amount)}
-                                    </span>
-                                  </div>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Category Badge */}
-                          <div className="flex items-center justify-between mt-2">
-                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                              {product.category}
-                            </span>
-                            <span className="text-xs text-gray-400">
-                              New
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="w-full text-center py-12">
-                  <p className="text-gray-500 text-lg">No new arrivals found</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Custom Styles */}
+    <div className="bg-white py-16 border-t border-gray-200 w-full">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        
+        @font-face {
+          font-family: 'Didot';
+          src: local('Didot'), local('Didot LT STD');
+          font-weight: normal;
+          font-style: normal;
+        }
+
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
@@ -344,26 +167,162 @@ const NewArrivals = () => {
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        .skeleton-animated-background {
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 200% 100%;
-          animation: loading 1.5s infinite;
-        }
-        @keyframes loading {
-          0% {
-            background-position: 200% 0;
-          }
-          100% {
-            background-position: -200% 0;
-          }
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
       `}</style>
+
+      <div className="w-full">
+        {/* Header Section */}
+        <div className="mb-12 pb-8 border-b border-gray-200 flex justify-between items-center px-8">
+          <h3 
+            className="text-4xl tracking-wider font-light"
+            style={{ fontFamily: 'Didot, serif' }}
+          >
+            New Arrivals
+          </h3>
+          
+          {/* <Link
+            to={`/${gender}/products`}
+            className="text-sm tracking-[0.2em] uppercase underline hover:no-underline"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
+          >
+            View All
+          </Link> */}
+        </div>
+
+        {/* Products Slider */}
+        {products.length > 0 ? (
+          <div className="relative w-full">
+            {/* Navigation Buttons */}
+            <button
+              onClick={scrollLeft}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            
+            <button
+              onClick={scrollRight}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            {/* Products Horizontal Scroll */}
+            <div
+              ref={sliderRef}
+              className="overflow-x-auto scrollbar-hide scroll-smooth w-full px-8"
+            >
+              <div className="flex gap-8 pb-4" style={{ minWidth: 'min-content' }}>
+                {products.map((product) => {
+                  const displayImage = getDisplayImage(product);
+                  const isHovered = hoveredProduct === product.id;
+
+                  return (
+                    <Link
+                      key={product.id}
+                      to={`/${gender}/product/${product.sku}`}
+                      className="product-card group cursor-pointer flex-shrink-0 w-64"
+                      onMouseEnter={() => setHoveredProduct(product.id)}
+                      onMouseLeave={() => setHoveredProduct(null)}
+                    >
+                      {/* Product Image Container */}
+                      <div className="relative aspect-[3/4] bg-gray-50 mb-4 overflow-hidden">
+                        {displayImage ? (
+                          <div className="w-full h-full">
+                            <img
+                              src={displayImage}
+                              alt={product.productName}
+                              className="w-full h-full object-cover transition-opacity duration-500"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+';
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                            No Image
+                          </div>
+                        )}
+
+                        {/* New Badge */}
+                        <div 
+                          className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-xs tracking-[0.2em]"
+                          style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                          NEW
+                        </div>
+
+                        {/* Image Indicator */}
+                        {product.images.length > 1 && (
+                          <div 
+                            className="absolute bottom-4 right-4 bg-black/70 text-white px-2 py-1 text-xs tracking-wider"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                          >
+                            {product.images.length} IMAGES
+                          </div>
+                        )}
+
+                        {/* Hover Indicator */}
+                        {isHovered && product.images.length > 1 && (
+                          <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+                            {/* <div className="bg-white/90 px-3 py-1 rounded text-xs tracking-wider">
+                              {product.images.length >= 3 ? 'View 3rd Image' : 'View 2nd Image'}
+                            </div> */}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="space-y-2 px-2">
+                        <h3 
+                          className="text-xs tracking-[0.3em] uppercase font-medium"
+                          style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        >
+                          {product.brand}
+                        </h3>
+                        <p 
+                          className="text-sm leading-relaxed line-clamp-2"
+                          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                        >
+                          {product.productName}
+                        </p>
+                        <div className="pt-2">
+                          <p 
+                            className="text-sm tracking-wider"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                          >
+                            {product.minPrice === product.maxPrice 
+                              ? `EUR ${product.minPrice.toFixed(2)}`
+                              : `EUR ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
+                            }
+                          </p>
+                        </div>
+                        {product.variantCount > 1 && (
+                          <p 
+                            className="text-xs text-gray-600 tracking-wider"
+                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                          >
+                            {product.variantCount} SIZES
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-24">
+            <p 
+              className="text-2xl tracking-wider"
+              style={{ fontFamily: 'Didot, serif' }}
+            >
+              No New Arrivals Found
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

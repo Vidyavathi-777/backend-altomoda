@@ -13,6 +13,17 @@ const Header = ({ currentGender, onGenderChange }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const { user, logout } = useUser();
 
+    useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 50) setIsScrolled(true);
+    else setIsScrolled(false);
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+
+
 
     useEffect(() => {
         const updateHeaderHeight = () => {
@@ -27,12 +38,23 @@ const Header = ({ currentGender, onGenderChange }) => {
         setItemCount(getCartItemCount());
     }, [getCartItemCount()]);
 
+
+        const cssVariables = {
+        primary: '#30486B',
+        secondary: '#FFAA6B',
+        neutral: '#30486B',
+        fontHeading: "'Cormorant Garamond', serif",
+        fontBody: "'Inter', sans-serif",
+        fontAccent: "'Inter', sans-serif"
+    };
+
     return (
         <header className="w-full bg-white  font-[var(--font-body)] ">
             {/* Top banner - Always visible on desktop, hidden on mobile */}
             <div className="bg-black text-white text-center font-bold py-3 px-4 hidden lg:flex justify-between items-center text-4xl sm:text-xs">
-                <div className="text-left">
-                    REST OF THE WORLD - EN - €
+                <div className="text-left font-light px-8 " style={{ fontFamily: cssVariables.fontAccent }}>
+              INDIA  - EN - <span>₹</span> 
+
                 </div>
                 <div className="flex-1 text-sm   text-center tracking-wider uppercase">
                     TAXES AND CUSTOMS DUTIES ARE NOT INCLUDED AND MAY BE CHARGED UPON DELIVERY

@@ -34,7 +34,7 @@ const HomePage = ({gender:propGender}) => {
       <main className="pt-[120px] sm:pt-[140px] md:pt-[160px] lg:pt-[180px]">
         <HeroSection  />
         <NewArrivals  />
-        <Newsletter />
+        {/* <Newsletter /> */}
         <ImageCarousel  />
 
         
