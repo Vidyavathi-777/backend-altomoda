@@ -6,6 +6,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ImageCarousel = () => {
   const { gender = 'woman' } = useParams();
@@ -13,11 +14,15 @@ const ImageCarousel = () => {
         man: "68f86b10734810ab97bb98d1",
         woman: "68f86b1c734810ab97bb9a2f"
     };
+
+  const navigate = useNavigate();
+
   
   const swiperData = [
     {
       id: 1,
       title: "OUR BRANDS // DISCOVER NOW",
+      type: "brands",
       subtitle: "Curated Excellence",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_01_WOMAN_3",
       gender: "woman"
@@ -25,6 +30,7 @@ const ImageCarousel = () => {
     {
       id: 2,
       title: "OUR MAGAZINE // DISCOVER NOW TCZ",
+      type: "magazine",
       subtitle: "Editorial Insights",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_02_WOMAN_3",
       gender: 'woman'
@@ -32,6 +38,7 @@ const ImageCarousel = () => {
     {
       id: 3,
       title: "OUR BOUTIQUES // DISCOVER NOW",
+      type: "boutiques",
       subtitle: "Exceptional Service",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/BANNER%20BOUTIQUE/Footer_03_WOMAN_BOUTIQUE",
       gender: "woman"
@@ -39,6 +46,7 @@ const ImageCarousel = () => {
     {
       id: 4,
       title: "OUR BRANDS // DISCOVER NOW",
+      type: "brands",
       subtitle: "Curated Excellence",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_01_MAN_3",
       gender: "man"
@@ -46,6 +54,7 @@ const ImageCarousel = () => {
     {
       id: 5,
       title: "OUR MAGAZINE // DISCOVER NOW TCZ",
+      type: "magazine",
       subtitle: "Editorial Insights",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/03_06_25/Footer_02_MAN_3",
       gender: "man"
@@ -53,11 +62,19 @@ const ImageCarousel = () => {
     {
       id: 6,
       title: "OUR BOUTIQUES // DISCOVER NOW",
+      type: "boutiques",
       subtitle: "Exceptional Service",
       image: "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/dZINQM1hh6m/BANNER%20BOUTIQUE/Footer_03_MAN_BOUTIQUE",
       gender: "man"
     }
   ];
+
+  const linkRoutes = {
+  brands: `/${gender}/designers`,
+  magazine: `/magazine`,
+  boutiques: `/boutique`,
+};
+
 
   const slides = swiperData.filter(item => item.gender === gender);
 
@@ -136,7 +153,8 @@ const ImageCarousel = () => {
           {slides.map((item) => (
             <SwiperSlide key={item.id}>
               <div className="w-full px-6">
-                <div className="relative w-full luxury-shadow rounded-lg overflow-hidden">
+                <div  onClick={() => navigate(linkRoutes[item.type])}
+                className="relative w-full luxury-shadow rounded-lg overflow-hidden">
                   {/* Image Container */}
                   <div className="h-0 pb-[120%] relative overflow-hidden">
                     <img
@@ -207,7 +225,8 @@ const ImageCarousel = () => {
           >
             {slides.map((item) => (
               <SwiperSlide key={item.id}>
-                <div className="group cursor-pointer">
+                <div  onClick={() => navigate(linkRoutes[item.type])}
+                className="group cursor-pointer">
                   <div className="relative w-full luxury-shadow rounded-sm overflow-hidden">
                     {/* Image Container */}
                     <div className="h-0 pb-[140%] relative overflow-hidden">

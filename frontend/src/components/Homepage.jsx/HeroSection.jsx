@@ -71,7 +71,7 @@ const HeroSection = () => {
     return (
         <>
             {/* Main Hero Banner - Full Width */}
-            <div className="relative w-full bg-white pt-[30px]">
+            <div className="relative w-full bg-white pt-[10px] lg:pt-[50px] ">
                 <div className="relative w-full">
                     <div className="w-full h-[100vh] min-h-[500px] max-h-[1000px] overflow-hidden">
                         <img

@@ -123,50 +123,52 @@ const safeClearCart = async () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center pt-32 px-4">
-        <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-md w-full">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 border-gray-200 border-t-blue-600 mx-auto mb-6"></div>
+      <div className="min-h-screen bg-white flex items-center justify-center pt-32 px-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center max-w-md w-full">
+          <div className="relative mb-8">
+            <div className="animate-spin rounded-full h-20 w-20 border-2 border-gray-200 border-t-black mx-auto"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Clock className="w-8 h-8 text-blue-600" />
+              <Clock className="w-8 h-8 text-gray-600" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Verifying Payment</h2>
-          <p className="text-gray-600">Please wait while we confirm your payment...</p>
+          <h2 className="text-2xl font-light text-gray-900 mb-4" style={{ fontFamily: 'Didot, serif' }}>Verifying Payment</h2>
+          <p className="text-gray-600 text-lg" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Please wait while we confirm your payment...</p>
         </div>
       </div>
     );
   }
 
   const renderSuccessState = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center pt-[250px] px-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-2xl w-full">
-
+    <div className="min-h-screen bg-white flex items-center justify-center pt-32 px-4 lg:pt-[250px]">
+      <div className="bg-white rounded-lg border border-gray-200 p-12 text-center max-w-2xl w-full">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <CheckCircle className="w-12 h-12 text-green-600" />
+        </div>
         
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">Payment Successful!</h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <h1 className="text-4xl font-light text-gray-900 mb-4" style={{ fontFamily: 'Didot, serif' }}>Payment Successful!</h1>
+        <p className="text-xl text-gray-600 mb-10" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           Your order has been placed successfully
         </p>
 
         {orderDetails && (
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 mb-8 text-left">
-            <h3 className="font-bold text-gray-900 mb-4 text-lg">Order Summary</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Order ID</span>
-                <span className="font-mono font-semibold text-gray-900 bg-white px-3 py-1 rounded-lg">
+          <div className="bg-gray-50 rounded-lg p-8 mb-10 text-left border border-gray-200">
+            <h3 className="font-light text-xl text-gray-900 mb-6" style={{ fontFamily: 'Didot, serif' }}>Order Summary</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-3 border-b border-gray-200">
+                <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Order ID</span>
+                <span className="font-semibold text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   #{orderDetails.orderId?.slice(-8).toUpperCase() || orderDetails._id?.slice(-8).toUpperCase() || 'N/A'}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Payment ID</span>
-                <span className="font-mono font-medium text-gray-700">
+              <div className="flex justify-between items-center py-3 border-b border-gray-200">
+                <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Payment ID</span>
+                <span className="font-medium text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   {orderDetails.paymentId?.slice(-12) || paymentId?.slice(-12) || 'N/A'}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-                <span className="text-gray-900 font-semibold">Amount Paid</span>
-                <span className="text-2xl font-bold text-green-600">
+              <div className="flex justify-between items-center pt-4">
+                <span className="text-gray-900 font-medium tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Amount Paid</span>
+                <span className="text-3xl font-light text-gray-900" style={{ fontFamily: 'Didot, serif' }}>
                   €{(orderDetails.amount || orderDetails.totAmount || 0).toFixed(2)}
                 </span>
               </div>
@@ -174,9 +176,9 @@ const safeClearCart = async () => {
           </div>
         )}
 
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-8 text-left">
-          <p className="text-sm text-blue-800">
-            <strong>What's next?</strong> You'll receive an order confirmation email shortly. 
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-10 text-left">
+          <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <strong className="font-semibold tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>What's next?</strong> You'll receive an order confirmation email shortly. 
             Track your order status in the Orders section.
           </p>
         </div>
@@ -184,14 +186,16 @@ const safeClearCart = async () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
             to="/orders"
-            className="flex items-center justify-center gap-2 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold shadow-lg"
+            className="flex items-center justify-center gap-3 px-8 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             View My Orders
             <ArrowRight className="w-5 h-5" />
           </Link>
           <Link 
             to="/"
-            className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+            className="px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             Continue Shopping
           </Link>
@@ -201,27 +205,30 @@ const safeClearCart = async () => {
   );
 
   const renderPendingState = () => (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center pt-[250px] px-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-2xl w-full">
+    <div className="min-h-screen bg-white flex items-center justify-center pt-32 px-4">
+      <div className="bg-white rounded-lg border border-gray-200 p-12 text-center max-w-2xl w-full">
+        <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <Clock className="w-12 h-12 text-yellow-600" />
+        </div>
         
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">Payment Processing</h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <h1 className="text-4xl font-light text-gray-900 mb-4" style={{ fontFamily: 'Didot, serif' }}>Payment Processing</h1>
+        <p className="text-xl text-gray-600 mb-10" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           Your payment is being verified
         </p>
 
         {orderDetails && (
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 mb-8 text-left">
-            <h3 className="font-bold text-gray-900 mb-4 text-lg">Order Information</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Order ID</span>
-                <span className="font-mono font-semibold text-gray-900">
+          <div className="bg-gray-50 rounded-lg p-8 mb-10 text-left border border-gray-200">
+            <h3 className="font-light text-xl text-gray-900 mb-6" style={{ fontFamily: 'Didot, serif' }}>Order Information</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-3 border-b border-gray-200">
+                <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Order ID</span>
+                <span className="font-semibold text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   #{orderDetails.orderId?.slice(-8).toUpperCase() || orderId?.slice(-8).toUpperCase() || 'N/A'}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Amount</span>
-                <span className="text-xl font-bold text-gray-900">
+              <div className="flex justify-between items-center pt-4">
+                <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Amount</span>
+                <span className="text-3xl font-light text-gray-900" style={{ fontFamily: 'Didot, serif' }}>
                   €{(orderDetails.amount || orderDetails.totAmount || 0).toFixed(2)}
                 </span>
               </div>
@@ -229,9 +236,9 @@ const safeClearCart = async () => {
           </div>
         )}
 
-        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg mb-8 text-left">
-          <p className="text-sm text-yellow-800">
-            <strong>Please note:</strong> Your order has been created and is awaiting payment confirmation. 
+        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg mb-10 text-left">
+          <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <strong className="font-semibold tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Please note:</strong> Your order has been created and is awaiting payment confirmation. 
             You'll receive an update once the payment is processed. Check your order status in the Orders section.
           </p>
         </div>
@@ -239,14 +246,16 @@ const safeClearCart = async () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold shadow-lg"
+            className="flex items-center justify-center gap-3 px-8 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             Refresh Status
             <ArrowRight className="w-5 h-5" />
           </button>
           <Link 
             to="/orders"
-            className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+            className="px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             View Orders
           </Link>
@@ -256,26 +265,26 @@ const safeClearCart = async () => {
   );
 
   const renderFailedState = () => (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center pt-[250px] px-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-2xl w-full">
-
+    <div className="min-h-screen bg-white flex items-center justify-center pt-32 px-4">
+      <div className="bg-white rounded-lg border border-gray-200 p-12 text-center max-w-2xl w-full">
+        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <XCircle className="w-12 h-12 text-red-600" />
+        </div>
         
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">Payment Failed</h1>
-        <p className="text-xl text-gray-600 mb-4">
+        <h1 className="text-4xl font-light text-gray-900 mb-4" style={{ fontFamily: 'Didot, serif' }}>Payment Failed</h1>
+        <p className="text-xl text-gray-600 mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           We couldn't process your payment
         </p>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+            <p className="text-red-700 text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>{error}</p>
           </div>
         )}
 
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-8 text-left">
-          <p className="text-sm text-red-800 mb-2">
-            <strong>What happened?</strong>
-          </p>
-          <p className="text-sm text-red-700">
+        <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-10 text-left">
+          <p className="text-gray-700 leading-relaxed mb-3" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <strong className="font-semibold tracking-wide block mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>What happened?</strong>
             Your payment couldn't be completed. This could be due to insufficient funds, 
             incorrect payment details, or a technical issue. Please try again or use a different payment method.
           </p>
@@ -284,31 +293,44 @@ const safeClearCart = async () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={handleRetryPayment}
-            className="flex items-center justify-center gap-2 px-8 py-4 bg-black text-white rounded-xl hover:bg-gray-800 transition-all duration-200 font-semibold shadow-lg"
+            className="flex items-center justify-center gap-3 px-8 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             Try Payment Again
             <ArrowRight className="w-5 h-5" />
           </button>
           <Link 
             to="/cart"
-            className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+            className="px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             Back to Cart
           </Link>
         </div>
 
-        <div className="mt-6 text-sm text-gray-500">
-          <p>If the problem persists, please contact our support team.</p>
+        <div className="mt-8 text-sm text-gray-500">
+          <p style={{ fontFamily: 'Cormorant Garamond, serif' }}>If the problem persists, please contact our support team.</p>
         </div>
       </div>
     </div>
   );
 
-  if (paymentStatus === 'success') return renderSuccessState();
-  if (paymentStatus === 'pending') return renderPendingState();
-  if (paymentStatus === 'failed') return renderFailedState();
-
-  return null;
+  return (
+    <div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        @font-face {
+          font-family: 'Didot';
+          src: local('Didot'), local('Didot LT STD');
+          font-weight: normal;
+          font-style: normal;
+        }
+      `}</style>
+      {paymentStatus === 'success' && renderSuccessState()}
+      {paymentStatus === 'pending' && renderPendingState()}
+      {paymentStatus === 'failed' && renderFailedState()}
+    </div>
+  );
 };
 
 export default SuccessPage;

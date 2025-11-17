@@ -1,13 +1,14 @@
-export const convertEuroToINR = async (amountInEuro) => {
-  try {
-    const response = await fetch('https://api.frankfurter.app/latest?from=EUR&to=INR');
-    const data = await response.json();
-    const rate = data?.rates?.INR || 90; // fallback if API fails
-    const amountInINR = amountInEuro * rate;
-    const withTax = amountInINR * 1.12; // add 12%
-    return Math.round(withTax);
-  } catch (error) {
-    console.error('Currency conversion failed:', error);
-    return Math.round(amountInEuro * 90 * 1.12); // fallback approx INR value
-  }
+// 1 EUR → INR rate (you can update anytime)
+const EUR_TO_INR = 90; // Example rate
+
+export const convertPriceToINR = (eurPrice) => {
+  if (!eurPrice) return 0;
+
+  // Convert EUR → INR
+  const inrPrice = eurPrice * EUR_TO_INR;
+
+  // Add 30%
+  const finalPrice = inrPrice * 1.3;
+
+  return Math.round(finalPrice); // remove decimals
 };

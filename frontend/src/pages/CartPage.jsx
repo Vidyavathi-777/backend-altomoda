@@ -2,6 +2,8 @@ import { useCart } from "../Context/CartContext";
 import { useUser } from "../Context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { convertPriceToINR } from "../utils/CurrencyConversion";
+import { ArrowLeft } from "lucide-react";
 
 const CartPage = () => {
   const { cart, loading, updateCartItem, removeFromCart, clearCart } = useCart();
@@ -17,17 +19,28 @@ const CartPage = () => {
     navigate("/checkout");
   };
 
+  const convertedPrice = () => {
+    let prices =  cart.items.priceSnapshot
+    const covertedPrice = convertPriceToINR(prices)
+    return convertedPrice
+
+  }
+
+
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-[180px] px-4 bg-white">
+      <div
+        className="min-h-screen flex flex-col items-center justify-center bg-white px-4"
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+      >
         <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
-        <h2 className="text-2xl font-semibold mb-2">Please Login</h2>
-        <p className="text-gray-600 mb-6">
-          You need to be logged in to view your cart
-        </p>
+        <h2 className="text-2xl font-semibold mb-2" style={{ fontFamily: "Didot, serif" }}>
+          Please Login
+        </h2>
+        <p className="text-gray-600 mb-6 text-sm">You need to login to view your cart</p>
         <Link
           to="/auth"
-          className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition"
+          className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-900 transition-all"
         >
           Login
         </Link>
@@ -37,7 +50,7 @@ const CartPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-[180px] bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
@@ -45,15 +58,21 @@ const CartPage = () => {
 
   if (!cart?.items || cart.items.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-[250px] px-4 bg-white">
+      <div
+        className="min-h-screen flex flex-col items-center justify-center bg-white px-4"
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+      >
         <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
-        <h2 className="text-2xl font-semibold mb-2">Your cart is empty 🛍️</h2>
-        <p className="text-gray-600 mb-6">
-          Start adding some items to your cart!
-        </p>
+        <h2
+          className="text-2xl font-semibold mb-2 tracking-wide"
+          style={{ fontFamily: "Didot, serif" }}
+        >
+          Your cart is empty 🛍️
+        </h2>
+        <p className="text-gray-600 mb-6 text-sm">Start adding some items to your cart</p>
         <Link
           to="/"
-          className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition"
+          className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-900 transition-all"
         >
           Continue Shopping
         </Link>
@@ -62,24 +81,40 @@ const CartPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-[250px] pb-20 font-body">
+    <div
+      className="min-h-screen bg-white pt-40 pb-20 lg:pt-[250px]"
+      style={{ fontFamily: "Montserrat, sans-serif" }}
+    >
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold tracking-wider text-black uppercase font-heading">
-            QUICK CART
+        <div className="flex justify-between items-center mb-12 border-b border-gray-300 pb-4">
+                    <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm">Back to Home</span>
+            </button>
+          </div>
+
+          <h1
+            className="text-3xl tracking-widest uppercase"
+            style={{ fontFamily: "Didot, serif", letterSpacing: "0.1em" }}
+          >
+            Your Cart
           </h1>
           <button
             onClick={clearCart}
-            className="text-sm text-gray-700 hover:text-red-600 underline"
+            className="text-sm text-gray-600 hover:text-red-600 underline"
           >
             Remove all
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             {cart.items.map((item) => (
               <div
                 key={item._id}
@@ -90,7 +125,7 @@ const CartPage = () => {
                   <img
                     src={item.product?.image || "/placeholder.jpg"}
                     alt={item.product?.title || "Product"}
-                    className="w-20 h-20 object-cover rounded"
+                    className="w-28 h-28 object-cover rounded-md border border-gray-200"
                     onError={(e) => {
                       e.target.src =
                         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+";
@@ -100,39 +135,37 @@ const CartPage = () => {
 
                 {/* Product Info */}
                 <div className="flex-1 w-full">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="text-lg font-bold uppercase text-black tracking-wider mb-1 font-heading">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3
+                        className="text-lg font-semibold uppercase tracking-wide text-gray-900"
+                        style={{ fontFamily: "Didot, serif" }}
+                      >
                         {item.product?.brand || "Brand"}
-                      </div>
-                      <p className="text-sm text-gray-700 font-medium mb-1">
+                      </h3>
+                      <p className="text-sm text-gray-700">
                         {item.product?.title || "Product"}
                       </p>
                       <p className="text-xs text-gray-500 uppercase">
-                        Size: {item.size || item.product?.size || "TU"}
+                        Size: {item.size || item.product?.size || "N/A"}
                       </p>
-                      
-                      {/* Original Price and Discount */}
-                      {item.originalPrice && item.originalPrice > item.priceSnapshot && (
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-sm text-gray-500 line-through">
-                            €{item.originalPrice.toFixed(2)}
-                          </span>
-                          <span className="text-sm font-semibold text-red-600">
-                            -{Math.round((1 - item.priceSnapshot / item.originalPrice) * 100)}%
-                          </span>
-                          <span className="text-sm font-bold text-black">
-                            €{item.priceSnapshot.toFixed(2)}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {(!item.originalPrice || item.originalPrice === item.priceSnapshot) && (
-                        <span className="text-sm font-bold text-black mt-1 block">
-                          €{item.priceSnapshot.toFixed(2)}
-                        </span>
-                      )}
                     </div>
+                    <button
+                      onClick={() => removeFromCart(item.sku)}
+                      className="text-gray-500 hover:text-red-500 transition-all"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mt-2">
+                    <span
+                      className="text-base font-semibold text-gray-900"
+                      style={{ fontFamily: "Montserrat, sans-serif" }}
+                    >
+                      Rs {item.priceSnapshot.toFixed(2)}
+                    </span>
                   </div>
 
                   {/* Quantity Controls */}
@@ -147,7 +180,7 @@ const CartPage = () => {
                       >
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="px-4 py-1 font-medium text-black bg-white border-x border-gray-400 min-w-[40px] text-center">
+                      <span className="px-5 py-1 text-center font-medium bg-white text-gray-900">
                         {item.qty}
                       </span>
                       <button
@@ -157,88 +190,63 @@ const CartPage = () => {
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
-                    
-                    <button
-                      onClick={() => removeFromCart(item.sku)}
-                      className="text-sm text-black underline hover:text-red-600"
-                    >
-                      Remove
-                    </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Summary */}
+          {/* Summary Section */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg p-6 border border-gray-300 sticky top-24">
-              <h3 className="text-lg font-bold tracking-wider mb-6 uppercase font-heading">
-                SUBTOTAL
+            <div className="bg-[#fafafa] rounded-lg p-8 border border-gray-200 shadow-sm sticky top-24">
+              <h3
+                className="text-xl font-semibold mb-6 uppercase tracking-widest text-gray-900"
+                style={{ fontFamily: "Didot, serif" }}
+              >
+                Summary
               </h3>
 
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm font-medium text-gray-800">
-                  Items in the shopping cart:
-                </span>
-                <span className="font-bold text-black">
-                  {cart.totalItems}
-                </span>
+              <div className="flex justify-between text-sm text-gray-700 mb-3">
+                <span>Items</span>
+                <span>{cart.totalItems}</span>
               </div>
 
-              <div className="flex justify-between items-center text-2xl font-bold text-black mb-2">
+              <div className="flex justify-between items-center mb-4 text-xl font-semibold text-gray-900">
                 <span>Total</span>
-                <span>€ {cart.subtotal.toFixed(2)}</span>
+                <span>Rs {cart.subtotal.toFixed(2)}</span>
               </div>
 
-              <p className="text-xs text-gray-600 mb-6 text-right">
+              <p className="text-xs text-gray-500 mb-8 text-right">
                 Import Duties not included
               </p>
-
-              {/* Discount Code */}
-              <div className="mb-6">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Insert Discount Code"
-                    className="w-full border border-gray-400 rounded-md px-4 py-3 text-sm pr-24 focus:outline-none focus:border-black"
-                  />
-                  <button className="absolute right-1 top-1 px-4 py-2 border border-black rounded-md text-sm bg-white hover:bg-gray-100 font-medium">
-                    Use HEAT
-                  </button>
-                </div>
-              </div>
 
               <div className="space-y-3">
                 <button
                   onClick={() => navigate("/")}
-                  className="w-full bg-white text-black py-3 rounded-md font-semibold border border-black hover:bg-gray-50 transition text-sm uppercase tracking-wide"
+                  className="w-full py-3 border border-gray-900 text-gray-900 rounded-md hover:bg-gray-100 uppercase tracking-wide transition-all text-sm"
                 >
-                  Go to cart
+                  Continue Shopping
                 </button>
 
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 transition text-sm uppercase tracking-wide"
+                  className="w-full py-3 bg-black text-white rounded-md hover:bg-gray-900 uppercase tracking-wide transition-all text-sm"
                 >
-                  Proceed
+                  Proceed to Checkout
                 </button>
               </div>
 
-              <div className="mt-6 text-xs text-gray-700 text-center space-y-1">
-                <p className="text-gray-600">
-                  Shipping costs are calculated on the next screen.
-                </p>
-                <div className="mt-2">
-                  <span className="underline cursor-pointer hover:text-gray-900">
-                    Terms and conditions
-                  </span>{" "}
-                  and{" "}
-                  <span className="underline cursor-pointer hover:text-gray-900">
-                    privacy policy
-                  </span>
-                </div>
-              </div>
+              <p className="text-[11px] text-gray-500 text-center mt-8 leading-relaxed">
+                Shipping calculated on next screen.
+                <br />
+                <span className="underline cursor-pointer hover:text-gray-800">
+                  Terms & Conditions
+                </span>{" "}
+                and{" "}
+                <span className="underline cursor-pointer hover:text-gray-800">
+                  Privacy Policy
+                </span>
+              </p>
             </div>
           </div>
         </div>

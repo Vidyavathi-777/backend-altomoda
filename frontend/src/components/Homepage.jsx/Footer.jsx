@@ -232,7 +232,7 @@ const Footer = () => {
                         </div>
                         <div className="space-y-1 text-sm text-white tracking-wider"
                              style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                            <p>THECORNER.COM S.r.l.</p>
+                            <p>THEALTOMODA.COM S.r.l.</p>
                             <p>Via Carducci 32, 20123 Milano</p>
                             <p>P.Iva n. 06937930151</p>
                         </div>
@@ -257,7 +257,7 @@ const Footer = () => {
                 <div className="text-center mt-12 pt-8 border-t border-gray-800">
                     <p className="text-xs tracking-widest text-white uppercase"
                        style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        © 2024 ALTOMODA. All rights reserved.
+                        © 2025 ALTOMODA. All rights reserved.
                     </p>
                 </div>
             </div>

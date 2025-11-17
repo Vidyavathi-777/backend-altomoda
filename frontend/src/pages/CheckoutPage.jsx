@@ -250,21 +250,21 @@ const CheckoutPage = () => {
         ].map((step, index) => (
           <React.Fragment key={step.num}>
             <div className="flex flex-col items-center">
-              <div className={`text-sm font-medium mb-2 ${
+              <div className={`text-sm mb-2 tracking-[0.2em] uppercase ${
                 step.active || step.completed ? 'text-black' : 'text-gray-400'
-              }`}>
+              }`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {step.label}
               </div>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm transition-all duration-300 ${
                 step.completed ? 'bg-black text-white' :
                 step.active ? 'bg-black text-white' :
-                'bg-gray-200 text-gray-400'
-              }`}>
-                {step.completed ? <Check className="w-4 h-4" /> : step.num}
+                'bg-gray-100 text-gray-400'
+              }`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                {step.completed ? <Check className="w-5 h-5" /> : step.num}
               </div>
             </div>
             {index < 2 && (
-              <div className={`w-32 h-0.5 mx-4 ${
+              <div className={`w-32 h-0.5 mx-6 transition-all duration-300 ${
                 step.completed ? 'bg-black' : 'bg-gray-200'
               }`} />
             )}
@@ -275,60 +275,60 @@ const CheckoutPage = () => {
   );
 
   const InformationStep = () => (
-    <div className="bg-white rounded-lg border border-gray-300 p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-        <h2 className="text-lg font-bold">Contact & Address</h2>
+    <div className="bg-white rounded-lg border border-gray-200 p-8">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>1</div>
+        <h2 className="text-xl font-light" style={{ fontFamily: 'Didot, serif' }}>Contact & Address</h2>
       </div>
       
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-md">
-          <span className="text-sm font-medium">Contact</span>
-          <span className="text-sm text-gray-600">{user?.email}</span>
+        <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
+          <span className="text-sm font-medium tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Contact</span>
+          <span className="text-sm text-gray-600" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{user?.email}</span>
         </div>
         
         {!showAddressForm ? (
           <>
-            <div className="mb-4">
-              <span className="text-sm font-medium block mb-3">Shipping address</span>
+            <div className="mb-6">
+              <span className="text-sm font-medium block mb-4 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Shipping address</span>
               
               {addresses.length > 0 && (
-                <div className="space-y-3 mb-4">
-                  <span className="text-xs text-gray-500 block">Saved addresses:</span>
+                <div className="space-y-4 mb-6">
+                  <span className="text-xs text-gray-500 block tracking-wide uppercase" style={{ fontFamily: 'Montserrat, sans-serif' }}>Saved addresses:</span>
                   {addresses.map((address) => (
                     <div
                       key={address._id}
                       onClick={() => setSelectedAddress(address)}
-                      className={`border rounded-md p-4 cursor-pointer transition-all ${
+                      className={`border rounded-lg p-5 cursor-pointer transition-all duration-300 ${
                         selectedAddress?._id === address._id
-                          ? 'border-black bg-gray-50'
-                          : 'border-gray-300 hover:border-gray-400'
+                          ? 'border-black bg-gray-50 shadow-sm'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           {address.label && (
-                            <p className="font-medium text-sm mb-1">{address.label}</p>
+                            <p className="font-medium text-sm mb-2 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>{address.label}</p>
                           )}
-                          <p className="text-sm text-gray-700">{address.line1}</p>
-                          {address.line2 && <p className="text-sm text-gray-700">{address.line2}</p>}
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-700 mb-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{address.line1}</p>
+                          {address.line2 && <p className="text-sm text-gray-700 mb-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{address.line2}</p>}
+                          <p className="text-sm text-gray-700" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                             {address.city}, {address.state} - {address.pincode}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">{address.country}</p>
+                          <p className="text-xs text-gray-500 mt-2 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>{address.country}</p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleEditAddress(address);
                             }}
-                            className="text-gray-400 hover:text-gray-600 p-1"
+                            className="text-gray-400 hover:text-gray-600 p-2 transition-colors"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           {selectedAddress?._id === address._id && (
-                            <Check className="w-4 h-4 text-black" />
+                            <Check className="w-5 h-5 text-black" />
                           )}
                         </div>
                       </div>
@@ -339,9 +339,10 @@ const CheckoutPage = () => {
 
               <button
                 onClick={() => setShowAddressForm(true)}
-                className="w-full py-3 px-4 border border-dashed border-gray-300 rounded-md text-gray-600 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                className="w-full py-4 px-4 border border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 text-sm font-medium tracking-wide"
+                style={{ fontFamily: 'Montserrat, sans-serif' }}
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-5 h-5" />
                 Add New Address
               </button>
             </div>
@@ -349,32 +350,34 @@ const CheckoutPage = () => {
             <button
               onClick={() => setCurrentStep(2)}
               disabled={!selectedAddress}
-              className="w-full bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white py-4 rounded-lg font-medium tracking-[0.2em] uppercase hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
             >
               Continue to Shipping
             </button>
           </>
         ) : (
-          <form onSubmit={handleAddNewAddress} className="space-y-4">
-            <h3 className="font-medium mb-4">
+          <form onSubmit={handleAddNewAddress} className="space-y-5">
+            <h3 className="font-light text-lg mb-2" style={{ fontFamily: 'Didot, serif' }}>
               {editingAddress ? 'Edit Address' : 'Add New Address'}
             </h3>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 Label (optional)
               </label>
               <input 
                 name="label" 
                 value={formData.label} 
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 placeholder="Home / Work" 
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 Address Line 1 *
               </label>
               <input 
@@ -382,27 +385,29 @@ const CheckoutPage = () => {
                 required 
                 value={formData.line1} 
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 placeholder="Street address" 
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 Address Line 2 (optional)
               </label>
               <input 
                 name="line2" 
                 value={formData.line2} 
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 placeholder="Apartment, suite, etc." 
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   City *
                 </label>
                 <input 
@@ -410,11 +415,12 @@ const CheckoutPage = () => {
                   required 
                   value={formData.city} 
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   State *
                 </label>
                 <input 
@@ -422,14 +428,15 @@ const CheckoutPage = () => {
                   required 
                   value={formData.state} 
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   PIN Code *
                 </label>
                 <input 
@@ -437,54 +444,57 @@ const CheckoutPage = () => {
                   required 
                   value={formData.pincode} 
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   Country *
                 </label>
                 <input 
                   name="country" 
                   value={formData.country} 
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-black transition-colors text-sm bg-gray-50"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black transition-all duration-300 text-sm bg-gray-50"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   disabled
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 name="isDefault"
                 checked={formData.isDefault}
                 onChange={handleInputChange}
-                className="w-4 h-4 text-black focus:ring-black border-gray-300 rounded"
+                className="w-5 h-5 text-black focus:ring-black border-gray-300 rounded transition-all"
               />
-              <label className="text-sm text-gray-700">Set as default address</label>
+              <label className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Set as default address</label>
             </div>
 
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-sm text-red-700">{error}</p>
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{error}</p>
               </div>
             )}
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-4 pt-3">
               <button 
                 type="submit"
                 disabled={formLoading}
-                className="flex-1 bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors text-sm"
+                className="flex-1 bg-black text-white py-4 rounded-lg font-medium tracking-[0.2em] uppercase hover:bg-gray-800 disabled:opacity-50 transition-all duration-300 text-sm"
+                style={{ fontFamily: 'Montserrat, sans-serif' }}
               >
                 {formLoading ? 'Saving...' : editingAddress ? 'Update Address' : 'Save Address'}
               </button>
               <button 
                 type="button"
                 onClick={handleCancelEdit}
-                className="px-6 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-6 py-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-300"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
           </form>
@@ -494,48 +504,50 @@ const CheckoutPage = () => {
   );
 
   const ShippingStep = () => (
-    <div className="bg-white rounded-lg border border-gray-300 p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-        <h2 className="text-lg font-bold">Review & Create Order</h2>
+    <div className="bg-white rounded-lg border border-gray-200 p-8">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>2</div>
+        <h2 className="text-xl font-light" style={{ fontFamily: 'Didot, serif' }}>Review & Create Order</h2>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{error}</p>
         </div>
       )}
 
-      <div className="mb-6 p-4 bg-gray-50 rounded-md">
-        <h3 className="font-medium mb-2 text-sm">Shipping To:</h3>
-        <p className="text-sm text-gray-700">{selectedAddress?.line1}</p>
-        {selectedAddress?.line2 && <p className="text-sm text-gray-700">{selectedAddress.line2}</p>}
-        <p className="text-sm text-gray-700">
+      <div className="mb-6 p-5 bg-gray-50 rounded-lg">
+        <h3 className="font-medium mb-3 text-sm tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Shipping To:</h3>
+        <p className="text-sm text-gray-700 mb-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{selectedAddress?.line1}</p>
+        {selectedAddress?.line2 && <p className="text-sm text-gray-700 mb-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{selectedAddress.line2}</p>}
+        <p className="text-sm text-gray-700" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           {selectedAddress?.city}, {selectedAddress?.state} - {selectedAddress?.pincode}
         </p>
-        <p className="text-xs text-gray-500 mt-1">{selectedAddress?.country}</p>
+        <p className="text-xs text-gray-500 mt-2 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>{selectedAddress?.country}</p>
       </div>
 
-      <div className="space-y-4 mb-6">
-        <div className="flex items-center justify-between p-4 border border-gray-300 rounded-md">
+      {/* <div className="space-y-4 mb-8">
+        <div className="flex items-center justify-between p-5 border border-gray-200 rounded-lg">
           <div>
-            <span className="font-medium">Standard Shipping</span>
+            <span className="font-medium tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Standard Shipping</span>
           </div>
-          <span className="font-bold">€50.00</span>
+          <span className="font-bold text-lg" style={{ fontFamily: 'Didot, serif' }}>€50.00</span>
         </div>
-      </div>
+      </div> */}
 
-      <div className="flex gap-3">
+      <div className="flex gap-4">
         <button
           onClick={() => setCurrentStep(1)}
-          className="flex-1 py-3 border border-gray-300 rounded-md font-medium text-gray-700 hover:bg-gray-50 transition"
+          className="flex-1 py-4 border border-gray-300 rounded-lg font-medium text-gray-700 tracking-[0.2em] uppercase hover:bg-gray-50 transition-all duration-300 text-sm"
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
         >
           Return to information
         </button>
         <button
           onClick={handleCreateOrder}
           disabled={!selectedAddress || orderLoading}
-          className="flex-1 bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="flex-1 bg-black text-white py-4 rounded-lg font-medium tracking-[0.2em] uppercase hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm"
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
         >
           {orderLoading ? 'Creating Order...' : 'Create Order'}
         </button>
@@ -544,94 +556,95 @@ const CheckoutPage = () => {
   );
 
   const PaymentStep = () => (
-    <div className="bg-white rounded-lg border border-gray-300 p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-        <h2 className="text-lg font-bold">Payment</h2>
+    <div className="bg-white rounded-lg border border-gray-200 p-8">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>3</div>
+        <h2 className="text-xl font-light" style={{ fontFamily: 'Didot, serif' }}>Payment</h2>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{error}</p>
         </div>
       )}
 
       {orderDetails && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
-          <div className="flex items-center gap-2 text-green-800 mb-2">
-            <CheckCircle className="w-5 h-5" />
-            <span className="font-medium">Order Created Successfully!</span>
+        <div className="mb-8 p-5 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center gap-3 text-green-800 mb-3">
+            <CheckCircle className="w-6 h-6" />
+            <span className="font-medium tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Order Created Successfully!</span>
           </div>
-          <p className="text-sm text-green-700">
+          <p className="text-sm text-green-700" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Order ID: #{orderDetails._id?.slice(-8).toUpperCase() || 'N/A'}
           </p>
         </div>
       )}
 
-      <div className="text-center mb-6">
-        <p className="text-gray-600 mb-4">Complete your payment to confirm the order</p>
+      <div className="text-center mb-8">
+        <p className="text-gray-600 mb-6 text-lg" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Complete your payment to confirm the order</p>
         <button
           onClick={handleInitiatePayment}
           disabled={paymentLoading}
-          className="w-full bg-black text-white py-4 rounded-md font-bold text-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="w-full bg-black text-white py-5 rounded-lg font-bold tracking-[0.2em] uppercase text-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
         >
           {paymentLoading ? 'Processing...' : 'Pay Now'}
         </button>
       </div>
 
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-gray-500 text-center tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         Secure payment processed by our payment partner
       </div>
     </div>
   );
 
   const OrderSummary = () => (
-    <div className="bg-white rounded-lg border border-gray-300 p-6 sticky top-24">
-      <h2 className="text-lg font-bold mb-6 border-b border-gray-200 pb-4">Order Summary</h2>
+    <div className="bg-white rounded-lg border border-gray-200 p-8 sticky top-24">
+      <h2 className="text-xl font-light mb-8 pb-6 border-b border-gray-200" style={{ fontFamily: 'Didot, serif' }}>Order Summary</h2>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-6 mb-8">
         {cart?.items?.map((item) => (
-          <div key={item.sku} className="flex justify-between items-start">
+          <div key={item.sku} className="flex justify-between items-start pb-4 border-b border-gray-100">
             <div className="flex-1">
-              <div className="font-medium text-sm">{item.product?.title}</div>
-              <div className="text-xs text-gray-500">Size: {item.size || item.product?.size || 'TU'}</div>
+              <div className="font-medium text-sm mb-2 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>{item.product?.title}</div>
+              <div className="text-xs text-gray-500 tracking-wide mb-3" style={{ fontFamily: 'Montserrat, sans-serif' }}>Size: {item.size || item.product?.size || 'TU'}</div>
               {item.originalPrice && item.originalPrice > item.priceSnapshot ? (
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-sm text-gray-500 line-through">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-500 line-through" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     €{item.originalPrice.toFixed(2)}
                   </span>
-                  <span className="text-sm font-bold text-black">
+                  <span className="text-sm font-bold text-black" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     €{item.priceSnapshot.toFixed(2)}
                   </span>
                 </div>
               ) : (
-                <div className="text-sm font-bold mt-1">€{item.priceSnapshot.toFixed(2)}</div>
+                <div className="text-sm font-bold" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Rs {item.priceSnapshot.toFixed(2)}</div>
               )}
             </div>
-            <div className="text-sm text-gray-500">Qty: {item.qty}</div>
+            <div className="text-sm text-gray-500 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Qty: {item.qty}</div>
           </div>
         ))}
       </div>
 
-      <div className="space-y-3 border-t border-gray-200 pt-4">
+      <div className="space-y-4 border-t border-gray-200 pt-6">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Subtotal ({cart?.totalItems || 0} items)</span>
-          <span className="font-semibold">€{cart?.subtotal?.toFixed(2) || '0.00'}</span>
+          <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Subtotal ({cart?.totalItems || 0} items)</span>
+          <span className="font-semibold" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Rs {cart?.subtotal?.toFixed(2) || '0.00'}</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Shipping</span>
-          <span className="font-semibold">€50.00</span>
-        </div>
-        <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
-          <span>Total</span>
-          <span>€{((cart?.subtotal || 0) + 50).toFixed(2)}</span>
+        {/* <div className="flex justify-between text-sm">
+          <span className="text-gray-600 tracking-wide" style={{ fontFamily: 'Montserrat, sans-serif' }}>Shipping</span>
+          <span className="font-semibold" style={{ fontFamily: 'Cormorant Garamond, serif' }}>€50.00</span>
+        </div> */}
+        <div className="flex justify-between text-xl font-light border-t border-gray-200 pt-4">
+          <span style={{ fontFamily: 'Didot, serif' }}>Total</span>
+          <span style={{ fontFamily: 'Didot, serif' }}>Rs {((cart?.subtotal || 0) ).toFixed(2)}</span>
         </div>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-gray-200">
-        <div className="text-xs text-gray-600 space-y-2">
-          <p className="font-semibold">IMPORTANT NOTICE</p>
-          <p>
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="text-xs text-gray-600 space-y-3">
+          <p className="font-semibold tracking-wide uppercase mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>IMPORTANT NOTICE</p>
+          <p className="leading-relaxed" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Taxes and customs duties are not included and may be charged upon delivery. 
             When the courier contacts you in order to pay the duties and you refuse the shipment, 
             return costs and any other cost related to the return (including duties) will be 
@@ -646,23 +659,43 @@ const CheckoutPage = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center pt-32">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-black mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading checkout...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-gray-200 border-t-black mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Loading checkout...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white pb-12 pt-24">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 font-heading">ALTOMODA.COM</h1>
+    <div className="min-h-screen bg-white pb-16 pt-28 lg:pt-[250px]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        @font-face {
+          font-family: 'Didot';
+          src: local('Didot'), local('Didot LT STD');
+          font-weight: normal;
+          font-style: normal;
+        }
+      `}</style>
+      
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-12">
+          {/* <h1 className="text-4xl font-light mb-4" style={{ fontFamily: 'Didot, serif' }}>ALTOMODA.COM</h1> */}
+                    <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm">Back to Home</span>
+            </button>
+          </div>
+
           <StepIndicator />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-8">
             {currentStep === 1 && <InformationStep />}
             {currentStep === 2 && <ShippingStep />}
             {currentStep === 3 && <PaymentStep />}

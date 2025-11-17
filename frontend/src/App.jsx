@@ -10,6 +10,9 @@ import ProductsPage from './pages/ProductsPage';
 import DesignersPage from './pages/DesignersPage';
 import { CategoriesProvider } from './Context/CategoriesContext';
 import { CartProvider } from './Context/CartContext';
+import { GenderProvider } from './Context/GenderContext';
+import { Toaster } from "react-hot-toast";
+
 
 
 
@@ -30,66 +33,96 @@ function App({ gender: propGender }) {
 
   return (
     <UserProvider>
-    <CategoriesProvider currentGender={currentGender}>
-      <CartProvider >
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <Header currentGender={currentGender} onGenderChange={handleGenderChange} />
-      </header>
+      <GenderProvider>
+      <CategoriesProvider currentGender={currentGender}>
+        <CartProvider >
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              success: {
+                style: {
+                  background: "white",
+                  color: "#333",
+                  border: "1px solid #D4AF37",
+                  padding: "14px 18px",
+                  fontFamily: "Montserrat, sans-serif",
+                },
+                iconTheme: {
+                  primary: "#D4AF37",
+                  secondary: "#fff",
+                },
+              },
+              error: {
+                style: {
+                  background: "#fff0f0",
+                  border: "1px solid #ff4d4d",
+                }
+              }
+            }}
+          />
 
-      <Routes>
-        <Route path='/:gender?' element={<HomePage />} />
-        <Route path='/:gender/product/:sku_parent' element={<ProductDetailPage />} />
-        <Route path='/product/:id' element={<ProductDetailPage />} />
-        <Route path="/products/search" element={<ProductsPage />} />
-        <Route path='/:gender/:newArrival/new-arrivals/products' element={<ProductsPage/>} />
-        <Route path='/:gender/:discountId/Discount/products' element={<ProductsPage />} />
-        <Route path="/:gender/:categoryId/:brandName/products" element={<ProductsPage />} />
-<Route path="/:gender/:categoryId/products" element={<ProductsPage />} />
-<Route path="/:categoryId/:brandName/products" element={<ProductsPage />} />
-<Route path="/:categoryId/products" element={<ProductsPage />} />
-           {/* <Route path="/:categoryId/products" element={<ProductsPage />} />
+          <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+            <Header />
+          </header>
+
+          <Routes>
+            <Route path='/:gender?' element={<HomePage />} />
+            <Route path='/:gender/product/:sku_parent' element={<ProductDetailPage />} />
+            <Route path='/product/:id' element={<ProductDetailPage />} />
+            <Route path="/products/search" element={<SearchResultsPage />} />
+            <Route path='/:gender/:newArrival/new-arrivals/products' element={<ProductsPage />} />
+            <Route path='/:gender/:discountId/Discount/products' element={<ProductsPage />} />
+            <Route path="/:gender/:categoryId/:brandName/products" element={<ProductsPage />} />
+            <Route path="/:gender/:categoryId/products" element={<ProductsPage />} />
+            <Route path="/:categoryId/:brandName/products" element={<ProductsPage />} />
+            <Route path="/:categoryId/products" element={<ProductsPage />} />
+            {/* <Route path="/:categoryId/products" element={<ProductsPage />} />
         <Route path='/:gender/discount/products' element={<ProductsPage />} />
         <Route path='/:gender/designers/:brandName/products' element={<ProductsPage />} /> */}
 
-        {/* <Route path='/:categoryId/:brandName/products' element={<ProductsPage />} />
+            {/* <Route path='/:categoryId/:brandName/products' element={<ProductsPage />} />
         
         {/* gender + categoryId */}
-        {/* <Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
+            {/* <Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
         <Route path='/:gender/:brandName/products' element={<ProductsPage />} />
         
         {/* Just categoryId (for backward compatibility) */}
-        {/* <Route path='/:categoryId/products' element={<ProductsPage />} />  */}
-        
-        {/* Designers page */}
-        <Route path='/:gender/designers' element={<DesignersPage />} />
-       <Route path='/magazine' element={<MagazinePage />}/>
-       <Route path='/auth' element={<UserAuth/>} />
-       <Route path='/login' element={<LoginPage/>} />
-       <Route path='/signup' element={<SignupPage/>} />
-       <Route path='/search' element={<SearchPage />} />
-       <Route path='/cart' element={<CartPage />} />
-       <Route path='/checkout' element={<CheckoutPage/>} />
-       <Route path='/paymentCheck' element={<SuccessPage />} />
-       <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
-       <Route path='/terms&conditions' element={<CancellationsPolicy />} /> 
-       <Route path='/addresses' element={<AddressManagement />} />
-       <Route path='/orders' element={<OrdersPage />} />
- 
+            {/* <Route path='/:categoryId/products' element={<ProductsPage />} />  */}
 
-{/* <Route path='/:categoryId/products' element={<ProductsPage />} />
+            {/* Designers page */}
+            <Route path='/:gender/designers' element={<DesignersPage />} />
+            <Route path='/boutique' element={<BoutiquesPage />} />
+            <Route path='/magazine' element={<MagazinePage />} />
+            <Route path='/auth' element={<UserAuth />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/signup' element={<SignupPage />} />
+            <Route path='/search' element={<SearchPage />} />
+            <Route path='/cart' element={<CartPage />} />
+            <Route path='/checkout' element={<CheckoutPage />} />
+            <Route path='/paymentCheck' element={<SuccessPage />} />
+            <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+            <Route path='/terms&conditions' element={<CancellationsPolicy />} />
+            <Route path='/addresses' element={<AddressManagement />} />
+            <Route path='/orders' element={<OrdersPage />} />
+            <Route path='/tryOn' element={<VirtualTryOn />} />
+            <Route path='/magazine/:id' element={<MagazineDetailPage/>} />
+
+
+            {/* <Route path='/:categoryId/products' element={<ProductsPage />} />
 <Route path='/:gender/:categoryId/products' element={<ProductsPage />} />
 <Route path='/:gender/:category/:subCategory/products' element={<ProductsPage />} />
 <Route path='/:gender/:brandName/products' element={<ProductsPage />} /> */}
-        {/* <Route path='/:gender/designers' element={<DesignersPage />} /> */}
-        {/* <Route path='/:gender/newArrival/products' element={<ProductsPage />} />
+            {/* <Route path='/:gender/designers' element={<DesignersPage />} /> */}
+            {/* <Route path='/:gender/newArrival/products' element={<ProductsPage />} />
         <Route path='/:gender/newArrival/:category/products' element={<ProductsPage />} />
         <Route path='/:gender/newArrival/:category/:subCategory/products' element={<ProductsPage />} /> */}
-      </Routes>
+          </Routes>
 
-      <BrandsSection />
-      <Footer />
-      </CartProvider>
-    </CategoriesProvider>
+          <BrandsSection />
+          <Footer />
+        </CartProvider>
+      </CategoriesProvider>
+      </GenderProvider>
     </UserProvider>
   );
 }
@@ -107,5 +140,9 @@ import SignupPage from './components/SignUpPage';
 import { UserProvider } from './Context/UserContext';
 import AddressManagement from './pages/AddressManagement';
 import OrdersPage from './pages/OrdersPage';
+import BoutiquesPage from './pages/Botiques';
+import SearchResultsPage from './pages/SearchResutPage';
+import VirtualTryOn from './components/Tryon';
+import MagazineDetailPage from './pages/MagazineDetailPage';
 
 export default App;

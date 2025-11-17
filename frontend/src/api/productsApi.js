@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { convertPriceToINR } from "../utils/CurrencyConversion";
 
 // Fetch all brands
 export const fetchBrands = async () => {
@@ -50,11 +51,49 @@ export const fetchCategoryChildren = async (categoryId) => {
     }
 };
 
-// Fetch products by category
-export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20) => {
+// productsApi.js - Add this function
+export const fetchSearchProducts = async (searchTerm, page = 1, limit = 20) => {
     try {
         const response = await fetch(
-            `${API_BASE_URL}/products/productbyCategroy/${categoryId}?page=${page}&limit=${limit}`,
+            `${API_BASE_URL}/products/search?search=${encodeURIComponent(searchTerm)}&page=${page}&limit=${limit}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            return {
+                products: data.data.products || [],
+                pagination: data.pagination || {
+                    totalProducts: 0,
+                    totalPages: 0,
+                    currentPage: page,
+                    perPage: limit
+                }
+            };
+        }
+        
+        throw new Error(data.message || 'Failed to fetch search results');
+    } catch (error) {
+        console.error("Error fetching search products:", error);
+        throw error;
+    }
+};
+// productsApi.js - Update all API functions to include sortBy parameter
+
+// Fetch products by category - UPDATED WITH SORTING
+export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20, sortBy = '') => {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/products/productbyCategroy/${categoryId}?page=${page}&limit=${limit}&sortBy=${sortBy}`,
             {
                 headers: {
                     'Content-Type': 'application/json'
@@ -87,10 +126,10 @@ export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20) 
     }
 };
 
-// Fetch products by brand
-export const fetchProductsByBrand = async (brand, categoryId, page = 1, limit = 20) => {
+// Fetch products by brand - UPDATED WITH SORTING
+export const fetchProductsByBrand = async (brand, categoryId, page = 1, limit = 20, sortBy = '') => {
     try {
-        let url = `${API_BASE_URL}/products/productsbyBrand/${categoryId}/${brand}?page=${page}&limit=${limit}`;
+        let url = `${API_BASE_URL}/products/productsbyBrand/${categoryId}/${brand}?page=${page}&limit=${limit}&sortBy=${sortBy}`;
 
         const response = await fetch(url, {
             headers: {
@@ -123,11 +162,11 @@ export const fetchProductsByBrand = async (brand, categoryId, page = 1, limit = 
     }
 };
 
-// Fetch new arrivals by category
-export const fetchNewArrivalsByCategory = async (categoryId, page = 1, limit = 20) => {
+// Fetch new arrivals by category - UPDATED WITH SORTING
+export const fetchNewArrivalsByCategory = async (categoryId, page = 1, limit = 20, sortBy = 'newest') => {
     try {
         const response = await fetch(
-            `${API_BASE_URL}/products/new-arrivals/${categoryId}?page=${page}&limit=${limit}`,
+            `${API_BASE_URL}/products/new-arrivals/${categoryId}?page=${page}&limit=${limit}&sortBy=${sortBy}`,
             {
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,6 +195,51 @@ export const fetchNewArrivalsByCategory = async (categoryId, page = 1, limit = 2
         throw new Error(data.message || 'Failed to fetch new arrivals');
     } catch (error) {
         console.error("Error fetching new arrivals:", error);
+        throw error;
+    }
+};
+
+// Fetch products with filters - UPDATED WITH SORTING
+export const fetchProductsWithFilters = async (filters, page = 1, limit = 20, sortBy = '') => {
+    try {
+        // Add sortBy to the request body
+        const payload = {
+            ...filters,
+            sortBy: sortBy
+        };
+
+        const response = await fetch(
+            `${API_BASE_URL}/products/filter?page=${page}&limit=${limit}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            return {
+                products: data.data.products || [],
+                pagination: {
+                    totalProducts: data.pagination.totalProducts || 0,
+                    totalPages: data.pagination.totalPages || 0,
+                    currentPage: data.pagination.currentPage || page,
+                    perPage: data.pagination.perPage || limit
+                }
+            };
+        }
+        
+        throw new Error(data.message || 'Failed to fetch products');
+    } catch (error) {
+        console.error("Error fetching products with filters:", error);
         throw error;
     }
 };
@@ -222,44 +306,6 @@ export const fetchProductBySkuParent = async (skuParent) => {
     }
 };
 
-// Fetch products with filters
-export const fetchProductsWithFilters = async (filters, page = 1, limit = 20) => {
-    try {
-        const response = await fetch(
-            `${API_BASE_URL}/products/filter?page=${page}&limit=${limit}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(filters)
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        
-        if (data.success) {
-            return {
-                products: data.data.products || [],
-                pagination: {
-                    totalProducts: data.pagination.totalProducts || 0,
-                    totalPages: data.pagination.totalPages || 0,
-                    currentPage: data.pagination.currentPage || page,
-                    perPage: data.pagination.perPage || limit
-                }
-            };
-        }
-        
-        throw new Error(data.message || 'Failed to fetch products');
-    } catch (error) {
-        console.error("Error fetching products with filters:", error);
-        throw error;
-    }
-};
 
 // Fetch related products by SKU
 export const fetchRelatedProducts = async (sku) => {
@@ -381,15 +427,18 @@ export const transformProduct = (product) => {
         }));
     }
 
+    const minInr = convertPriceToINR(minPrice);
+const maxInr = convertPriceToINR(maxPrice);
+
     return {
         id: product._id || Math.random().toString(),
         sku: product.sku_parent || product.sku,
         name: product.brand || 'Unknown Brand',
         productName: title,
         description: description,
-        price: minPrice === maxPrice ? minPrice : `${minPrice} - ${maxPrice}`,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
+    price: minInr === maxInr ? minInr : `${minInr} - ${maxInr}`,
+    minPrice: minInr,
+    maxPrice: maxInr,
         images: productImages,
         brand: product.brand || 'Unknown',
         category: category,

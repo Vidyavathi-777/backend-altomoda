@@ -175,7 +175,7 @@ const CancellationsPolicy = () => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-gray-25 to-gray-100 px-4 sm:px-8 py-12 lg:pt-[250px] sm:pt-[150px]"
+      className="min-h-screen bg-gradient-to-br from-gray-25 to-gray-100 px-4 sm:px-8 py-12 lg:pt-[250px] pt-[150px]"
       style={{ fontFamily: cssVariables.fontBody }}
     >
       <div className="max-w-6xl mx-auto">

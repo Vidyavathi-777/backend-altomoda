@@ -3,6 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Minus, Plus, X } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
 import { transformProduct } from '../api/productsApi';
+import TryOnModal from '../components/Tryon';
+import { Sparkle } from "lucide-react";
+import toast from "react-hot-toast";
+import Breadcrumb from '../components/BreadCrumb';
+import { Navigate, useNavigate } from 'react-router-dom';
+import tryLook from '../assets/tryTheLook.png'
+import { convertPriceToINR } from '../utils/CurrencyConversion';
+
 
 const ProductDetailPage = () => {
     const [selectedSize, setSelectedSize] = useState('');
@@ -20,12 +28,16 @@ const ProductDetailPage = () => {
     const [addingToCart, setAddingToCart] = useState(false);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
+    const [showTryOn, setShowTryOn] = useState(false);
+
+
 
     const { sku_parent, gender = 'woman' } = useParams();
     const sliderRef = useRef(null);
     const mobileImageSliderRef = useRef(null);
     const sizeDropdownRef = useRef(null);
     const { addToCart } = useCart();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -110,10 +122,10 @@ const ProductDetailPage = () => {
         setSizeDropdownOpen(false);
     };
 
-    const handleQuantityChange = (newQuantity) => {
-        if (newQuantity < 1) return;
-        setQuantity(newQuantity);
-    };
+    // const handleQuantityChange = (newQuantity) => {
+    //     if (newQuantity < 1) return;
+    //     setQuantity(newQuantity);
+    // };
 
     const fetchRelatedProducts = async () => {
         if (!product?.sku_parent) {
@@ -256,7 +268,10 @@ const ProductDetailPage = () => {
     };
 
     const getCurrentPrice = () => {
-        return selectedVariant?.price || product?.base_price || 0;
+        
+        let price =  selectedVariant.minPrice || product?.base_price || 0;
+        const convertedPrice = convertPriceToINR(price)
+        return convertedPrice
     };
 
     const handleAddToCart = async () => {
@@ -272,11 +287,12 @@ const ProductDetailPage = () => {
             const priceSnapshot = getCurrentPrice();
 
             await addToCart(sku, quantity, priceSnapshot);
-
+            toast.success("Added to cart!");
             setQuantity(1);
         } catch (err) {
+            toast.error("Something went wrong!");
             console.error('Failed to add to cart:', err);
-            alert(err.message || 'Failed to add item to cart');
+            // alert(err.message || 'Failed to add item to cart');
         } finally {
             setAddingToCart(false);
         }
@@ -284,14 +300,15 @@ const ProductDetailPage = () => {
 
     const maxSlide = Math.max(0, Math.ceil(relatedProducts.length / visibleItems) - 1);
 
+
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-white pt-20 md:pt-32">
+            <div className="min-h-screen flex items-center justify-center bg-white pt-16 md:pt-20">
                 <div className="text-center px-4">
                     <div className="w-10 h-10 md:w-12 md:h-12 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase text-gray-600"
                         style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Loading Luxury Product
+                        Loading
                     </p>
                 </div>
             </div>
@@ -300,7 +317,7 @@ const ProductDetailPage = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-white pt-20 md:pt-32 px-4">
+            <div className="min-h-screen flex items-center justify-center bg-white lg:pt-[200px] md:pt-24 px-4">
                 <div className="text-center max-w-md">
                     <h2 className="text-2xl md:text-3xl mb-4 font-light" style={{ fontFamily: 'Didot, serif' }}>Product Not Found</h2>
                     <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{error}</p>
@@ -318,7 +335,7 @@ const ProductDetailPage = () => {
 
     if (!product) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-white pt-20 md:pt-32">
+            <div className="min-h-screen flex items-center justify-center bg-white pt-16 md:pt-20">
                 <p className="text-base md:text-lg tracking-wider text-gray-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                     Product not found
                 </p>
@@ -354,6 +371,27 @@ const ProductDetailPage = () => {
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                 }
+                /* Gold Gradient */
+                .lux-gold {
+                    background: linear-gradient(145deg, #f7e9b5, #d4af37);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                /* Glow Animation */
+                @keyframes goldGlow {
+                    0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4); }
+                    50% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.9); }
+                    100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.4); }
+                }
+
+                /* Floating Animation */
+                @keyframes floatSparkle {
+                    0% { transform: translateY(0px); }
+                    50% { transform: translateY(-4px); }
+                    100% { transform: translateY(0px); }
+                }
+
             `}</style>
 
             {/* Lightbox */}
@@ -402,76 +440,123 @@ const ProductDetailPage = () => {
             )}
 
             {/* Main Product Section */}
-            <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-12 py-8 md:py-12 lg:py-16">
+            <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-12 lg:pt-[120px] py-8 md:py-12 lg:py-16 pt-[100px]">
+                <p
+                    onClick={() => navigate(-1)}
+                    className="cursor-pointer text-gray-600 hover:text-black"
+                >
+                    Back
+                </p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24">
                     {/* Product Images - Desktop */}
-                    <div className="hidden lg:block space-y-4 md:space-y-6">
-                        {product.images?.map((img, idx) => (
-                            <div
-                                key={idx}
-                                className="bg-gray-50 overflow-hidden group cursor-zoom-in"
-                                onClick={() => openLightbox(idx)}
-                            >
-                                <img
-                                    src={img.url || img}
-                                    alt={`${getLocalizedText('title')} - ${idx + 1}`}
-                                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                                    onError={(e) => {
-                                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+';
+                    {/* Product Images - Desktop */}
+                    <div className="hidden lg:flex">
+                        {/* Thumbnails */}
+                        <div className="w-20 mr-4 space-y-2 flex-shrink-0">
+                            {product.images?.map((img, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => {
+                                        const element = document.getElementById(`product-image-${idx}`);
+                                        if (element) {
+                                            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                        }
                                     }}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                                    className={`w-full aspect-[3/4] bg-gray-50 overflow-hidden border-2 transition-all ${currentImageIndex === idx ? 'border-gold' : 'border-transparent'}`}
+                                >
+                                    <img
+                                        src={img.url || img}
+                                        alt={`${getLocalizedText('title')} - ${idx + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </button>
+                            ))}
+                        </div>
 
-                    {/* Product Images - Mobile */}
-                    <div className="lg:hidden relative">
-                        {product.images?.length > 1 && (
-                            <>
-                                <button
-                                    onClick={handleImagePrev}
-                                    disabled={currentImageIndex === 0}
-                                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center disabled:opacity-30 transition-all shadow-lg"
-                                >
-                                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-                                </button>
-                                <button
-                                    onClick={handleImageNext}
-                                    disabled={currentImageIndex === product.images.length - 1}
-                                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center disabled:opacity-30 transition-all shadow-lg"
-                                >
-                                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-                                </button>
-                            </>
-                        )}
-                        <div
-                            ref={mobileImageSliderRef}
-                            className="overflow-x-auto scrollbar-hide snap-x snap-mandatory"
-                            onClick={() => openLightbox(currentImageIndex)}
-                        >
-                            <div className="flex">
+                        {/* Main Image Scroll Area */}
+                        <div className="hidden lg:block space-y-4 md:space-y-6">
+                            <div className="space-y-4">
                                 {product.images?.map((img, idx) => (
-                                    <div key={idx} className="flex-shrink-0 w-full snap-start">
-                                        <div className="bg-gray-50 overflow-hidden aspect-[3/4]">
-                                            <img
-                                                src={img.url || img}
-                                                alt={`${getLocalizedText('title')} - ${idx + 1}`}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
+                                    <div
+                                        key={idx}
+                                        id={`product-image-${idx}`}
+                                        className="bg-gray-50 overflow-hidden group relative"
+                                    >
+            
+
+
+                                        <img
+                                            src={img.url || img}
+                                            alt={`${getLocalizedText('title')} - ${idx + 1}`}
+                                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
+                                            onError={(e) => {
+                                                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+';
+                                            }}
+                                            onClick={() => openLightbox(idx)}
+                                        />
                                     </div>
                                 ))}
                             </div>
                         </div>
+                    </div>
+
+                    {/* Product Images - Mobile */}
+                    <div className="lg:hidden">
+                        {/* Main Image */}
+                        <div className="relative mb-4">
+                            {product.images?.length > 1 && (
+                                <>
+                                    <button
+                                        onClick={handleImagePrev}
+                                        disabled={currentImageIndex === 0}
+                                        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 text-black w-8 h-8 md:w-10 md:h-10 flex items-center justify-center disabled:opacity-30 transition-all shadow-lg"
+                                    >
+                                        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 " />
+                                    </button>
+                                    <button
+                                        onClick={handleImageNext}
+                                        disabled={currentImageIndex === product.images.length - 1}
+                                        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10  w-8 h-8 md:w-10 md:h-10 flex items-center justify-center disabled:opacity-30 transition-all shadow-lg"
+                                    >
+                                        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                                    </button>
+                                </>
+                            )}
+                            <div
+                                ref={mobileImageSliderRef}
+                                className={`overflow-x-auto scrollbar-hide snap-x snap-mandatory ${showTryOn ? "pointer-events-none" : ""}`}
+                            >
+
+                                <div className="flex">
+                                    {product.images?.map((img, idx) => (
+                                        <div key={idx} className="flex-shrink-0 w-full snap-start">
+                                            <div className="bg-gray-50 overflow-hidden aspect-[3/4] relative">
+                                                <img
+                                                    src={img.url || img}
+                                                    onClick={() => openLightbox(currentImageIndex)}
+                                                    alt={`${getLocalizedText('title')} - ${idx + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                         {product.images?.length > 1 && (
-                            <div className="flex justify-center gap-1.5 md:gap-2 mt-4 md:mt-6">
-                                {product.images.map((_, idx) => (
+                            <div className="flex gap-2 overflow-x-auto scrollbar-hide px-2 py-2">
+                                {product.images.map((img, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => scrollImageToSlide(idx)}
-                                        className={`h-1 md:h-1.5 rounded-full transition-all duration-300 ${currentImageIndex === idx ? 'bg-gold w-6 md:w-8' : 'bg-gray-300 w-1 md:w-1.5'
-                                            }`}
-                                    />
+                                        className={`flex-shrink-0 w-12 h-16 bg-gray-50 overflow-hidden border transition-all ${currentImageIndex === idx ? 'border-gold' : 'border-transparent'}`}
+                                    >
+                                        <img
+                                            src={img.url || img}
+                                            alt={`Thumbnail ${idx + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </button>
                                 ))}
                             </div>
                         )}
@@ -505,14 +590,14 @@ const ProductDetailPage = () => {
                                 className="text-xl md:text-2xl tracking-wide"
                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                             >
-                                EUR {getCurrentPrice().toFixed(2)}
+                                RS. {getCurrentPrice().toFixed(2)}
                             </span>
-                            <p
+                            {/* <p
                                 className="text-[10px] md:text-xs text-gray-500 mt-2 tracking-wider"
                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                             >
                                 IMPORT DUTIES NOT INCLUDED
-                            </p>
+                            </p> */}
                         </div>
 
                         {/* Size Selection */}
@@ -558,8 +643,8 @@ const ProductDetailPage = () => {
                                                 key={variant._id}
                                                 onClick={() => handleSizeSelect(variant.size)}
                                                 className={`w-full px-4 md:px-6 py-3 md:py-4 text-left border-b border-gray-100 last:border-b-0 transition-colors text-sm md:text-base ${selectedSize === variant.size
-                                                        ? 'bg-black text-white'
-                                                        : 'hover:bg-gray-50'
+                                                    ? 'bg-black text-white'
+                                                    : 'hover:bg-gray-50'
                                                     }`}
                                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                                             >
@@ -568,10 +653,10 @@ const ProductDetailPage = () => {
                                                         {variant.size}
                                                         {variant.size_conversion && ` (${getSizeConversion(variant)})`}
                                                     </span>
-                                                    <span className={`text-[10px] md:text-xs tracking-wider ${selectedSize === variant.size ? 'text-white' : 'text-gray-500'
+                                                    {/* <span className={`text-[10px] md:text-xs tracking-wider ${selectedSize === variant.size ? 'text-white' : 'text-gray-500'
                                                         }`}>
                                                         {variant.stock > 0 ? 'IN STOCK' : 'PRE-ORDER'}
-                                                    </span>
+                                                    </span> */}
                                                 </div>
                                             </button>
                                         ))}
@@ -582,26 +667,44 @@ const ProductDetailPage = () => {
 
                         {/* Quantity & Add to Cart */}
                         <div className="space-y-3 md:space-y-4">
-                            <div className="flex items-center gap-3 md:gap-4">
-                                <div className="flex items-center border border-black">
+                            <div className='flex justify-between'>
+                                <div className="flex items-center gap-3 md:gap-4">
+                                    <div className="flex items-center border border-black">
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity - 1)}
+                                            className="px-3 md:px-4 py-2 md:py-3 hover:bg-gray-50 transition-colors"
+                                            disabled={quantity <= 1}
+                                        >
+                                            <Minus className="w-3 h-3 md:w-4 md:h-4" />
+                                        </button>
+                                        <span
+                                            className="px-4 md:px-6 py-2 md:py-3 text-center min-w-[50px] md:min-w-[60px] tracking-wider text-sm md:text-base"
+                                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                        >
+                                            {quantity}
+                                        </span>
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity + 1)}
+                                            className="px-3 md:px-4 py-2 md:py-3 hover:bg-gray-50 transition-colors"
+                                        >
+                                            <Plus className="w-3 h-3 md:w-4 md:h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
                                     <button
-                                        onClick={() => handleQuantityChange(quantity - 1)}
-                                        className="px-3 md:px-4 py-2 md:py-3 hover:bg-gray-50 transition-colors"
-                                        disabled={quantity <= 1}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setShowTryOn(true);
+                                        }}
+                                        className="w-50 h-17 flex items-center justify-center backdrop-blur-xl bg-white/90 border border-yellow-500/60  hover:shadow-[0_0_18px_rgba(212,175,55,1)] transition-all duration-300"
                                     >
-                                        <Minus className="w-3 h-3 md:w-4 md:h-4" />
-                                    </button>
-                                    <span
-                                        className="px-4 md:px-6 py-2 md:py-3 text-center min-w-[50px] md:min-w-[60px] tracking-wider text-sm md:text-base"
-                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                    >
-                                        {quantity}
-                                    </span>
-                                    <button
-                                        onClick={() => handleQuantityChange(quantity + 1)}
-                                        className="px-3 md:px-4 py-2 md:py-3 hover:bg-gray-50 transition-colors"
-                                    >
-                                        <Plus className="w-3 h-3 md:w-4 md:h-4" />
+                                        <img
+                                            src={tryLook}
+                                            alt="Try On"
+                                            className="w-full h-full object-contain"
+                                        />
                                     </button>
                                 </div>
                             </div>
@@ -617,19 +720,18 @@ const ProductDetailPage = () => {
                         </div>
 
                         {/* Product Details Tabs */}
-                        <div className="border-t border-gray-200 pt-6 md:pt-8">
-                            <div className="flex overflow-x-auto scrollbar-hide border-b border-gray-200 mb-4 md:mb-6 -mx-4 px-4 md:mx-0 md:px-0">
+                        <div className="border-t border-gray-200 pt-4 md:pt-6">
+                            <div className="flex overflow-x-auto scrollbar-hide border-b border-gray-200 mb-4 -mx-4 px-4 md:mx-0 md:px-0">
                                 {[
                                     { key: 'details', label: 'Product Details' },
-                                    { key: 'composition', label: 'Composition & Care' },
-                                    { key: 'shipping', label: 'Shipping & Returns' }
+                                    { key: 'composition', label: 'Composition' }
                                 ].map((tab) => (
                                     <button
                                         key={tab.key}
                                         onClick={() => setActiveTab(tab.key)}
-                                        className={`px-4 md:px-6 py-3 md:py-4 text-[10px] md:text-xs lg:text-sm uppercase tracking-[0.2em] border-b-2 transition-all whitespace-nowrap ${activeTab === tab.key
-                                                ? 'border-gold text-black'
-                                                : 'border-transparent text-gray-500 hover:text-black'
+                                        className={`px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-[0.2em] border-b-2 transition-all whitespace-nowrap ${activeTab === tab.key
+                                            ? 'border-gold text-black'
+                                            : 'border-transparent text-gray-500 hover:text-black'
                                             }`}
                                         style={{ fontFamily: 'Montserrat, sans-serif' }}
                                     >
@@ -640,35 +742,28 @@ const ProductDetailPage = () => {
 
                             <div className="animate-fadeIn">
                                 {activeTab === 'details' && (
-                                    <div className="space-y-4 md:space-y-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                                    <div className="space-y-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                                         <div className="text-base md:text-lg leading-relaxed"
                                             dangerouslySetInnerHTML={{ __html: getLocalizedText('description') }} />
 
-                                        <div className="grid grid-cols-2 gap-3 md:gap-4 pt-4 md:pt-6 border-t border-gray-200">
-                                            <div>
-                                                <p className="text-xs md:text-sm uppercase tracking-wider text-gray-600 mb-2"
-                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}>SKU</p>
-                                                <p className="text-base md:text-lg">{product.sku_parent}</p>
+                                        <div className="grid grid-cols-1 gap-3 pt-4 border-t border-gray-200">
+                                            <div className="flex justify-between py-2 border-b border-gray-100">
+                                                <span className="text-sm uppercase tracking-wider text-gray-600"
+                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}>SKU</span>
+                                                <span className="text-base">{product.sku_parent}</span>
                                             </div>
                                             {getLocalizedText('made') && (
-                                                <div>
-                                                    <p className="text-xs md:text-sm uppercase tracking-wider text-gray-600 mb-2"
-                                                        style={{ fontFamily: 'Montserrat, sans-serif' }}>Made In</p>
-                                                    <p className="text-base md:text-lg">{getLocalizedText('made')}</p>
+                                                <div className="flex justify-between py-2 border-b border-gray-100">
+                                                    <span className="text-sm uppercase tracking-wider text-gray-600"
+                                                        style={{ fontFamily: 'Montserrat, sans-serif' }}>Made In</span>
+                                                    <span className="text-base">{getLocalizedText('made')}</span>
                                                 </div>
                                             )}
                                             {getLocalizedText('sex') && (
-                                                <div>
-                                                    <p className="text-xs md:text-sm uppercase tracking-wider text-gray-600 mb-2"
-                                                        style={{ fontFamily: 'Montserrat, sans-serif' }}>Gender</p>
-                                                    <p className="text-base md:text-lg">{getLocalizedText('sex')}</p>
-                                                </div>
-                                            )}
-                                            {selectedVariant?.sku && (
-                                                <div>
-                                                    <p className="text-xs md:text-sm uppercase tracking-wider text-gray-600 mb-2"
-                                                        style={{ fontFamily: 'Montserrat, sans-serif' }}>Variant SKU</p>
-                                                    <p className="text-base md:text-lg">{selectedVariant.sku}</p>
+                                                <div className="flex justify-between py-2 border-b border-gray-100">
+                                                    <span className="text-sm uppercase tracking-wider text-gray-600"
+                                                        style={{ fontFamily: 'Montserrat, sans-serif' }}>Gender</span>
+                                                    <span className="text-base">{getLocalizedText('sex')}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -676,13 +771,13 @@ const ProductDetailPage = () => {
                                 )}
 
                                 {activeTab === 'composition' && (
-                                    <div className="space-y-4 md:space-y-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                                    <div className="space-y-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                                         {product.composition?.length > 0 && (
                                             <div>
-                                                <h4 className="text-lg md:text-xl font-semibold mb-3 md:mb-4" style={{ fontFamily: 'Didot, serif' }}>
-                                                    Composition
+                                                <h4 className="text-lg md:text-xl font-semibold mb-3" style={{ fontFamily: 'Didot, serif' }}>
+                                                    Material Composition
                                                 </h4>
-                                                <div className="space-y-2 md:space-y-3">
+                                                <div className="space-y-2">
                                                     {product.composition.map((comp, idx) => {
                                                         const material = comp.material;
                                                         let materialText = '';
@@ -706,24 +801,15 @@ const ProductDetailPage = () => {
                                         )}
 
                                         {getLocalizedText('care') && (
-                                            <div className="pt-4 md:pt-6 border-t border-gray-200">
-                                                <h4 className="text-lg md:text-xl font-semibold mb-3 md:mb-4" style={{ fontFamily: 'Didot, serif' }}>
+                                            <div className="pt-4 border-t border-gray-200">
+                                                <h4 className="text-lg md:text-xl font-semibold mb-3" style={{ fontFamily: 'Didot, serif' }}>
                                                     Care Instructions
                                                 </h4>
-                                                <p className="text-base md:text-lg leading-relaxed">{getLocalizedText('care')}</p>
+                                                <div className="bg-gray-50 p-4 rounded-lg">
+                                                    <p className="text-base md:text-lg leading-relaxed">{getLocalizedText('care')}</p>
+                                                </div>
                                             </div>
                                         )}
-                                    </div>
-                                )}
-
-                                {activeTab === 'shipping' && (
-                                    <div className="space-y-3 md:space-y-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                                        <div className="text-base md:text-lg leading-relaxed space-y-3 md:space-y-4">
-                                            <p><strong className="font-semibold">Standard Delivery:</strong> 2-5 business days</p>
-                                            <p><strong className="font-semibold">Express Delivery:</strong> 1-2 business days</p>
-                                            <p><strong className="font-semibold">Returns:</strong> Complimentary returns within 30 days</p>
-                                            <p><strong className="font-semibold">Note:</strong> All purchases include a luxury dust bag and authenticity certificate</p>
-                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -732,9 +818,9 @@ const ProductDetailPage = () => {
                 </div>
             </div>
 
-            {/* Related Products */}
+            {/* Related Products Section - RESTORED */}
             {relatedLoading ? (
-                <div className="border-t border-gray-200 py-8 md:py-12 lg:py-16 bg-gray-50">
+                <div className="border-t border-gray-200 py-8 md:py-12 bg-gray-50">
                     <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-12">
                         <h3
                             className="text-2xl md:text-3xl mb-8 md:mb-12 tracking-wider text-center"
@@ -813,7 +899,7 @@ const ProductDetailPage = () => {
                                                     className="text-xs md:text-sm tracking-wider"
                                                     style={{ fontFamily: 'Montserrat, sans-serif' }}
                                                 >
-                                                    EUR {item.minPrice?.toFixed(2) || '0.00'}
+                                                    RS. {item.minPrice?.toFixed(2) || '0.00'}
                                                 </p>
                                             </div>
                                         </Link>
@@ -824,7 +910,14 @@ const ProductDetailPage = () => {
                     </div>
                 </div>
             )}
+            <TryOnModal
+                open={showTryOn}
+                onClose={() => setShowTryOn(false)}
+                productImage={product.images?.[0]}  
+            />
+
         </div>
+
     );
 };
 

@@ -131,9 +131,9 @@ const SearchPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 sm:pt-[140px] md:pt-[160px] lg:pt-[200px]">
+        <div className="min-h-screen bg-gray-50 pt-[150px] md:pt-[160px] lg:pt-[250px]">
             {/* Search Header */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+            <div className=" sticky top-0 z-10 ">
                 <div className="container mx-auto px-4 py-6">
                     <div className="max-w-2xl mx-auto">
                         <div className="relative">

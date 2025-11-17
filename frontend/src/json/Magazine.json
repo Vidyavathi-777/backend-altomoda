@@ -5,7 +5,175 @@
     "title": "The Tie: The Return of a Classic",
     "description": "Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Preview",
-    "alt": "tie"
+    "alt": "tie",
+     "full_content": {
+        "hero_section": {
+          "layout": "image_with_side_text",
+          "alignment": "right_text",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo"
+          },
+          "content": {
+            "category_badge": "Trend",
+            "title": "The Tie: The Return of a Classic",
+            "description": "<p><strong>Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.</strong></p><p>Some trends don't really disappear — they simply wait for the right moment. That's the case with the tie, which in 2025 returns to the spotlight not just as a formal accessory, but as a symbol of fluid, conscious, and modern style.</p>"
+          }
+        },
+        "intro_text": {
+          "content": "<p>The tie is back. Classic or reimagined, it's the unexpected touch that transforms any look.</p>"
+        },
+        "gallery_sections": [
+          {
+            "type": "image_grid",
+            "images": [
+              {
+                "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+                "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+                "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+                "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+                "alt": "tie style 1"
+              },
+              {
+                "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+                "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+                "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+                "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+                "alt": "tie style 2"
+              }
+            ]
+          }
+        ],
+        "product_sliders": [
+          {
+            "title": "Featured Ties",
+            "products": [
+              {
+                "id": "8361234e009_2172",
+                "name": "Jacquard silk tie",
+                "brand": "Gucci",
+                "price": "€220",
+                "images": {
+                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_350x.jpg?v=1754245324",
+                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_450x.jpg?v=1754245324",
+                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_200x.jpg?v=1754245324"
+                }
+              },
+              {
+                "id": "masa0001aq005_s9885",
+                "name": "Jacquard silk tie",
+                "brand": "Etro",
+                "price": "€195",
+                "images": {
+                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_350x.jpg?v=1739805983",
+                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_450x.jpg?v=1739805983",
+                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_200x.jpg?v=1739805983"
+                }
+              },
+              {
+                "id": "ste001s0119_hb825",
+                "name": "Jacquard silk tie",
+                "brand": "Tom Ford",
+                "price": "€260",
+                "images": {
+                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_350x.jpg?v=1760090117",
+                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_450x.jpg?v=1760090117",
+                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_200x.jpg?v=1760090117"
+                }
+              },
+              {
+                "id": "762027v4c80_1962",
+                "name": "Wool tie",
+                "brand": "Bottega Veneta",
+                "price": "€220",
+                "images": {
+                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_350x.jpg?v=1730240212",
+                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_450x.jpg?v=1730240212",
+                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_200x.jpg?v=1730240212"
+                }
+              }
+            ]
+          }
+        ],
+        "detailed_content": {
+          "sections": [
+            {
+              "type": "text_block",
+              "content": "<p>From menswear and womenswear runways to the boldest street-style looks, the tie is being reimagined: ultra-skinny or oversized, patterned or solid, paired with classic shirts or cut-out tops, cropped blazers, and even minimalist tees. Its language today is hybrid, genderless, rooted in tailoring yet playful and contemporary.</p><p>No longer just a symbol of formality, the tie is now a statement of individuality. It tells stories — of irony, power, nostalgia, or rebellion — depending on who wears it and how.</p><p>Wearing it today means breaking the rules with elegance and expressing yourself through a detail that's never ordinary.</p>"
+            }
+          ]
+        },
+        "additional_gallery": {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+              "alt": "tie style 3"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+              "alt": "tie style 4"
+            }
+          ]
+        },
+        "additional_products": {
+          "title": "More Ties to Discover",
+          "products": [
+            {
+              "id": "masa0005aq015_s9865",
+              "name": "Silk tie",
+              "brand": "Etro",
+              "price": "€235",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_350x.jpg?v=1732790576",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_450x.jpg?v=1732790576",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_200x.jpg?v=1732790576"
+              }
+            },
+            {
+              "id": "8357584e009_6169",
+              "name": "Jacquard silk tie",
+              "brand": "Gucci",
+              "price": "€220",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_350x.jpg?v=1754245141",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_450x.jpg?v=1754245141",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_200x.jpg?v=1754245141"
+              }
+            },
+            {
+              "id": "ste001s0119_er556",
+              "name": "Jacquard silk tie",
+              "brand": "Tom Ford",
+              "price": "€260",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_350x.jpg?v=1760090060",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_450x.jpg?v=1760090060",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_200x.jpg?v=1760090060"
+              }
+            },
+            {
+              "id": "masa0001aq005_s9875",
+              "name": "Jacquard silk tie",
+              "brand": "Etro",
+              "price": "€195",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_350x.jpg?v=1739805800",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_450x.jpg?v=1739805800",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_200x.jpg?v=1739805800"
+              }
+            }
+          ]
+        }
+      }
   },
   {
     "id": 2,

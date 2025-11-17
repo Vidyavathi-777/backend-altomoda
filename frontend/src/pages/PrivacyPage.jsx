@@ -138,7 +138,7 @@ const PrivacyPolicy = () => {
         fontFamily: cssVariables.fontBody,
       }}
     >
-      <div className="max-w-4xl mx-auto pt-[180px] sm:pt=[10px]">
+      <div className="max-w-4xl mx-auto lg:pt-[180px] pt-[100px] ">
         {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-block mb-6">
