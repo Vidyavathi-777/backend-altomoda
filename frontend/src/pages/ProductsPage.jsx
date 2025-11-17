@@ -124,7 +124,7 @@ const ProductsPage = () => {
     const [sortBy, setSortBy] = useState('');
     const [scrollPositions, setScrollPositions] = useState({});
     const [showTryOn, setShowTryOn] = useState(false);
-    const [selectedProductForTryOn, setSelectedProductForTryOn] = useState(null); 
+    const [selectedProductForTryOn, setSelectedProductForTryOn] = useState(null);
 
     const [clientFilters, setClientFilters] = useState({ color: [] });
     const [apiFilters, setApiFilters] = useState({ brand: [], category: [], type: [] });
@@ -794,39 +794,38 @@ const ProductsPage = () => {
                     <div className="flex gap-8">
                         {/* Desktop Filters Sidebar */}
                         <div className="hidden lg:block w-80 flex-shrink-0">
-                            <div className="sticky top-32">
-                                <h3
-                                    className="text-xl tracking-[0.2em] font-light mb-6 pb-4 border-b border-gray-300"
-                                    style={{ fontFamily: 'Didot, serif' }}
-                                >
-                                    FILTERS
-                                </h3>
 
-                                <div className="space-y-0">
-                                    <FilterSection
-                                        title="Designers"
-                                        filterKey="brand"
-                                        options={filterOptions.brands}
-                                    />
-                                    <FilterSection
-                                        title="Color"
-                                        filterKey="color"
-                                        options={filterOptions.colors}
-                                    />
-                                    <FilterSection
-                                        title="Type"
-                                        filterKey="type"
-                                        options={filterOptions.types}
-                                    />
-                                    <FilterSection
-                                        title="Category"
-                                        filterKey="category"
-                                        options={filterOptions.categories}
-                                    />
+                            {/* Entire sidebar uses flex to lock footer buttons */}
+                            <div className="sticky top-32 h-[85vh] flex flex-col justify-between bg-white">
+
+                                {/* Scrollable filter area */}
+                                <div className="overflow-y-auto pr-2">
+
+                                    <h3
+                                        className="text-xl tracking-[0.2em] font-light mb-6 pb-4 border-b border-gray-300"
+                                        style={{ fontFamily: 'Didot, serif' }}
+                                    >
+                                        FILTERS
+                                    </h3>
+
+                                    <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} />
+                                    <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
+                                    <FilterSection title="Type" filterKey="type" options={filterOptions.types} />
+                                    <FilterSection title="Category" filterKey="category" options={filterOptions.categories} />
                                 </div>
 
-                                {totalActiveFilters > 0 && (
-                                    <div className="mt-6 pt-6 border-t border-gray-300">
+                                {/* FIXED ALWAYS VISIBLE BUTTONS */}
+                                <div className="border-t border-gray-300 pt-4 pb-6 bg-white flex flex-col gap-3">
+
+                                    <button
+                                        onClick={applyApiFilters}
+                                        className="w-full py-3 bg-black text-white text-xs tracking-[0.2em] uppercase hover:bg-gray-800 transition-all duration-300"
+                                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                    >
+                                        Apply Filters
+                                    </button>
+
+                                    {totalActiveFilters > 0 && (
                                         <button
                                             onClick={clearAllFilters}
                                             className="w-full py-3 border border-black text-xs tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-all duration-300"
@@ -834,10 +833,11 @@ const ProductsPage = () => {
                                         >
                                             Clear All Filters
                                         </button>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         </div>
+
 
                         {/* Products Area */}
                         <div className="flex-1 min-w-0">
@@ -899,7 +899,7 @@ const ProductsPage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 ">
                                         {filteredProducts.map((product) => {
                                             const scrollPosition = scrollPositions[product.id] || 0;
                                             const scrollContainer = scrollRefs.current[product.id];
@@ -910,10 +910,10 @@ const ProductsPage = () => {
                                                 <Link
                                                     to={`/${actualGender || 'woman'}/product/${product.sku}`}
                                                     key={product.sku}
-                                                    className="group cursor-pointer"
+                                                    className="group cursor-pointer pt-[50px]"
                                                 >
                                                     <div
-                                                        className="relative aspect-[3/4] bg-gray-50 mb-3 md:mb-4 overflow-hidden"
+                                                        className="relative aspect-[3/4] bg-gray-50 mb-4  md:mb-4 overflow-hidden "
                                                         onMouseEnter={() => setHoveredProduct(product.id)}
                                                         onMouseLeave={() => setHoveredProduct(null)}
                                                     >
@@ -921,13 +921,13 @@ const ProductsPage = () => {
                                                         {product.images.length > 0 ? (
                                                             <div
                                                                 ref={el => scrollRefs.current[product.id] = el}
-                                                                className="w-full h-full flex overflow-x-auto image-scroll-container snap-x snap-mandatory scroll-smooth"
+                                                                className="w-full h-full flex overflow-x-auto image-scroll-container snap-x snap-mandatory scroll-smooth "
                                                                 onScroll={() => handleScroll(product.id)}
                                                             >
                                                                 {product.images.map((image, index) => (
                                                                     <div
                                                                         key={index}
-                                                                        className="w-full h-full flex-shrink-0 snap-start pt-15"
+                                                                        className="w-full h-full flex-shrink-0 snap-start "
                                                                     >
                                                                         <img
                                                                             src={image}
@@ -1003,31 +1003,31 @@ const ProductsPage = () => {
                                                             {product.productName}
                                                         </p>
                                                         <div>
-                                                             <div className="pt-1 md:pt-2">
-                                                            <p
-                                                                className="text-xs md:text-sm tracking-wider"
-                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                            >
-                                                                {product.minPrice === product.maxPrice
-                                                                    ? `RS ${product.minPrice.toFixed(2)}`
-                                                                    : `RS ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
-                                                                }
-                                                            </p>
-                                                        </div>
-                                                            <div>
-                                                <button
-                                                    onClick={(e) => handleTryOnClick(e, product)} // Pass the product
-                                                    className="w-50 h-17 flex items-center justify-center backdrop-blur-xl bg-white/90 border border-yellow-500/60 hover:shadow-[0_0_18px_rgba(212,175,55,1)] transition-all duration-300"
-                                                >
-                                                    <img
-                                                        src={tryLook}
-                                                        alt="Try On"
-                                                        className="w-full h-full object-contain"
-                                                    />
-                                                </button>
+                                                            <div className="pt-1 md:pt-2">
+                                                                <p
+                                                                    className="text-xs md:text-sm tracking-wider"
+                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                >
+                                                                    {product.minPrice === product.maxPrice
+                                                                        ? `RS ${product.minPrice.toFixed(2)}`
+                                                                        : `RS ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
+                                                                    }
+                                                                </p>
                                                             </div>
+                                                            {/* <div>
+                                                                <button
+                                                                    onClick={(e) => handleTryOnClick(e, product)} // Pass the product
+                                                                    className="w-50 h-17 flex items-center justify-center backdrop-blur-xl bg-white/90 border border-yellow-500/60 hover:shadow-[0_0_18px_rgba(212,175,55,1)] transition-all duration-300"
+                                                                >
+                                                                    <img
+                                                                        src={tryLook}
+                                                                        alt="Try On"
+                                                                        className="w-full h-full object-contain"
+                                                                    />
+                                                                </button>
+                                                            </div> */}
                                                         </div>
-                                                       
+
                                                         {product.variantCount > 1 && (
                                                             <p
                                                                 className="text-[10px] md:text-xs text-gray-600 tracking-wider"
@@ -1073,8 +1073,8 @@ const ProductsPage = () => {
                                                             onClick={() => handlePageChange(pageNum)}
                                                             disabled={loading}
                                                             className={`w-10 h-10 md:w-12 md:h-12 border text-xs tracking-wider ${currentPage === pageNum
-                                                                    ? 'bg-black text-white border-black'
-                                                                    : 'border-black hover:bg-black hover:text-white'
+                                                                ? 'bg-black text-white border-black'
+                                                                : 'border-black hover:bg-black hover:text-white'
                                                                 } disabled:opacity-30 transition-all duration-300`}
                                                             style={{ fontFamily: 'Montserrat, sans-serif' }}
                                                         >
@@ -1173,7 +1173,7 @@ const ProductsPage = () => {
                 open={showTryOn}
                 onClose={handleTryOnClose}
                 productImage={selectedProductForTryOn?.images?.[0]} // Use the selected product's first image
-                
+
             />
         </div>
     );

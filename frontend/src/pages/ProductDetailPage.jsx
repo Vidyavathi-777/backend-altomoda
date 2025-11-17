@@ -268,8 +268,8 @@ const ProductDetailPage = () => {
     };
 
     const getCurrentPrice = () => {
-        
-        let price =  selectedVariant.minPrice || product?.base_price || 0;
+
+        let price = selectedVariant.minPrice || product?.base_price || 0;
         const convertedPrice = convertPriceToINR(price)
         return convertedPrice
     };
@@ -482,7 +482,7 @@ const ProductDetailPage = () => {
                                         id={`product-image-${idx}`}
                                         className="bg-gray-50 overflow-hidden group relative"
                                     >
-            
+
 
 
                                         <img
@@ -667,7 +667,7 @@ const ProductDetailPage = () => {
 
                         {/* Quantity & Add to Cart */}
                         <div className="space-y-3 md:space-y-4">
-                            <div className='flex justify-between'>
+                            {/* <div className='flex justify-between'>
                                 <div className="flex items-center gap-3 md:gap-4">
                                     <div className="flex items-center border border-black">
                                         <button
@@ -707,7 +707,7 @@ const ProductDetailPage = () => {
                                         />
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <button
                                 className="w-full py-4 md:py-5 bg-black text-white text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
@@ -913,7 +913,7 @@ const ProductDetailPage = () => {
             <TryOnModal
                 open={showTryOn}
                 onClose={() => setShowTryOn(false)}
-                productImage={product.images?.[0]}  
+                productImage={product.images?.[0]}
             />
 
         </div>
