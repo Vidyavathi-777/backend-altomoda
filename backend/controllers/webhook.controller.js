@@ -488,7 +488,7 @@ exports.handlePaymentRedirect = catchAsync(async (req, res) => {
 
   } catch (error) {
     console.error('❌ Payment redirect handling error:', error.message);
-
+  
     const errorParams = new URLSearchParams({
       paymentId: paymentId,
       error: 'server_error'

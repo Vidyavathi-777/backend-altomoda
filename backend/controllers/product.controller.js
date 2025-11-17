@@ -381,12 +381,38 @@ const createStandardizedVariant = (product) => {
   };
 };
 
-// Get products by category
+// product.controller.js - Update the sorting logic for newest products
+
+// Helper function to build sort configuration
+// In product.controller.js - update buildSortConfig
+const buildSortConfig = (sortBy) => {
+  switch (sortBy) {
+    case 'newest': return { createdAt: -1 };
+    case 'price-low': return { 'props.buy_price': 1 };
+    case 'price-high': return { 'props.buy_price': -1 };
+    case 'a-z': return { 'locs.singles.title.en': 1 };
+    case 'z-a': return { 'locs.singles.title.en': -1 };
+    case '':
+    case 'default':
+    default: return { _id: -1 }; // fallback to natural database order
+  }
+};
+
+// Helper function to get date for newest products (3 days ago)
+const getNewestProductsDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - 3); // 3 days ago
+  return date;
+};
+
+// Update getProductsByCategory method with newest filter
 exports.getProductsByCategory = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
+    const sortBy = typeof req.query.sortBy === 'string' ? req.query.sortBy : '';
+
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid category ID" });
@@ -411,6 +437,11 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     };
 
+    // For newest sorting, filter products from last 3 days
+    if (sortBy === 'newest') {
+      baseQuery.createdAt = { $gte: getNewestProductsDate() };
+    }
+
     // Count distinct sku_parent values for accurate pagination
     const distinctSkuParents = await Product.distinct('props.sku_parent', baseQuery);
     const totalGroupedProducts = distinctSkuParents.length;
@@ -419,12 +450,13 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
     // Get paginated sku_parents
     const paginatedSkuParents = distinctSkuParents.slice((page - 1) * limit, page * limit);
 
-    // Fetch products belonging to paginated sku_parents
+    // Fetch products belonging to paginated sku_parents with sorting
     const products = await Product.find({
       ...baseQuery,
       'props.sku_parent': { $in: paginatedSkuParents }
     })
       .populate("cats", "name locs")
+      .sort(buildSortConfig(sortBy))
       .lean();
 
     // Group products by sku_parent
@@ -445,6 +477,9 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
       .map((skuParent) => grouped[skuParent])
       .filter((item) => item !== undefined);
 
+    // Apply client-side sorting for price and alphabetical sorts
+    const sortedArray = applyClientSideSorting(groupedArray, sortBy);
+
     res.status(200).json({
       success: true,
       pagination: {
@@ -456,7 +491,7 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
         hasPrevPage: page > 1
       },
       data: {
-        products: groupedArray
+        products: sortedArray,
       },
     });
 
@@ -469,12 +504,14 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
   }
 });
 
-// Get products by brand
+// Update getProductsByBrand method with newest filter
 exports.getProductsByBrand = catchAsync(async (req, res) => {
   try {
     const { categoryId, brand } = req.params;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
+    const sortBy = typeof req.query.sortBy === 'string' ? req.query.sortBy : '';
+
 
     if (!brand) {
       return res.status(400).json({ message: "Brand query is required" });
@@ -485,6 +522,11 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
       "props.brand": brand,
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     };
+
+    // For newest sorting, filter products from last 3 days
+    if (sortBy === 'newest') {
+      query.createdAt = { $gte: getNewestProductsDate() };
+    }
 
     // Add category filter if provided
     if (categoryId) {
@@ -513,12 +555,13 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
     // Get paginated sku_parents
     const paginatedSkuParents = distinctSkuParents.slice((page - 1) * limit, page * limit);
 
-    // Fetch products
+    // Fetch products with sorting
     const products = await Product.find({
       ...query,
       'props.sku_parent': { $in: paginatedSkuParents }
     })
       .populate('cats', 'name locs')
+      .sort(buildSortConfig(sortBy))
       .lean();
 
     // Group products by sku_parent
@@ -539,6 +582,9 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
       .map((skuParent) => grouped[skuParent])
       .filter((item) => item !== undefined);
 
+    // Apply client-side sorting
+    const sortedArray = applyClientSideSorting(groupedArray, sortBy);
+
     res.status(200).json({
       success: true,
       pagination: {
@@ -550,7 +596,7 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
         hasPrevPage: page > 1
       },
       data: {
-        products: groupedArray,
+        products: sortedArray,
       },
     });
 
@@ -563,10 +609,10 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
   }
 });
 
-// Get products with filters
+// Update getProductsWithFilters method with newest filter
 exports.getProductsWithFilters = catchAsync(async (req, res) => {
   try {
-    const { categoryIds, brands, colors, isNewArrival, days } = req.body;
+    const { categoryIds, brands, colors, isNewArrival, days, sortBy = '' } = req.body;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
 
@@ -574,7 +620,12 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     };
 
-    // Add new arrivals filter if specified
+    // For newest sorting, filter products from last 3 days
+    if (sortBy === 'newest' && !isNewArrival) {
+      filter.createdAt = { $gte: getNewestProductsDate() };
+    }
+
+    // Add new arrivals filter if specified (overrides newest filter)
     if (isNewArrival) {
       const daysFilter = parseInt(days) || 7;
       const startDate = new Date();
@@ -622,14 +673,14 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
     // Get paginated sku_parents
     const paginatedSkuParents = distinctSkuParents.slice((page - 1) * limit, page * limit);
 
-    // Fetch products belonging to paginated sku_parents
+    // Fetch products belonging to paginated sku_parents with sorting
     const paginatedFilter = {
       ...filter,
       "props.sku_parent": { $in: paginatedSkuParents },
     };
 
     const products = await Product.find(paginatedFilter)
-      .sort({ createdAt: -1 }) // Sort by newest first
+      .sort(buildSortConfig(sortBy))
       .populate("cats", "name locs")
       .lean();
 
@@ -654,6 +705,9 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
       .map((skuParent) => grouped[skuParent])
       .filter((item) => item !== undefined);
 
+    // Apply client-side sorting
+    const sortedArray = applyClientSideSorting(groupedArray, sortBy);
+
     res.status(200).json({
       success: true,
       pagination: {
@@ -665,7 +719,7 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
         hasPrevPage: page > 1
       },
       data: {
-        products: groupedArray,
+        products: sortedArray,
       },
     });
   } catch (error) {
@@ -677,13 +731,14 @@ exports.getProductsWithFilters = catchAsync(async (req, res) => {
   }
 });
 
-// Get new products
+// Update getNewProducts method - keep original new arrivals logic
 exports.getNewProducts = catchAsync(async (req, res) => {
   try {
     const { categoryId } = req.params;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const days = parseInt(req.query.days) || 7;
+    const sortBy = req.query.sortBy || 'newest';
 
     // Validate compulsory category ID
     if (!categoryId || !mongoose.Types.ObjectId.isValid(categoryId)) {
@@ -745,14 +800,14 @@ exports.getNewProducts = catchAsync(async (req, res) => {
       });
     }
 
-    // Fetch products belonging to paginated sku_parents
+    // Fetch products belonging to paginated sku_parents with sorting
     const paginatedFilter = {
       ...filter,
       "props.sku_parent": { $in: paginatedSkuParents },
     };
 
     const products = await Product.find(paginatedFilter)
-      .sort({ createdAt: -1 }) // Sort by newest first
+      .sort(buildSortConfig(sortBy))
       .populate("cats", "name locs")
       .lean();
 
@@ -782,8 +837,8 @@ exports.getNewProducts = catchAsync(async (req, res) => {
       .map((skuParent) => grouped[skuParent])
       .filter((item) => item !== undefined);
 
-    // Sort grouped array by creation date (newest first)
-    groupedArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // Apply client-side sorting
+    const sortedArray = applyClientSideSorting(groupedArray, sortBy);
 
     res.status(200).json({
       success: true,
@@ -796,7 +851,7 @@ exports.getNewProducts = catchAsync(async (req, res) => {
         hasPrevPage: page > 1
       },
       data: {
-        products: groupedArray,
+        products: sortedArray,
       },
     });
   } catch (error) {
@@ -807,6 +862,26 @@ exports.getNewProducts = catchAsync(async (req, res) => {
     });
   }
 });
+
+// Client-side sorting helper function
+const applyClientSideSorting = (products, sortBy) => {
+  const sorted = [...products];
+  
+  switch(sortBy) {
+    case 'price-low':
+      return sorted.sort((a, b) => (a.minPrice || a.base_price || 0) - (b.minPrice || b.base_price || 0));
+    case 'price-high':
+      return sorted.sort((a, b) => (b.minPrice || b.base_price || 0) - (a.minPrice || a.base_price || 0));
+    case 'a-z':
+      return sorted.sort((a, b) => (a.productName || '').localeCompare(b.productName || ''));
+    case 'z-a':
+      return sorted.sort((a, b) => (b.productName || '').localeCompare(a.productName || ''));
+    case 'newest':
+    default:
+      // Already sorted by createdAt from database, just return as is
+      return sorted;
+  }
+};
 
 // Get product by SKU parent
 exports.getProductBySkuParent = catchAsync(async (req, res) => {

@@ -16,6 +16,7 @@ const calculateDiscount = (stockPrice, buyPrice) => {
     return Math.round(((stockPrice - buyPrice) / stockPrice) * 100);
 };
 
+// Helper function to create standardized product structure
 const createStandardizedProduct = (product) => {
     const basePrice = product.stock_price;
     const buyPrice = product.props?.buy_price;
@@ -43,10 +44,31 @@ const createStandardizedProduct = (product) => {
         fastening: product.locs?.singles?.fastening || {},
         sex: product.locs?.singles?.sex || {},
         images: product.imgs || [],
-        price: basePrice,
-        buy_price: buyPrice,
+        base_price: basePrice,
+        base_buy_price: buyPrice,
         discountPercentage: discount,
         createdAt: product.createdAt,
+        variants: []
+    };
+};
+
+// Helper function to create standardized variant structure
+const createStandardizedVariant = (product) => {
+    return {
+        _id: product._id,
+        sku: product.sku,
+        size: product.props?.size,
+        size_conversion: product.locs?.singles?.size_conversion || {},
+        stock: product.qty,
+        price: product.stock_price,
+        buy_price: product.props?.buy_price,
+        barcode: product.props?.barcode,
+        model_measurements: {
+            waist: product.props?.model_size_waistline,
+            hip: product.props?.model_size_hip,
+            chest: product.props?.model_size_chest,
+            height: product.props?.model_size_height
+        }
     };
 };
 
@@ -60,7 +82,10 @@ exports.searchProducts = async (req, res) => {
 
         // console.log("Search query received:", search);
 
-        let filter = {};
+        let filter = {
+            // Only include products with images
+            imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
+        };
 
         // 🔹 If search parameter is provided, search across all fields
         if (search) {
@@ -137,17 +162,16 @@ exports.searchProducts = async (req, res) => {
 
         // console.log("Final filter:", JSON.stringify(filter, null, 2));
 
-        // 🔹 Pagination setup
-        const skip = (page - 1) * limit;
-
-        // 🔹 Fetch products with proper grouping by sku_parent
+        // 🔹 Count distinct sku_parent values for accurate pagination
         const distinctSkuParents = await Product.distinct('props.sku_parent', filter);
         const totalGroupedProducts = distinctSkuParents.length;
         const totalPages = Math.ceil(totalGroupedProducts / limit);
 
-        // Get paginated sku_parents
+        // 🔹 Get paginated sku_parents
+        const skip = (page - 1) * limit;
         const paginatedSkuParents = distinctSkuParents.slice(skip, skip + parseInt(limit));
 
+        // 🔹 Fetch all products belonging to paginated sku_parents
         let products = [];
         if (paginatedSkuParents.length > 0) {
             products = await Product.find({
@@ -155,10 +179,27 @@ exports.searchProducts = async (req, res) => {
                 'props.sku_parent': { $in: paginatedSkuParents }
             })
             .populate("cats", "name locs")
+            .sort({ createdAt: -1 }) // Sort by newest first
             .lean();
         }
 
-        const standardized = products.map((p) => createStandardizedProduct(p));
+        // 🔹 Group products by sku_parent
+        const grouped = {};
+        
+        products.forEach((product) => {
+            const skuParent = product.props?.sku_parent;
+            
+            if (!grouped[skuParent]) {
+                grouped[skuParent] = createStandardizedProduct(product);
+            }
+
+            grouped[skuParent].variants.push(createStandardizedVariant(product));
+        });
+
+        // 🔹 Convert to array and maintain correct pagination order
+        const groupedArray = paginatedSkuParents
+            .map((skuParent) => grouped[skuParent])
+            .filter((item) => item !== undefined);
 
         // ✅ Clean response
         res.status(200).json({
@@ -172,7 +213,7 @@ exports.searchProducts = async (req, res) => {
                 hasPrevPage: Number(page) > 1,
             },
             data: {
-                products: standardized,
+                products: groupedArray,
             },
         });
     } catch (error) {

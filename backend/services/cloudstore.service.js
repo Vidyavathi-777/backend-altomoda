@@ -12,7 +12,7 @@ class CloudStoreService {
         'Authorization': `Bearer ${config.cloudstore.shopAuthToken}`, 
         'Content-Type': 'application/json',
       },
-      timeout: config.cloudstore.timeoutMs || 30000,
+      timeout: config.cloudstore.timeoutMs || 100000,
     });
 
     // --- Simple rate-limit window ---
@@ -75,20 +75,22 @@ class CloudStoreService {
 
 async getFullCatalog(pageIndex = 1, pageSize = 20) {
   const url = `${config.cloudstore.baseUrl}/shop/v1/items?_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
-  logger.info(`Fetching from CloudStore URL: ${url}`);
   
-  const response = await this.client.get(url, {
+  const res = await this.client.get(url, {
     headers: {
       Authorization: `Bearer ${config.cloudstore.shopAuthToken}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Accept-Encoding': 'gzip, deflate, br', // Match Postman
-      'User-Agent': 'YourApp/1.0', // Custom user agent
+      Accept: "application/json",
+      "Accept-Encoding": "gzip, br",
     },
-    timeout: 30000, // Increase timeout
+    decompress: true,
+    timeout: 300000,
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
   });
-  return response.data;
+
+  return res.data;
 }
+
   async getCatalogWithQuantities(sinceTimestamp = null, page = 1) {
     const params = { withQuantities: true, page };
     if (sinceTimestamp) params.since = sinceTimestamp;
