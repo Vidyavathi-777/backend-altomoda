@@ -122,7 +122,7 @@ class ProductImporter {
 
   // --------------------------------
   // Main Import Workflow
-  // --------------------------------
+  // -------------------------------- updatemany
   async importProducts() {
     await this.initializeCategoryMappings();
 
