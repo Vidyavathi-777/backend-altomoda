@@ -392,6 +392,13 @@ const ProductDetailPage = () => {
                     100% { transform: translateY(0px); }
                 }
 
+                @keyframes colorPulse {
+  0% { background-color: white; }
+  50% { background-color: #d4af37; } /* Gold */
+  100% { background-color: white; }
+}
+
+
             `}</style>
 
             {/* Lightbox */}
@@ -667,8 +674,8 @@ const ProductDetailPage = () => {
 
                         {/* Quantity & Add to Cart */}
                         <div className="space-y-3 md:space-y-4">
-                            {/* <div className='flex justify-between'>
-                                <div className="flex items-center gap-3 md:gap-4">
+                            <div className='flex justify-between'>
+                                {/* <div className="flex items-center gap-3 md:gap-4">
                                     <div className="flex items-center border border-black">
                                         <button
                                             onClick={() => handleQuantityChange(quantity - 1)}
@@ -690,24 +697,28 @@ const ProductDetailPage = () => {
                                             <Plus className="w-3 h-3 md:w-4 md:h-4" />
                                         </button>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setShowTryOn(true);
-                                        }}
-                                        className="w-50 h-17 flex items-center justify-center backdrop-blur-xl bg-white/90 border border-yellow-500/60  hover:shadow-[0_0_18px_rgba(212,175,55,1)] transition-all duration-300"
-                                    >
-                                        <img
-                                            src={tryLook}
-                                            alt="Try On"
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </button>
+                                    <div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setShowTryOn(true);
+                                            }}
+                                            className="w-50 h-14 flex items-center justify-center rounded-xl border border-gray-300 
+               animate-[colorPulse_3s_infinite] transition-all duration-300"
+                                        >
+                                            <img
+                                                src={tryLook}
+                                                alt="Try On"
+                                                className="w-40 h-30 object-contain"
+                                            />
+                                        </button>
+                                    </div>
+
                                 </div>
-                            </div> */}
+                            </div>
 
                             <button
                                 className="w-full py-4 md:py-5 bg-black text-white text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"

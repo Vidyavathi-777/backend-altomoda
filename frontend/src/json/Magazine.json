@@ -6,174 +6,174 @@
     "description": "Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Preview",
     "alt": "tie",
-     "full_content": {
-        "hero_section": {
-          "layout": "image_with_side_text",
-          "alignment": "right_text",
-          "image": {
-            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
-            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
-            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
-            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo"
-          },
-          "content": {
-            "category_badge": "Trend",
-            "title": "The Tie: The Return of a Classic",
-            "description": "<p><strong>Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.</strong></p><p>Some trends don't really disappear — they simply wait for the right moment. That's the case with the tie, which in 2025 returns to the spotlight not just as a formal accessory, but as a symbol of fluid, conscious, and modern style.</p>"
-          }
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Profilo"
         },
-        "intro_text": {
-          "content": "<p>The tie is back. Classic or reimagined, it's the unexpected touch that transforms any look.</p>"
-        },
-        "gallery_sections": [
-          {
-            "type": "image_grid",
-            "images": [
-              {
-                "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
-                "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
-                "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
-                "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
-                "alt": "tie style 1"
-              },
-              {
-                "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
-                "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
-                "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
-                "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
-                "alt": "tie style 2"
-              }
-            ]
-          }
-        ],
-        "product_sliders": [
-          {
-            "title": "Featured Ties",
-            "products": [
-              {
-                "id": "8361234e009_2172",
-                "name": "Jacquard silk tie",
-                "brand": "Gucci",
-                "price": "€220",
-                "images": {
-                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_350x.jpg?v=1754245324",
-                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_450x.jpg?v=1754245324",
-                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_200x.jpg?v=1754245324"
-                }
-              },
-              {
-                "id": "masa0001aq005_s9885",
-                "name": "Jacquard silk tie",
-                "brand": "Etro",
-                "price": "€195",
-                "images": {
-                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_350x.jpg?v=1739805983",
-                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_450x.jpg?v=1739805983",
-                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_200x.jpg?v=1739805983"
-                }
-              },
-              {
-                "id": "ste001s0119_hb825",
-                "name": "Jacquard silk tie",
-                "brand": "Tom Ford",
-                "price": "€260",
-                "images": {
-                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_350x.jpg?v=1760090117",
-                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_450x.jpg?v=1760090117",
-                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_200x.jpg?v=1760090117"
-                }
-              },
-              {
-                "id": "762027v4c80_1962",
-                "name": "Wool tie",
-                "brand": "Bottega Veneta",
-                "price": "€220",
-                "images": {
-                  "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_350x.jpg?v=1730240212",
-                  "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_450x.jpg?v=1730240212",
-                  "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_200x.jpg?v=1730240212"
-                }
-              }
-            ]
-          }
-        ],
-        "detailed_content": {
-          "sections": [
-            {
-              "type": "text_block",
-              "content": "<p>From menswear and womenswear runways to the boldest street-style looks, the tie is being reimagined: ultra-skinny or oversized, patterned or solid, paired with classic shirts or cut-out tops, cropped blazers, and even minimalist tees. Its language today is hybrid, genderless, rooted in tailoring yet playful and contemporary.</p><p>No longer just a symbol of formality, the tie is now a statement of individuality. It tells stories — of irony, power, nostalgia, or rebellion — depending on who wears it and how.</p><p>Wearing it today means breaking the rules with elegance and expressing yourself through a detail that's never ordinary.</p>"
-            }
-          ]
-        },
-        "additional_gallery": {
+        "content": {
+          "category_badge": "Trend",
+          "title": "The Tie: The Return of a Classic",
+          "description": "<p><strong>Discover how the tie is reclaiming its place as a key detail in the modern wardrobe — an accessory that can be elegant, ironic, or completely revolutionary.</strong></p><p>Some trends don't really disappear — they simply wait for the right moment. That's the case with the tie, which in 2025 returns to the spotlight not just as a formal accessory, but as a symbol of fluid, conscious, and modern style.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>The tie is back. Classic or reimagined, it's the unexpected touch that transforms any look.</p>"
+      },
+      "gallery_sections": [
+        {
           "type": "image_grid",
           "images": [
             {
-              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
-              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
-              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
-              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
-              "alt": "tie style 3"
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_1",
+              "alt": "tie style 1"
             },
             {
-              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
-              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
-              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
-              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
-              "alt": "tie style 4"
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_2",
+              "alt": "tie style 2"
             }
           ]
-        },
-        "additional_products": {
-          "title": "More Ties to Discover",
+        }
+      ],
+      "product_sliders": [
+        {
+          "title": "Featured Ties",
           "products": [
             {
-              "id": "masa0005aq015_s9865",
-              "name": "Silk tie",
-              "brand": "Etro",
-              "price": "€235",
-              "images": {
-                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_350x.jpg?v=1732790576",
-                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_450x.jpg?v=1732790576",
-                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_200x.jpg?v=1732790576"
-              }
-            },
-            {
-              "id": "8357584e009_6169",
+              "id": "8361234e009_2172",
               "name": "Jacquard silk tie",
               "brand": "Gucci",
               "price": "€220",
               "images": {
-                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_350x.jpg?v=1754245141",
-                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_450x.jpg?v=1754245141",
-                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_200x.jpg?v=1754245141"
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_350x.jpg?v=1754245324",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_450x.jpg?v=1754245324",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8361234E009_2172-0_200x.jpg?v=1754245324"
               }
             },
             {
-              "id": "ste001s0119_er556",
-              "name": "Jacquard silk tie",
-              "brand": "Tom Ford",
-              "price": "€260",
-              "images": {
-                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_350x.jpg?v=1760090060",
-                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_450x.jpg?v=1760090060",
-                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_200x.jpg?v=1760090060"
-              }
-            },
-            {
-              "id": "masa0001aq005_s9875",
+              "id": "masa0001aq005_s9885",
               "name": "Jacquard silk tie",
               "brand": "Etro",
               "price": "€195",
               "images": {
-                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_350x.jpg?v=1739805800",
-                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_450x.jpg?v=1739805800",
-                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_200x.jpg?v=1739805800"
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_350x.jpg?v=1739805983",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_450x.jpg?v=1739805983",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9885-1_200x.jpg?v=1739805983"
+              }
+            },
+            {
+              "id": "ste001s0119_hb825",
+              "name": "Jacquard silk tie",
+              "brand": "Tom Ford",
+              "price": "€260",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_350x.jpg?v=1760090117",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_450x.jpg?v=1760090117",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_HB825-1_200x.jpg?v=1760090117"
+              }
+            },
+            {
+              "id": "762027v4c80_1962",
+              "name": "Wool tie",
+              "brand": "Bottega Veneta",
+              "price": "€220",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_350x.jpg?v=1730240212",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_450x.jpg?v=1730240212",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/762027V4C80_1962-1_f8ae3140-f8e4-404d-b04c-709ecd51dbf9_200x.jpg?v=1730240212"
               }
             }
           ]
         }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>From menswear and womenswear runways to the boldest street-style looks, the tie is being reimagined: ultra-skinny or oversized, patterned or solid, paired with classic shirts or cut-out tops, cropped blazers, and even minimalist tees. Its language today is hybrid, genderless, rooted in tailoring yet playful and contemporary.</p><p>No longer just a symbol of formality, the tie is now a statement of individuality. It tells stories — of irony, power, nostalgia, or rebellion — depending on who wears it and how.</p><p>Wearing it today means breaking the rules with elegance and expressing yourself through a detail that's never ordinary.</p>"
+          }
+        ]
+      },
+      "additional_gallery": {
+        "type": "image_grid",
+        "images": [
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_3",
+            "alt": "tie style 3"
+          },
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Tie_Slot_4_2",
+            "alt": "tie style 4"
+          }
+        ]
+      },
+      "additional_products": {
+        "title": "More Ties to Discover",
+        "products": [
+          {
+            "id": "masa0005aq015_s9865",
+            "name": "Silk tie",
+            "brand": "Etro",
+            "price": "€235",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_350x.jpg?v=1732790576",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_450x.jpg?v=1732790576",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0005AQ015_S9865-1_200x.jpg?v=1732790576"
+            }
+          },
+          {
+            "id": "8357584e009_6169",
+            "name": "Jacquard silk tie",
+            "brand": "Gucci",
+            "price": "€220",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_350x.jpg?v=1754245141",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_450x.jpg?v=1754245141",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8357584E009_6169-0_200x.jpg?v=1754245141"
+            }
+          },
+          {
+            "id": "ste001s0119_er556",
+            "name": "Jacquard silk tie",
+            "brand": "Tom Ford",
+            "price": "€260",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_350x.jpg?v=1760090060",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_450x.jpg?v=1760090060",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/STE001S0119_ER556-1_200x.jpg?v=1760090060"
+            }
+          },
+          {
+            "id": "masa0001aq005_s9875",
+            "name": "Jacquard silk tie",
+            "brand": "Etro",
+            "price": "€195",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_350x.jpg?v=1739805800",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_450x.jpg?v=1739805800",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MASA0001AQ005_S9875-1_200x.jpg?v=1739805800"
+            }
+          }
+        ]
       }
+    }
   },
   {
     "id": 2,
@@ -181,7 +181,75 @@
     "title": "Pitti Immagine 2025: Effortless Elegance Under the Florentine Sun",
     "description": "From the streets of Pitti Uomo emerges a new way of living fashion: authentic, dynamic, and able to blend tradition and innovation with ease.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Preview",
-    "alt": "pitti"
+    "alt": "pitti",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Profilo"
+        },
+        "content": {
+          "category_badge": "Trend",
+          "title": "Pitti Immagine 2025: Effortless Elegance Under the Florentine Sun",
+          "description": "<p><strong>From the streets of Pitti Uomo emerges a new way of living fashion: authentic, dynamic, and able to blend tradition and innovation with ease.</strong></p><p>At Pitti Uomo 108, the real runway is outside. While the booths unveil visions of style for the coming season, it's in the sun-drenched courtyards of the Fortezza da Basso that the most spontaneous and personal fashion show takes place: street style.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>Not just collections and presentations—at Pitti Uomo 108, the truest spirit of fashion came to life within the city walls, where every look tells a story of style, identity, and freedom.</p>"
+      },
+      "gallery_sections": [
+        {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_1",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_1",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_1",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_1",
+              "alt": "pitti street style 1"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_2",
+              "alt": "pitti street style 2"
+            }
+          ]
+        }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>Every June, Florence becomes a crossroads of cultures, aesthetics, and identities. Carefully curated yet never stiff, looks feature fluid silhouettes, technical garments paired with tailored pieces, retro details set against futuristic touches—the Pitti style is an ongoing conversation between heritage and modernity.</p><p>Each outfit is a statement of intent, a visual narrative that speaks of the wearer even before the brand. Florence doesn't follow the rules—it reinvents them.</p><p>We've selected the most representative shots of these Florentine days: candid poses, genuine laughter, and gazes that radiate style and personality.<br>Now it's your turn: step out as if every sidewalk were your runway.</p>"
+          }
+        ]
+      },
+      "additional_gallery": {
+        "type": "image_grid",
+        "images": [
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_3",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_3",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_3",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_3",
+            "alt": "pitti street style 3"
+          },
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_4",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_4",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_4",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Pitti_Slot_4",
+            "alt": "pitti street style 4"
+          }
+        ]
+      }
+    }
   },
   {
     "id": 3,
@@ -189,7 +257,168 @@
     "title": "Country Summer: The Free Spirit of the Season",
     "description": "Discover how country style is taking over summer 2025 and get inspired by a look that's authentic, natural, and full of contemporary charm.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Preview",
-    "alt": "country"
+    "alt": "country",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Profilo"
+        },
+        "content": {
+          "category_badge": "Trend",
+          "title": "Country Summer: The Free Spirit of the Season",
+          "description": "<p><strong>Discover how country style is taking over summer 2025 and get inspired by a look that's authentic, natural, and full of contemporary charm.</strong></p><p>Some styles simply embody freedom—they evoke sun-drenched landscapes, dusty roads, and open-air evenings under starlit skies. Country isn't just an aesthetic: it's a way of life. And this summer, it returns to center stage, infusing fashion with its genuine, rebellious spirit.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>Country is the style of the season: authentic, rebellious, natural—wear it in a modern key for a light elegance with a wild heart.</p>"
+      },
+      "gallery_sections": [
+        {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_1",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_1",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_1",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_1",
+              "alt": "country summer style 1"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_2",
+              "alt": "country summer style 2"
+            }
+          ]
+        }
+      ],
+      "product_sliders": [
+        {
+          "title": "Country Summer Essentials",
+          "products": [
+            {
+              "id": "venti_khaki-p",
+              "name": "Venti triangle bra bikini",
+              "brand": "Lido",
+              "price": "€170",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/VENTI_KHAKI-2_350x.jpg?v=1746440770",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/VENTI_KHAKI-2_450x.jpg?v=1746440770",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/VENTI_KHAKI-2_200x.jpg?v=1746440770"
+              }
+            },
+            {
+              "id": "tequila2511101032600_002-p",
+              "name": "Tequila linen and silk skirt",
+              "brand": "Max Mara",
+              "price": "€354",
+              "original_price": "€590",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/TEQUILA2511101032600_002-0_350x.jpg?v=1744629146",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/TEQUILA2511101032600_002-0_450x.jpg?v=1744629146",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/TEQUILA2511101032600_002-0_200x.jpg?v=1744629146"
+              }
+            },
+            {
+              "id": "gwa00408a000448_90100-p",
+              "name": "Trinidad Leather belt",
+              "brand": "Golden Goose",
+              "price": "€275",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GWA00408A000448_90100-1_350x.jpg?v=1754151249",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GWA00408A000448_90100-1_450x.jpg?v=1754151249",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GWA00408A000448_90100-1_200x.jpg?v=1754151249"
+              }
+            },
+            {
+              "id": "ws0mi1dhu_0to-p",
+              "name": "Fawcette suede sandals",
+              "brand": "Valentino Garavani",
+              "price": "€950",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/WS0MI1DHU_0TO-0_ee33c0de-5f40-4fd4-88d2-10681c1eceec_350x.jpg?v=1760701971",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/WS0MI1DHU_0TO-0_ee33c0de-5f40-4fd4-88d2-10681c1eceec_450x.jpg?v=1760701971",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/WS0MI1DHU_0TO-0_ee33c0de-5f40-4fd4-88d2-10681c1eceec_200x.jpg?v=1760701971"
+              }
+            }
+          ]
+        }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>With fringe, plaid prints, knotted shirts, faded denim, and cowboy boots, country summer makes a bold yet effortless statement. The key word is authenticity: pieces that look like they came straight from a ranch, reimagined with a modern twist. Floral maxi dresses, suede vests, high-waisted shorts, and straw-and-leather accessories create lightweight looks full of personality.</p><p>From runways to music festivals, country blends with boho vibes and '70s vintage touches to deliver versatile, surprising outfits. It's a style that invites you to slow down, embrace the essentials, and still savor the beauty of thoughtful details.</p><p>Country summer is a call to live lightly and stylishly. Mix it with modern pieces for a refined contrast, or go all-in with a total look for a season that feels both wild and romantic. Because true fashion always tells stories that smell like freedom.</p>"
+          }
+        ]
+      },
+      "additional_gallery": {
+        "type": "image_grid",
+        "images": [
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_3",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_3",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_3",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_3",
+            "alt": "country summer style 3"
+          },
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_4",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_4",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_4",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Country%20Summer_Slot_4",
+            "alt": "country summer style 4"
+          }
+        ]
+      },
+      "additional_products": {
+        "title": "More Country Summer Styles",
+        "products": [
+          {
+            "id": "fsh198vi015_ny-p",
+            "name": "Printed viscose shirt",
+            "brand": "Drôle de Monsieur",
+            "price": "€132",
+            "original_price": "€220",
+            "discount_percentage": "-40%",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FSH198VI015_NY-1_350x.jpg?v=1734609789",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FSH198VI015_NY-1_450x.jpg?v=1734609789",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FSH198VI015_NY-1_200x.jpg?v=1734609789"
+            }
+          },
+          {
+            "id": "824658v5dv0_9247-p",
+            "name": "Wide-leg jeans",
+            "brand": "Bottega Veneta",
+            "price": "€950",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/824658V5DV0_9247-1_eeae6855-3f32-422c-8adb-4db3f2973cca_350x.jpg?v=1761862889",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/824658V5DV0_9247-1_eeae6855-3f32-422c-8adb-4db3f2973cca_450x.jpg?v=1761862889",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/824658V5DV0_9247-1_eeae6855-3f32-422c-8adb-4db3f2973cca_200x.jpg?v=1761862889"
+            }
+          },
+          {
+            "id": "ys0j72thg_rb8-p",
+            "name": "Viva Superstar Leather slides",
+            "brand": "Valentino Garavani",
+            "price": "€690",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/YS0J72THG_RB8-1_2ce7efb7-e4a3-49bf-91a0-e965c729d18f_350x.jpg?v=1746018347",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/YS0J72THG_RB8-1_2ce7efb7-e4a3-49bf-91a0-e965c729d18f_450x.jpg?v=1746018347",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/YS0J72THG_RB8-1_2ce7efb7-e4a3-49bf-91a0-e965c729d18f_200x.jpg?v=1746018347"
+            }
+          }
+        ]
+      }
+    }
   },
   {
     "id": 4,
@@ -197,7 +426,174 @@
     "title": "Denim: The Return of a Timeless Icon",
     "description": "Discover how denim is once again taking center stage and get inspired to reinvent it with style in your everyday wardrobe.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Preview",
-    "alt": "denim"
+    "alt": "denim",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Profilo"
+        },
+        "content": {
+          "category_badge": "Trend",
+          "title": "Denim: The Return of a Timeless Icon",
+          "description": "<p><strong>Discover how denim is once again taking center stage and get inspired to reinvent it with style in your everyday wardrobe.</strong></p><p>Some trends never truly go out of style—they transform, evolve, and renew themselves. This is the case with denim, which in 2025 is making a strong comeback, asserting itself as more than just a fabric—it's a true style language. From humble workwear to a symbol of rebellion, today jeans appear in a new form: sophisticated, bold, contemporary.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>Denim is the coolest trend of the moment. Versatile, rebellious, chic—wear it as a total look or pair it with classic pieces for an urban-flavored elegance.</p>"
+      },
+      "gallery_sections": [
+        {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_1",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_1",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_1",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_1",
+              "alt": "denim style 1"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_2",
+              "alt": "denim style 2"
+            }
+          ]
+        }
+      ],
+      "product_sliders": [
+        {
+          "title": "Featured Denim Pieces",
+          "products": [
+            {
+              "id": "cohjih02913_ial-p",
+              "name": "Elvis denim jacket",
+              "brand": "A.P.C.",
+              "price": "€210",
+              "original_price": "€350",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COHJIH02913_IAL-1_824405f0-abc6-489a-85fc-f10d350b2a0e_350x.jpg?v=1745949425",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COHJIH02913_IAL-1_824405f0-abc6-489a-85fc-f10d350b2a0e_450x.jpg?v=1745949425",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COHJIH02913_IAL-1_824405f0-abc6-489a-85fc-f10d350b2a0e_200x.jpg?v=1745949425"
+              }
+            },
+            {
+              "id": "g9vz8zg8me9_s9001-p",
+              "name": "Denim jacket",
+              "brand": "Dolce & Gabbana",
+              "price": "€930",
+              "original_price": "€1550",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/G9VZ8ZG8ME9_S9001-1_350x.jpg?v=1739901618",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/G9VZ8ZG8ME9_S9001-1_450x.jpg?v=1739901618",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/G9VZ8ZG8ME9_S9001-1_200x.jpg?v=1739901618"
+              }
+            },
+            {
+              "id": "820358xdc6y_4447-p",
+              "name": "Denim shirt",
+              "brand": "Gucci",
+              "price": "€1250",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/820358XDC6Y_4447-1_350x.jpg?v=1762206741",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/820358XDC6Y_4447-1_450x.jpg?v=1762206741",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/820358XDC6Y_4447-1_200x.jpg?v=1762206741"
+              }
+            },
+            {
+              "id": "m2255csw_malibusandwash-p",
+              "name": "70S Cut Straight leg jeans",
+              "brand": "Our Legacy",
+              "price": "€258",
+              "original_price": "€430",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/M2255CSW_MalibuSandWash-1_350x.jpg?v=1742998660",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/M2255CSW_MalibuSandWash-1_450x.jpg?v=1742998660",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/M2255CSW_MalibuSandWash-1_200x.jpg?v=1742998660"
+              }
+            }
+          ]
+        }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>The Fall/Winter 2024–25 runways have crowned it the ultimate star: raw denim midi dresses, wrap maxi skirts, structured blazers, and wide-leg trousers blending Y2K inspiration with '90s vibes. Accessories are not left behind either: denim bags, bucket hats, and boots define urban, bold looks—perfect from day to night.</p><p>Today, denim is freedom—the freedom to mix, to dare, to tell a personal story through pieces that become a canvas for self-expression. Because jeans, in the end, are never just a garment—they're an attitude.</p>"
+          }
+        ]
+      },
+      "additional_gallery": {
+        "type": "image_grid",
+        "images": [
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_3",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_3",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_3",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_3",
+            "alt": "denim style 3"
+          },
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_4",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_4",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_4",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Denim_Slot_4",
+            "alt": "denim style 4"
+          }
+        ]
+      },
+      "additional_products": {
+        "title": "More Denim Styles",
+        "products": [
+          {
+            "id": "dwt004_bydl-p",
+            "name": "The Secretary denim blouse",
+            "brand": "Frame",
+            "price": "€240",
+            "original_price": "€480",
+            "discount_percentage": "-50%",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DWT004_BYDL-1_350x.jpg?v=1742488341",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DWT004_BYDL-1_450x.jpg?v=1742488341",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DWT004_BYDL-1_200x.jpg?v=1742488341"
+            }
+          },
+          {
+            "id": "a50471601_spce-p",
+            "name": "Denim jacket",
+            "brand": "AGOLDE",
+            "price": "€221",
+            "original_price": "€369",
+            "discount_percentage": "-40%",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A50471601_spce-1_350x.jpg?v=1744899560",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A50471601_spce-1_450x.jpg?v=1744899560",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A50471601_spce-1_200x.jpg?v=1744899560"
+            }
+          },
+          {
+            "id": "dd19x94v_558-p",
+            "name": "High-rise flared jeans",
+            "brand": "Valentino Garavani",
+            "price": "€1300",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DD19X94V_558-1_90a24e28-9663-4b4a-9a5b-ccd85bac15e0_350x.jpg?v=1745051290",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DD19X94V_558-1_90a24e28-9663-4b4a-9a5b-ccd85bac15e0_450x.jpg?v=1745051290",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/DD19X94V_558-1_90a24e28-9663-4b4a-9a5b-ccd85bac15e0_200x.jpg?v=1745051290"
+            }
+          }
+        ]
+      }
+    }
   },
   {
     "id": 5,
@@ -205,7 +601,136 @@
     "title": "How to Wear... Loafers",
     "description": "Discover how to style loafers in three versatile and on-trend looks, from minimal elegance to creative casual.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Preview",
-    "alt": "loafers"
+    "alt": "loafers",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Loafers_Profilo"
+        },
+        "content": {
+          "category_badge": "How To Wear It",
+          "title": "How to Wear... Loafers",
+          "description": "<p>Loafers are one of those timeless classics that manage to reinvent themselves every season.<br>Versatile, comfortable, and incredibly chic, they're the perfect shoes for anyone who wants to combine style with practicality. But how do you give them a unique twist? Here are three outfit ideas to make the most of them.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>From the office to weekends, loafers are the timeless style touch—sleek, chic, and easy to make your own in any outfit.</p>"
+      },
+      "style_sections": [
+        {
+          "title": "Casual with a twist",
+          "description": "<p>Loafers can be your go-to allies even for casual looks, adding a touch of effortless refinement. Wear them with straight-leg jeans or trousers, paired with a t-shirt, knit sweater, or jacket for an outfit that's simple yet stylish. Comfortable and relaxed, but with that little something extra.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_1",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_1",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_1",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_1",
+            "alt": "casual loafers style"
+          },
+          "products": [
+            {
+              "id": "813000fad4d_2550-p",
+              "name": "Jordaan loafers",
+              "brand": "Gucci",
+              "price": "€950",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/813000FAD4D_2550-1_38872571-f592-4d7d-9221-ad17fc1c7e6b_350x.jpg?v=1741772298",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/813000FAD4D_2550-1_38872571-f592-4d7d-9221-ad17fc1c7e6b_450x.jpg?v=1741772298",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/813000FAD4D_2550-1_38872571-f592-4d7d-9221-ad17fc1c7e6b_200x.jpg?v=1741772298"
+              }
+            },
+            {
+              "id": "786016aad6s_6207-p",
+              "name": "Gucci Jordaan leather loafers",
+              "brand": "Gucci",
+              "price": "€890",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/786016AAD6S_6207-1_350x.jpg?v=1762203880",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/786016AAD6S_6207-1_450x.jpg?v=1762203880",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/786016AAD6S_6207-1_200x.jpg?v=1762203880"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Effortless elegance",
+          "description": "<p>For a polished outfit that works perfectly at the office—or anywhere you want to make an impression—choose a sleek, minimal loafer in smooth or suede leather. Pair it with tailored trousers in neutral tones like beige, taupe, or light grey, and complete the look with a clean-cut blazer or a lightweight, essential-style trench.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_2",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_2",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_2",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_2",
+            "alt": "elegant loafers style"
+          },
+          "products": [
+            {
+              "id": "307929blm00_1000-p",
+              "name": "Horsebit 1953 Leather loafers",
+              "brand": "Gucci",
+              "price": "€890",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/307929BLM00_1000-1_350x.jpg?v=1762209252",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/307929BLM00_1000-1_450x.jpg?v=1762209252",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/307929BLM00_1000-1_200x.jpg?v=1762209252"
+              }
+            },
+            {
+              "id": "10135921a09912_1b00v-p",
+              "name": "Medusa '95 Leather loafers",
+              "brand": "Versace",
+              "price": "€750",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/10135921A09912_1B00V-1_350x.jpg?v=1747365398",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/10135921A09912_1B00V-1_450x.jpg?v=1747365398",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/10135921A09912_1B00V-1_200x.jpg?v=1747365398"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Creative mix and match",
+          "description": "<p>A bolder, more contemporary take pairs loafers with socks and shorts. Go for classic black leather loafers or more elaborate styles, add knee-high socks (ribbed, colorful, or with contrasting details), and finish with a pair of tailored or relaxed-fit shorts. On top, feel free to play with shirts, jackets, or tees—this look is perfect for those who love to experiment.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_3",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_3",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_3",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Loafers_3",
+            "alt": "creative loafers style"
+          },
+          "products": [
+            {
+              "id": "xxw79a0dd00nf5_b999-p",
+              "name": "Kate leather loafers",
+              "brand": "Tod's",
+              "price": "€414",
+              "original_price": "€690",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/XXW79A0DD00NF5_B999-1_85a8bd97-c2fd-411a-a515-ca34ce85e7df_350x.jpg?v=1747429611",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/XXW79A0DD00NF5_B999-1_85a8bd97-c2fd-411a-a515-ca34ce85e7df_450x.jpg?v=1747429611",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/XXW79A0DD00NF5_B999-1_85a8bd97-c2fd-411a-a515-ca34ce85e7df_200x.jpg?v=1747429611"
+              }
+            },
+            {
+              "id": "gup00911p000862_10283-p",
+              "name": "Logo cotton blend socks",
+              "brand": "Golden Goose",
+              "price": "€60",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GUP00911P000862_10283-1_350x.jpg?v=1754130180",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GUP00911P000862_10283-1_450x.jpg?v=1754130180",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GUP00911P000862_10283-1_200x.jpg?v=1754130180"
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": 6,
@@ -213,7 +738,440 @@
     "title": "Street Style Report: The Most Iconic Looks of Fashion Week",
     "description": "Get inspired by the street style of the Fall-Winter 25-26 Women's Fashion Week in Paris.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Preview",
-    "alt": "street style"
+    "alt": "street style",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/StreetFW_Profilo"
+        },
+        "content": {
+          "category_badge": "Trend",
+          "title": "Street Style Report: The Most Iconic Looks of Fashion Week",
+          "description": "<p><strong>Get inspired by the street style of the Fall-Winter 25-26 Women's Fashion Week in Paris.</strong></p><p>While the runways set the trends for the future, it is on the streets of Paris that style comes to life in real-time. The Fall-Winter 25-26 Fashion Week saw the city transform into a stage of creativity, where editors, influencers, and industry insiders showcased bold, elegant, and unexpected looks.</p><p>We've selected the most captivating looks of the week, captured through the lens of photographer Thomas Razzano @thomrazzano. Each shot tells a piece of the vibrant atmosphere of this Fashion Week, highlighting impeccable details and unique interpretations of trends.</p><p>Ready to be inspired? Paris has spoken—now it's your turn to transform the streets into your runway.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>Once again, the true soul of fashion was revealed off the shows, where creatives and style icons transformed the streets of Paris into a blend of elegance and innovation.</p>"
+      },
+      "style_sections": [
+        {
+          "title": "Total Black: timeless elegance",
+          "description": "<p>Total black is a choice that never disappoints. From street style to the runways, black dominates with its sober and versatile elegance, adapting to any occasion. A look that expresses sophistication and confidence, never looking banal. A classic that never goes out of style, perfect for those seeking effortless, impeccable style.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Total-Black",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Total-Black",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Total-Black",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Total-Black",
+            "alt": "total black street style"
+          },
+          "products": [
+            {
+              "id": "24h243to0992381_990-p",
+              "name": "Drapeado crop-top",
+              "brand": "Jacquemus",
+              "price": "€210",
+              "original_price": "€350",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243TO0992381_990-1_e8f84832-df42-46ff-a952-13857a518998_350x.jpg?v=1738704074",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243TO0992381_990-1_e8f84832-df42-46ff-a952-13857a518998_450x.jpg?v=1738704074",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243TO0992381_990-1_e8f84832-df42-46ff-a952-13857a518998_200x.jpg?v=1738704074"
+              }
+            },
+            {
+              "id": "24h243sk0642381_990-p",
+              "name": "Draped skirt",
+              "brand": "Jacquemus",
+              "price": "€252",
+              "original_price": "€420",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243SK0642381_990-1_a6e67fdb-1e55-41c8-9445-83d5cd1b3b24_350x.jpg?v=1738704013",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243SK0642381_990-1_a6e67fdb-1e55-41c8-9445-83d5cd1b3b24_450x.jpg?v=1738704013",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24H243SK0642381_990-1_a6e67fdb-1e55-41c8-9445-83d5cd1b3b24_200x.jpg?v=1738704013"
+              }
+            },
+            {
+              "id": "j15wz0013p4864_001-p",
+              "name": "Leather ballet flats",
+              "brand": "Jil Sander",
+              "price": "€450",
+              "original_price": "€750",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WZ0013P4864_001-1_350x.jpg?v=1739189921",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WZ0013P4864_001-1_450x.jpg?v=1739189921",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WZ0013P4864_001-1_200x.jpg?v=1739189921"
+              }
+            },
+            {
+              "id": "815217aaec2_1000-p",
+              "name": "GG Emblem leather shoulder bag",
+              "brand": "Gucci",
+              "price": "€2500",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/815217AAEC2_1000-1_f6098019-c6fc-4cf3-a6e8-9d13cd56f89f_350x.jpg?v=1741781081",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/815217AAEC2_1000-1_f6098019-c6fc-4cf3-a6e8-9d13cd56f89f_450x.jpg?v=1741781081",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/815217AAEC2_1000-1_f6098019-c6fc-4cf3-a6e8-9d13cd56f89f_200x.jpg?v=1741781081"
+              }
+            },
+            {
+              "id": "24e241fo0773073_990-p",
+              "name": "Duelo Leather slingback pumps",
+              "brand": "Jacquemus",
+              "price": "€354",
+              "original_price": "€590",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24E241FO0773073_990-1_350x.jpg?v=1739189980",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24E241FO0773073_990-1_450x.jpg?v=1739189980",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/24E241FO0773073_990-1_200x.jpg?v=1739189980"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Tweed: the fabric that speaks elegance",
+          "description": "<p>Tweed is a fabric that never loses its charm, and this season it has returned as a star. From structured jackets to classic-cut dresses, tweed adds a vintage and refined touch to any look. Perfect for those who love discreet elegance, tweed is the ideal choice for a sophisticated air that never goes unnoticed.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Tweed",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Tweed",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Tweed",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Tweed",
+            "alt": "tweed street style"
+          },
+          "products": [
+            {
+              "id": "rs25918cr_red-p",
+              "name": "Cardigan in jersey",
+              "brand": "Self-Portrait",
+              "price": "€285",
+              "original_price": "€475",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918CR_RED-1_1dd32095-8a69-456c-85fb-5c649f83b9f7_350x.jpg?v=1737024900",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918CR_RED-1_1dd32095-8a69-456c-85fb-5c649f83b9f7_450x.jpg?v=1737024900",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918CR_RED-1_1dd32095-8a69-456c-85fb-5c649f83b9f7_200x.jpg?v=1737024900"
+              }
+            },
+            {
+              "id": "rs25918skr_red-p",
+              "name": "Knitted mini skirt",
+              "brand": "Self-Portrait",
+              "price": "€189",
+              "original_price": "€315",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918SKR_RED-1_d9174478-92af-45ea-930b-d6a4a7c7a977_350x.jpg?v=1746022072",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918SKR_RED-1_d9174478-92af-45ea-930b-d6a4a7c7a977_450x.jpg?v=1746022072",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25918SKR_RED-1_d9174478-92af-45ea-930b-d6a4a7c7a977_200x.jpg?v=1746022072"
+              }
+            },
+            {
+              "id": "rs25164jc_cream-p",
+              "name": "Boucle knit jacket",
+              "brand": "Self-Portrait",
+              "price": "€345",
+              "original_price": "€575",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25164JC_CREAM-1_350x.jpg?v=1735644893",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25164JC_CREAM-1_450x.jpg?v=1735644893",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RS25164JC_CREAM-1_200x.jpg?v=1735644893"
+              }
+            },
+            {
+              "id": "ss25014cbl_blue-p",
+              "name": "Cotton knit cardigan",
+              "brand": "Self-Portrait",
+              "price": "€300",
+              "original_price": "€500",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014CBL_BLUE-1_350x.jpg?v=1741254429",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014CBL_BLUE-1_450x.jpg?v=1741254429",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014CBL_BLUE-1_200x.jpg?v=1741254429"
+              }
+            },
+            {
+              "id": "ss25014skbl_blue-p",
+              "name": "Knitted mini skirt",
+              "brand": "Self-Portrait",
+              "price": "€189",
+              "original_price": "€315",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014SKBL_BLUE-1_350x.jpg?v=1741254568",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014SKBL_BLUE-1_450x.jpg?v=1741254568",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SS25014SKBL_BLUE-1_200x.jpg?v=1741254568"
+              }
+            },
+            {
+              "id": "mad265f139l167_vr1-p",
+              "name": "Tweed jacket",
+              "brand": "Fabiana Filippi",
+              "price": "€310",
+              "original_price": "€620",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MAD265F139L167_VR1-2_8f7421c2-4254-45f6-82ce-18a79c2a3d4b_350x.jpg?v=1742504437",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MAD265F139L167_VR1-2_8f7421c2-4254-45f6-82ce-18a79c2a3d4b_450x.jpg?v=1742504437",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/MAD265F139L167_VR1-2_8f7421c2-4254-45f6-82ce-18a79c2a3d4b_200x.jpg?v=1742504437"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Leather: the bold and sophisticated allure",
+          "description": "<p>Leather is a material that continues to dominate the street style scene, combining edginess and refinement in a single look. Leather jackets, pants, or coats add a bold touch to any outfit, perfect for a rock-chic or elegant style. Its versatility makes it an essential piece, capable of adapting to any look, without ever going unnoticed.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Leather",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Leather",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Leather",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Leather",
+            "alt": "leather street style"
+          },
+          "products": [
+            {
+              "id": "fps841artz_f0tz6-p",
+              "name": "Leather jacket",
+              "brand": "Fendi",
+              "price": "€4500",
+              "original_price": "€7500",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FPS841ARTZ_F0TZ6-4_350x.jpg?v=1733804309",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FPS841ARTZ_F0TZ6-4_450x.jpg?v=1733804309",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FPS841ARTZ_F0TZ6-4_200x.jpg?v=1733804309"
+              }
+            },
+            {
+              "id": "j15wp0128p8226_236-p",
+              "name": "Leather slingback pumps",
+              "brand": "Jil Sander",
+              "price": "€510",
+              "original_price": "€850",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WP0128P8226_236-1_350x.jpg?v=1738703775",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WP0128P8226_236-1_450x.jpg?v=1738703775",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/J15WP0128P8226_236-1_200x.jpg?v=1738703775"
+              }
+            },
+            {
+              "id": "pld265f280d751_0145-p",
+              "name": "Leather shirt",
+              "brand": "Fabiana Filippi",
+              "price": "€812",
+              "original_price": "€1625",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PLD265F280D751_0145-1_ed524fd7-2263-49dd-8bf6-69aaeeee0fbb_350x.jpg?v=1742504074",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PLD265F280D751_0145-1_ed524fd7-2263-49dd-8bf6-69aaeeee0fbb_450x.jpg?v=1742504074",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PLD265F280D751_0145-1_ed524fd7-2263-49dd-8bf6-69aaeeee0fbb_200x.jpg?v=1742504074"
+              }
+            },
+            {
+              "id": "sn0100la0161_002-p",
+              "name": "Leather mules",
+              "brand": "JW Anderson",
+              "price": "€348",
+              "original_price": "€580",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SN0100LA0161_002-0_27c750a8-da0f-4949-93b7-209534627d97_350x.jpg?v=1739357877",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SN0100LA0161_002-0_27c750a8-da0f-4949-93b7-209534627d97_450x.jpg?v=1739357877",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/SN0100LA0161_002-0_27c750a8-da0f-4949-93b7-209534627d97_200x.jpg?v=1739357877"
+              }
+            },
+            {
+              "id": "hb0603la0351_640-p",
+              "name": "Small Corner Leather handbag",
+              "brand": "JW Anderson",
+              "price": "€790",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/HB0603LA0351_640-0_350x.jpg?v=1741009899",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/HB0603LA0351_640-0_450x.jpg?v=1741009899",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/HB0603LA0351_640-0_200x.jpg?v=1741009899"
+              }
+            },
+            {
+              "id": "751526aacce_9053-p",
+              "name": "GG Marmont leather mini crossbody bag",
+              "brand": "Gucci",
+              "price": "€1850",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/751526AACCE_9053-1_350x.jpg?v=1761877832",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/751526AACCE_9053-1_450x.jpg?v=1761877832",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/751526AACCE_9053-1_200x.jpg?v=1761877832"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Blazer: the power of a timeless classic",
+          "description": "<p>The blazer is a timeless classic that always knows how to make a difference. Worn with tailored pants for a professional look or with jeans for a more relaxed vibe, the blazer adds structure and sophistication to any outfit. Perfect for any occasion, it is the piece that defines your style with elegance and versatility, never going unnoticed.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Blazer",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Blazer",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Blazer",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Blazer",
+            "alt": "blazer street style"
+          },
+          "products": [
+            {
+              "id": "astro2512041031600_001-p",
+              "name": "Astro Prince of Wales checked double breasted jacket",
+              "brand": "Sportmax",
+              "price": "€462",
+              "original_price": "€770",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/ASTRO2512041031600_001-1_350x.jpg?v=1742818140",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/ASTRO2512041031600_001-1_450x.jpg?v=1742818140",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/ASTRO2512041031600_001-1_200x.jpg?v=1742818140"
+              }
+            },
+            {
+              "id": "818203z7ajz_4264-p",
+              "name": "Cotton double-breasted blazer",
+              "brand": "Gucci",
+              "price": "€2700",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/818203Z7AJZ_4264-1_0bca4203-4628-47d0-a1ae-9a2fa1d66168_350x.jpg?v=1762205656",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/818203Z7AJZ_4264-1_0bca4203-4628-47d0-a1ae-9a2fa1d66168_450x.jpg?v=1762205656",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/818203Z7AJZ_4264-1_0bca4203-4628-47d0-a1ae-9a2fa1d66168_200x.jpg?v=1762205656"
+              }
+            },
+            {
+              "id": "6501443cu704_9200-p",
+              "name": "Double-breasted wool blazer",
+              "brand": "Stella McCartney",
+              "price": "€1740",
+              "original_price": "€2900",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/6501443CU704_9200-1_350x.jpg?v=1739790172",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/6501443CU704_9200-1_450x.jpg?v=1739790172",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/6501443CU704_9200-1_200x.jpg?v=1739790172"
+              }
+            },
+            {
+              "id": "palanca2511041071600_014-p",
+              "name": "Palanca double breasted blazer",
+              "brand": "Max Mara",
+              "price": "€594",
+              "original_price": "€990",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PALANCA2511041071600_014-1_350x.jpg?v=1737300317",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PALANCA2511041071600_014-1_450x.jpg?v=1737300317",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PALANCA2511041071600_014-1_200x.jpg?v=1737300317"
+              }
+            },
+            {
+              "id": "bzebd19_w000-p",
+              "name": "Everyday virgin wool jacket",
+              "brand": "BLAZÉ Milano",
+              "price": "€960",
+              "original_price": "€1600",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/BZEBD19_W000-1_350x.jpg?v=1753798948",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/BZEBD19_W000-1_450x.jpg?v=1753798948",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/BZEBD19_W000-1_200x.jpg?v=1753798948"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Trench: the piece that combines practicality and style",
+          "description": "<p>The trench coat is the timeless piece every wardrobe should have. With its elegant design and versatility, it's perfect for every season. Worn over a dress or paired with casual pants, the trench always adds a touch of class and functionality. A piece that combines protection from the wind and rain with timeless elegance, making every outfit sophisticated and practical.</p>",
+          "image": {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Trench",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Trench",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Trench",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Strip_Trench",
+            "alt": "trench street style"
+          },
+          "products": [
+            {
+              "id": "812009v4xp0_4246-p",
+              "name": "Wool trench coat",
+              "brand": "Bottega Veneta",
+              "price": "€2900",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/812009V4XP0_4246-1_e68755a5-3868-4e1b-84a8-20a915f8dc45_350x.jpg?v=1761861023",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/812009V4XP0_4246-1_e68755a5-3868-4e1b-84a8-20a915f8dc45_450x.jpg?v=1761861023",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/812009V4XP0_4246-1_e68755a5-3868-4e1b-84a8-20a915f8dc45_200x.jpg?v=1761861023"
+              }
+            },
+            {
+              "id": "8079384123456_a1189-p",
+              "name": "Long Heritage Kensington trench coat",
+              "brand": "Burberry",
+              "price": "€2150",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8079384123456_A1189-4_0315a994-fa4e-4971-8f34-bd19afb41543_350x.jpg?v=1735557249",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8079384123456_A1189-4_0315a994-fa4e-4971-8f34-bd19afb41543_450x.jpg?v=1735557249",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8079384123456_A1189-4_0315a994-fa4e-4971-8f34-bd19afb41543_200x.jpg?v=1735557249"
+              }
+            },
+            {
+              "id": "8106349162770_c2219-p",
+              "name": "Double-breasted trench coat",
+              "brand": "Burberry",
+              "price": "€2190",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8106349162770_C2219-1_ca5cff22-84b6-4f19-8eaa-d5f0ad7c992f_350x.jpg?v=1759248847",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8106349162770_C2219-1_ca5cff22-84b6-4f19-8eaa-d5f0ad7c992f_450x.jpg?v=1759248847",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8106349162770_C2219-1_ca5cff22-84b6-4f19-8eaa-d5f0ad7c992f_200x.jpg?v=1759248847"
+              }
+            },
+            {
+              "id": "im000177d13238_2157-p",
+              "name": "Short trench coat",
+              "brand": "Herno",
+              "price": "€372",
+              "original_price": "€620",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/IM000177D13238_2157-1_350x.jpg?v=1744710065",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/IM000177D13238_2157-1_450x.jpg?v=1744710065",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/IM000177D13238_2157-1_200x.jpg?v=1744710065"
+              }
+            },
+            {
+              "id": "8104555150445_c1764-p",
+              "name": "Double-breasted trench coat",
+              "brand": "Burberry",
+              "price": "€2190",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8104555150445_C1764-4_350x.jpg?v=1735664723",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8104555150445_C1764-4_450x.jpg?v=1735664723",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8104555150445_C1764-4_200x.jpg?v=1735664723"
+              }
+            },
+            {
+              "id": "cozbaf01150_baa-p",
+              "name": "Greta double-breasted trench coat",
+              "brand": "A.P.C.",
+              "price": "€590",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COZBAF01150_BAA-7_350x.jpg?v=1746454382",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COZBAF01150_BAA-7_450x.jpg?v=1746454382",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/COZBAF01150_BAA-7_200x.jpg?v=1746454382"
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": 7,
@@ -221,7 +1179,115 @@
     "title": "Agolde x RSVP: 15 Years of Style",
     "description": "An exclusive collaboration celebrating Chicago's creativity with vintage-inspired pieces and a commemorative coffee table book marking RSVP Gallery's 15-year legacy.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Preview",
-    "alt": "RSVP"
+    "alt": "RSVP",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Profilo"
+        },
+        "content": {
+          "category_badge": "Green Talks",
+          "title": "Agolde x RSVP: 15 Years of Style",
+          "description": "<p><strong>A Tribute to Chicago's Creativity and Culture</strong></p><p>At the heart of Chicago's cultural scene, RSVP Gallery marks its 15th anniversary with an exclusive collaboration alongside Agolde, a leading name in contemporary denim. Founded by Don C and the late Virgil Abloh, RSVP Gallery has established itself as a pioneering concept store, blending art, fashion, and community. For this milestone, the partnership also features Theaster Gates, an artist and visionary, further solidifying RSVP's role at the crossroads of culture and commerce.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>With this collaboration, Agolde and RSVP Gallery not only celebrate a significant milestone but also renew their commitment to fostering creativity, community, and innovation.</p>"
+      },
+      "gallery_sections": [
+        {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_4",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_4",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_4",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_4",
+              "alt": "RSVP collaboration 1"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_3",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_3",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_3",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/RSVP_Strip_3",
+              "alt": "RSVP collaboration 2"
+            }
+          ]
+        }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>The collaboration includes Agolde's inaugural menswear collection and a collectible coffee table book that celebrates the store's 15 years of cultural impact. Curated by Don C, the collection draws inspiration from men's workwear and Chicago's creative energy. Key pieces include varsity jackets, puffer vests, rugby shirts, and tracksuits, all featuring a vintage aesthetic with a strong nod to the city's history.</p>"
+          }
+        ]
+      },
+      "product_sliders": [
+        {
+          "title": "Discover the Collection",
+          "products": [
+            {
+              "id": "a1019_blbur-p",
+              "name": "AGOLDE x RSVP Gallery - Long sleeve cotton polo shirt",
+              "brand": "AGOLDE",
+              "price": "€144",
+              "original_price": "€289",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLBUR-1_f563cf65-c73e-49fc-9bf5-5891affc529d_350x.jpg?v=1737773639",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLBUR-1_f563cf65-c73e-49fc-9bf5-5891affc529d_450x.jpg?v=1737773639",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLBUR-1_f563cf65-c73e-49fc-9bf5-5891affc529d_200x.jpg?v=1737773639"
+              }
+            },
+            {
+              "id": "a1019_blkcr-p",
+              "name": "AGOLDE x RSVP Gallery - Long sleeve cotton polo shirt",
+              "brand": "AGOLDE",
+              "price": "€144",
+              "original_price": "€289",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLKCR-1_b2a0c10d-9f3c-42fd-abed-b6c5aba6b435_350x.jpg?v=1737773699",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLKCR-1_b2a0c10d-9f3c-42fd-abed-b6c5aba6b435_450x.jpg?v=1737773699",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A1019_BLKCR-1_b2a0c10d-9f3c-42fd-abed-b6c5aba6b435_200x.jpg?v=1737773699"
+              }
+            },
+            {
+              "id": "a10231521_1521glr-p",
+              "name": "AGOLDE x RSVP Gallery - Cotton crew-neck T-shirt",
+              "brand": "AGOLDE",
+              "price": "€101",
+              "original_price": "€169",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A10231521_1521GLR-1_6f075fd4-16c2-4aec-afd0-abff776e375f_350x.jpg?v=1737773705",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A10231521_1521GLR-1_6f075fd4-16c2-4aec-afd0-abff776e375f_450x.jpg?v=1737773705",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A10231521_1521GLR-1_6f075fd4-16c2-4aec-afd0-abff776e375f_200x.jpg?v=1737773705"
+              }
+            },
+            {
+              "id": "a6701632_1632-p",
+              "name": "AGOLDE x RSVP Gallery - Cotton cargo-trousers",
+              "brand": "AGOLDE",
+              "price": "€194",
+              "original_price": "€389",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A6701632_1632-1_652568e0-ac97-48c1-b8ba-5ebb665d4525_350x.jpg?v=1737775527",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A6701632_1632-1_652568e0-ac97-48c1-b8ba-5ebb665d4525_450x.jpg?v=1737775527",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/A6701632_1632-1_652568e0-ac97-48c1-b8ba-5ebb665d4525_200x.jpg?v=1737775527"
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": 8,
@@ -229,6 +1295,170 @@
     "title": "Layering: The Art of Stylish Overlapping",
     "description": "Explore the season's must-have trend and get inspired to effortlessly incorporate it into your wardrobe.",
     "image": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Preview",
-    "alt": "layering"
+    "alt": "layering",
+    "full_content": {
+      "hero_section": {
+        "layout": "image_with_side_text",
+        "alignment": "right_text",
+        "image": {
+          "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Profilo",
+          "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Profilo",
+          "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Profilo",
+          "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Profilo"
+        },
+        "content": {
+          "category_badge": "Trend",
+          "title": "Layering: The Art of Stylish Overlapping",
+          "subtitle": "Explore the season's must-have trend and get inspired to effortlessly incorporate it into your wardrobe.",
+          "description": "<p>In the world of fashion, every season tells a story, and like a well-written novel, there's always a new chapter to discover. This time, the spotlight is on layering, a styling technique that perfectly balances creativity and functionality. Playing with layers isn't just about exploring new combinations—it's about celebrating personal expression and adaptability, turning every outfit into a one-of-a-kind statement.</p>"
+        }
+      },
+      "intro_text": {
+        "content": "<p>Layers of style: layering is the trend that blends aesthetics and functionality, perfect for playing with volumes and textures in any season. Try it out to create unique looks that tell your story.</p>"
+      },
+      "gallery_sections": [
+        {
+          "type": "image_grid",
+          "images": [
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_1",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_1",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_1",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_1",
+              "alt": "layering style 1"
+            },
+            {
+              "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_2",
+              "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_2",
+              "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_2",
+              "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_2",
+              "alt": "layering style 2"
+            }
+          ]
+        }
+      ],
+      "product_sliders": [
+        {
+          "title": "Featured Pieces for Layering",
+          "products": [
+            {
+              "id": "1s342y0501nomad_2403-p",
+              "name": "Nomad suede knee high boots",
+              "brand": "Casadei",
+              "price": "€1100",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/1S342Y0501NOMAD_2403-1_4efa7a51-2e89-4e1b-a729-c4251fea3554_350x.jpg?v=1731721978",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/1S342Y0501NOMAD_2403-1_4efa7a51-2e89-4e1b-a729-c4251fea3554_450x.jpg?v=1731721978",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/1S342Y0501NOMAD_2403-1_4efa7a51-2e89-4e1b-a729-c4251fea3554_200x.jpg?v=1731721978"
+              }
+            },
+            {
+              "id": "d530541copper_002-p",
+              "name": "Lace cardigan",
+              "brand": "Parosh",
+              "price": "€213",
+              "original_price": "€426",
+              "discount_percentage": "-50%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/D530541COPPER_002-1_350x.jpg?v=1736421983",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/D530541COPPER_002-1_450x.jpg?v=1736421983",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/D530541COPPER_002-1_200x.jpg?v=1736421983"
+              }
+            },
+            {
+              "id": "georg2519361011600_001-p",
+              "name": "Georg wool and cashmere sweater",
+              "brand": "S MAX MARA",
+              "price": "€160",
+              "original_price": "€268",
+              "discount_percentage": "-40%",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GEORG2519361011600_001-1_43be1b76-6a08-4014-ac90-97f36c15f48f_350x.jpg?v=1737896481",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GEORG2519361011600_001-1_43be1b76-6a08-4014-ac90-97f36c15f48f_450x.jpg?v=1737896481",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GEORG2519361011600_001-1_43be1b76-6a08-4014-ac90-97f36c15f48f_200x.jpg?v=1737896481"
+              }
+            },
+            {
+              "id": "19eiju015mh0062_p040-p",
+              "name": "Draped skirt",
+              "brand": "Rabanne",
+              "price": "€2600",
+              "images": {
+                "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/19EIJU015MH0062_P040-1_350x.jpg?v=1761903683",
+                "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/19EIJU015MH0062_P040-1_450x.jpg?v=1761903683",
+                "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/19EIJU015MH0062_P040-1_200x.jpg?v=1761903683"
+              }
+            }
+          ]
+        }
+      ],
+      "detailed_content": {
+        "sections": [
+          {
+            "type": "text_block",
+            "content": "<p>Born from the need to tackle changing weather and a desire to break fashion rules, layering has become a symbol of versatility in modern style. The key lies in mixing textures, materials, and volumes harmoniously, creating layered looks that captivate without overwhelming. From oversized blazers worn over silky dresses to quilted vests peeking out under structured coats, and cotton shirts paired with chunky knit sweaters—the possibilities are endless. Accessories play a pivotal role, with belts defining the silhouette in even the most voluminous outfits, and scarves adding pops of color between layers.</p><p>In the autumn/winter 2024 collections, layering takes a bolder turn: shearling coats paired with maxi cardigans, pleated skirts layered over cargo pants, and sheer details emerging between heavier fabrics. All of this is complemented by a palette ranging from neutral tones to saturated hues, achieving a chic, contemporary finish.</p>"
+          }
+        ]
+      },
+      "additional_gallery": {
+        "type": "image_grid",
+        "images": [
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_5",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_5",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_5",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_5",
+            "alt": "layering style 5"
+          },
+          {
+            "desktop": "https://res.cloudinary.com/contentchef/image/upload/w_1200,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_6",
+            "tablet": "https://res.cloudinary.com/contentchef/image/upload/w_900,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_6",
+            "mobile": "https://res.cloudinary.com/contentchef/image/upload/w_600,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_6",
+            "fallback": "https://res.cloudinary.com/contentchef/image/upload/w_450,q_auto,dpr_1,f_auto/thecorner-d377/AzFzk3MehAb/Layering_Slot_6",
+            "alt": "layering style 6"
+          }
+        ]
+      },
+      "additional_products": {
+        "title": "More Layering Essentials",
+        "products": [
+          {
+            "id": "k208u4q0q120q_k40-p",
+            "name": "THE (Knit) - Cashmere blend turtleneck sweater",
+            "brand": "THE (Alphabet)",
+            "price": "€390",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K208U4Q0Q120Q_K40-4_7e28041b-ac59-4a31-897c-77dffd5badfd_350x.jpg?v=1733519677",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K208U4Q0Q120Q_K40-4_7e28041b-ac59-4a31-897c-77dffd5badfd_450x.jpg?v=1733519677",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K208U4Q0Q120Q_K40-4_7e28041b-ac59-4a31-897c-77dffd5badfd_200x.jpg?v=1733519677"
+            }
+          },
+          {
+            "id": "pmge043f24fab001_0903-p",
+            "name": "Checked cotton shirt",
+            "brand": "Palm Angels",
+            "price": "€495",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PMGE043F24FAB001_0903-1_350x.jpg?v=1747315429",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PMGE043F24FAB001_0903-1_450x.jpg?v=1747315429",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/PMGE043F24FAB001_0903-1_200x.jpg?v=1747315429"
+            }
+          },
+          {
+            "id": "8098475158439_c1480-p",
+            "name": "Cotton trench coat",
+            "brand": "Burberry",
+            "price": "€2373",
+            "original_price": "€3390",
+            "discount_percentage": "-30%",
+            "images": {
+              "desktop": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8098475158439_C1480-4_ccda7e04-59c4-4752-9a37-c6bc4c032ab3_350x.jpg?v=1755057750",
+              "tablet": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8098475158439_C1480-4_ccda7e04-59c4-4752-9a37-c6bc4c032ab3_450x.jpg?v=1755057750",
+              "mobile": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/8098475158439_C1480-4_ccda7e04-59c4-4752-9a37-c6bc4c032ab3_200x.jpg?v=1755057750"
+            }
+          }
+        ]
+      }
+    }
   }
 ]

@@ -28,11 +28,14 @@ const MagazinePage = () => {
 
       {/* Articles Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link to={"/magazine/1"} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {articles.map((article) => (
-            <MagazineArticle key={article.id} article={article} />
+            <Link key={article.id} to={`/magazine/${article.id}`}>
+              <MagazineArticle article={article} />
+            </Link>
           ))}
-        </Link>
+        </div>
+
 
         {/* Load More Button */}
         {/* <div className="text-center mt-12">

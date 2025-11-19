@@ -642,6 +642,13 @@ const ProductsPage = () => {
                 .scroll-indicators::-webkit-scrollbar {
                     display: none;
                 }
+
+                @keyframes colorPulse {
+  0%   { background-color: white; }
+  50%  { background-color: #d4af37; } /* Gold */
+  100% { background-color: white; }
+}
+
             `}</style>
 
             {/* Header Section */}
@@ -1002,31 +1009,35 @@ const ProductsPage = () => {
                                                         >
                                                             {product.productName}
                                                         </p>
-                                                        <div>
-                                                            <div className="pt-1 md:pt-2">
-                                                                <p
-                                                                    className="text-xs md:text-sm tracking-wider"
-                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                                >
-                                                                    {product.minPrice === product.maxPrice
-                                                                        ? `RS ${product.minPrice.toFixed(2)}`
-                                                                        : `RS ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                            {/* <div>
-                                                                <button
-                                                                    onClick={(e) => handleTryOnClick(e, product)} // Pass the product
-                                                                    className="w-50 h-17 flex items-center justify-center backdrop-blur-xl bg-white/90 border border-yellow-500/60 hover:shadow-[0_0_18px_rgba(212,175,55,1)] transition-all duration-300"
-                                                                >
-                                                                    <img
-                                                                        src={tryLook}
-                                                                        alt="Try On"
-                                                                        className="w-full h-full object-contain"
-                                                                    />
-                                                                </button>
-                                                            </div> */}
-                                                        </div>
+<div className="flex items-center justify-between gap-3">
+    {/* Price */}
+    <div className="pt-1 md:pt-2">
+        <p
+            className="text-xs md:text-sm tracking-wider"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
+        >
+            {product.minPrice === product.maxPrice
+                ? `RS ${product.minPrice.toFixed(2)}`
+                : `RS ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
+            }
+        </p>
+    </div>
+
+    {/* Try-On Button */}
+    <button
+        onClick={(e) => handleTryOnClick(e, product)}
+        className="w-50 h-12 flex items-center justify-center rounded-lg border border-gray-300 
+                   animate-[colorPulse_3s_ease-in-out_infinite] transition-all duration-300"
+    >
+        <img
+            src={tryLook}
+            alt="Try On"
+            className="w-30 h-30 object-contain"
+        />
+    </button>
+</div>
+
+
 
                                                         {product.variantCount > 1 && (
                                                             <p
