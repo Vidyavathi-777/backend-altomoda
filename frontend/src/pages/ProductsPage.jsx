@@ -954,14 +954,34 @@ const ProductsPage = () => {
                                                         {/* Top Right - Try On Button */}
                                                         <button
                                                             onClick={(e) => handleTryOnClick(e, product)}
-                                                            className="absolute top-3 lg:top-4 right-3 lg:right-4 bg-black hover:bg-gray-800 px-5 py-3 md:px-6 md:py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg z-10"
+                                                            className="absolute top-3 lg:top-4 right-3 lg:right-4 bg-white border border-gray-300 hover:bg-gray-50 
+               px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md 
+               z-10 flex items-center gap-1.5 md:gap-2"
                                                         >
-                                                            <img
-                                                                src={tryLook}
-                                                                alt="Try On"
-                                                                className="h-10 md:h-12 w-auto object-contain invert brightness-0"
-                                                            />
+                                                            <svg
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0"
+                                                            >
+
+                                                                <path d="M12 3c1.7 0 3 1.3 3 3 0 1.2-.7 2.2-1.7 2.8l-.8.5" />
+                                                                <path d="M3 14l9-5 9 5" />
+                                                                <path d="M5 19h14" />
+                                                            </svg>
+
+                                                            <span
+                                                                className="text-[10px] md:text-xs font-medium tracking-wide whitespace-nowrap text-gray-700"
+                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                            >
+                                                                TRY THE LOOK
+                                                            </span>
                                                         </button>
+
+
 
 
 
