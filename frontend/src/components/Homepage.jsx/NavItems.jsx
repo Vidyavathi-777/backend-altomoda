@@ -6,11 +6,6 @@ import { useCategories } from '../../Context/CategoriesContext';
 import { useUser } from '../../Context/UserContext';
 import { useGender } from "../../Context/GenderContext";
 
-
-
-
-
-
 const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
 
     const { gender, changeGender } = useGender();
@@ -27,16 +22,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
     const [mobileGender, setMobileGender] = useState('woman');
     const [activeDesktopMenu, setActiveDesktopMenu] = useState(null);
+    const [activeNavItem, setActiveNavItem] = useState(null);
     const [itemCount] = useState(0);
     const [menuTimeout, setMenuTimeout] = useState(null);
     const [mobileSubView, setMobileSubView] = useState(null);
 
     const navigate = useNavigate()
     const location = useLocation()
-
-    // useEffect(() => {
-    //     setMobileGender(currentGender);
-    // }, [currentGender]);
 
     useEffect(() => {
         const path = location.pathname;
@@ -47,17 +39,12 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
         }
     }, [location.pathname]);
 
-    // useEffect(() => {
-    //     if (mobileMenuOpen) {
-    //         setMobileGender(currentGender);
-    //     }
-    // }, [mobileMenuOpen, currentGender]);
-
     const handleGenderSwitch = (g) => {
         changeGender(g);
         navigate(g === "man" ? "/man" : "/woman");
         setMobileMenuOpen(false);
         setMobileSubView(null);
+        setActiveNavItem(null); 
     };
 
     const handleMenuEnter = (menu) => {
@@ -76,6 +63,11 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
 
     const closeDesktopMenu = () => {
         setActiveDesktopMenu(null);
+    };
+
+    const handleNavItemClick = (item) => {
+        setActiveNavItem(item);
+        closeDesktopMenu();
     };
 
     const designerBrands = {
@@ -99,15 +91,15 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
         setMobileSubView(null);
     };
 
-    const handleDesktopItemClick = (route) => {
+    const handleDesktopItemClick = (route, item) => {
         navigate(route);
+        handleNavItemClick(item);
         closeDesktopMenu();
     };
 
     const getCurrentCategories = () => {
         return mobileGender === 'woman' ? womanCategories : manCategories;
     };
-
 
     const cssVariables = {
         primary: '#30486B',
@@ -127,10 +119,17 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                     onMouseEnter={() => handleMenuEnter('designers')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button className="text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 group-hover:text-gray-800">
+                    <button 
+                        onClick={() => handleNavItemClick('designers')}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            activeNavItem === 'designers' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
+                    >
                         Designers
                     </button>
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'designers' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
 
                 {/* New Arrivals */}
@@ -141,11 +140,16 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 >
                     <Link
                         to={`/${gender}/${navitems[gender]}/new-arrivals/products`}
-                        onClick={closeDesktopMenu}
-                        className="text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 group-hover:text-gray-800">
+                        onClick={() => handleNavItemClick('newarrivals')}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            activeNavItem === 'newarrivals' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
+                    >
                         New Arrivals
                     </Link>
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'newarrivals' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
 
                 {/* Woman */}
@@ -156,12 +160,15 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 >
                     <button
                         onClick={() => handleGenderSwitch("woman")}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${gender === 'woman' ? 'text-black font-semibold' : 'text-gray-700'
-                            }`}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            gender === 'woman' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
                     >
                         Woman
                     </button>
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${gender === 'woman' ? 'w-full' : 'w-0 group-hover:w-full'}`}></div>
+                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'woman' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
 
                 {/* Man */}
@@ -172,48 +179,48 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 >
                     <button
                         onClick={() => handleGenderSwitch("man")}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${gender === 'man' ? 'text-black font-semibold' : 'text-gray-700'
-                            }`}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            gender === 'man' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
                     >
                         Man
                     </button>
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${gender === 'man' ? 'w-full' : 'w-0 group-hover:w-full'}`}></div>
+                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'man' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
 
                 {/* Boutiques */}
                 <div className="relative h-full group">
-                    <Link to={"/boutique"}
-                        className="text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 group-hover:text-gray-800">
+                    <Link 
+                        to={"/boutique"}
+                        onClick={() => handleNavItemClick('boutiques')}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            activeNavItem === 'boutiques' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
+                    >
                         Boutiques
                     </Link>
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'boutiques' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
-
-
-                {/* Up To 50% Off */}
-                {/* <div
-                    className="relative h-full"
-                    onMouseEnter={() => handleMenuEnter('upto50%off')}
-                    onMouseLeave={handleMenuLeave}
-                >
-                    <button className="text-lg font-medium text-red-600 tracking-wider hover:opacity-70 transition  h-full flex items-center">
-                        Up To 50% Off
-                    </button>
-                </div> */}
 
                 {/* Magazine */}
                 <div className="relative h-full group">
-                    <Link to={"/magazine"}
-                        className="text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 group-hover:text-gray-800">
+                    <Link 
+                        to={"/magazine"}
+                        onClick={() => handleNavItemClick('magazine')}
+                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
+                            activeNavItem === 'magazine' ? 'text-black font-semibold' : 'text-gray-700'
+                        }`}
+                    >
                         TCZ_TheCornerZine
                     </Link>
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
+                        activeNavItem === 'magazine' ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></div>
                 </div>
-
-                {/* Product Finder */}
-                {/* <a href="#" className="text-lg font-medium tracking-wider hover:opacity-70 transition  h-full flex items-center">
-                    Product Finder
-                </a> */}
             </nav>
 
             {/* Mega Menu Dropdowns - Portal Style */}
@@ -233,14 +240,14 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                 <div className="space-y-4 w-1/4">
                                     <Link
                                         to="/woman/designers"
-                                        onClick={closeDesktopMenu}
+                                        onClick={() => handleDesktopItemClick("/woman/designers", "designers")}
                                         className="block text-gray-700 transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                     >
                                         Designers Woman
                                     </Link>
                                     <Link
                                         to="/man/designers"
-                                        onClick={closeDesktopMenu}
+                                        onClick={() => handleDesktopItemClick("/man/designers", "designers")}
                                         className="block text-gray-700 transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                     >
                                         Designers Man
@@ -256,7 +263,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             <Link
                                                 to={`/woman/${navitems.woman}/${brand}/products`}
                                                 key={brand}
-                                                onClick={closeDesktopMenu}
+                                                onClick={() => handleDesktopItemClick(`/woman/${navitems.woman}/${brand}/products`, "designers")}
                                                 className="transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                             >
                                                 {brand}
@@ -274,7 +281,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             <Link
                                                 to={`/man/${navitems.man}/${brand}/products`}
                                                 key={brand}
-                                                onClick={closeDesktopMenu}
+                                                onClick={() => handleDesktopItemClick(`/man/${navitems.man}/${brand}/products`, "designers")}
                                                 className="transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                             >
                                                 {brand}
@@ -294,7 +301,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                         <div key={mainCategory.id}>
                                             <Link
                                                 to={`/${gender}/${mainCategory.id}/new-arrivals/products`}
-                                                onClick={closeDesktopMenu}
+                                                onClick={() => handleDesktopItemClick(`/${gender}/${mainCategory.id}/new-arrivals/products`, "newarrivals")}
                                                 className="font-bold uppercase tracking-wide text-gray-900 block mb-4 text-sm transition-all duration-300 hover:text-black hover:translate-x-1"
                                                 style={{ fontFamily: cssVariables.fontHeading }}
                                             >
@@ -305,7 +312,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                                     <Link
                                                         key={sub.id}
                                                         to={`/${gender}/${sub.id}/new-arrivals/products`}
-                                                        onClick={closeDesktopMenu}
+                                                        onClick={() => handleDesktopItemClick(`/${gender}/${sub.id}/new-arrivals/products`, "newarrivals")}
                                                         className="block transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                                     >
                                                         {sub.name}
@@ -325,7 +332,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     <h4 className="font-bold uppercase tracking-wide text-gray-900 mb-6">
                                         <Link
                                             to={`/${activeDesktopMenu}/${navitems[activeDesktopMenu]}/products`}
-                                            onClick={closeDesktopMenu}
+                                            onClick={() => handleDesktopItemClick(`/${activeDesktopMenu}/${navitems[activeDesktopMenu]}/products`, activeDesktopMenu)}
                                             className="transition-all duration-300 hover:text-black hover:translate-x-1 block"
                                             style={{ fontFamily: cssVariables.fontHeading }}
                                         >
@@ -345,7 +352,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                         <div key={mainCategory.id}>
                                             <Link
                                                 to={`/${activeDesktopMenu}/${mainCategory.id}/products`}
-                                                onClick={closeDesktopMenu}
+                                                onClick={() => handleDesktopItemClick(`/${activeDesktopMenu}/${mainCategory.id}/products`, activeDesktopMenu)}
                                                 className="font-semibold uppercase tracking-wide text-gray-900 block mb-4 text-sm transition-all duration-300 hover:text-black hover:translate-x-1"
                                                 style={{ fontFamily: cssVariables.fontHeading }}
                                             >
@@ -356,7 +363,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                                     <Link
                                                         key={sub.id}
                                                         to={`/${activeDesktopMenu}/${sub.id}/products`}
-                                                        onClick={closeDesktopMenu}
+                                                        onClick={() => handleDesktopItemClick(`/${activeDesktopMenu}/${sub.id}/products`, activeDesktopMenu)}
                                                         className="block transition-all duration-300 hover:text-black hover:translate-x-1 hover:font-medium"
                                                     >
                                                         {sub.name}
@@ -392,8 +399,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 </div>
             )}
 
-
-            {/* Mobile menu */}
+            {/* Mobile menu - No changes needed for mobile as it already works differently */}
             {mobileMenuOpen && (
                 <div className="fixed inset-0 z-50 lg:hidden animate-slideInLeft">
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
@@ -404,13 +410,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     <div className="flex gap-6">
                                         <button
                                             onClick={() => handleGenderSwitch('woman')}
-                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'woman' ? 'border-b-2 border-black font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'woman' ? 'font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             Woman
                                         </button>
                                         <button
                                             onClick={() => handleGenderSwitch('man')}
-                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'man' ? 'border-b-2 border-black font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'man' ? 'font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             Man
                                         </button>
@@ -498,12 +504,6 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 cursor-pointer"
                                         />
                                     </div>
-                                    {/* <Link to={"/boutique"} 
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="block w-full text-left py-4 text-sm uppercase tracking-wider font-medium border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-2 hover:font-semibold"
-                                    >
-                                        Product Finder
-                                    </Link> */}
 
                                     {user ? (
                                         <div className="mt-8 pt-6 border-t border-gray-200">
@@ -534,13 +534,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     <div className="flex gap-6">
                                         <button
                                             onClick={() => handleGenderSwitch("woman")}
-                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'woman' ? 'border-b-2 border-black font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'woman' ? 'font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             Woman
                                         </button>
                                         <button
                                             onClick={() => handleGenderSwitch("man")}
-                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'man' ? 'border-b-2 border-black font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`text-sm uppercase tracking-wider pb-1 transition-all duration-300 ${gender === 'man' ? 'font-semibold text-black' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             Man
                                         </button>
@@ -678,5 +678,3 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
 };
 
 export default NavItems;
-
-

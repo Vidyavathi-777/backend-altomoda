@@ -16,6 +16,11 @@ import TryOnModal from '../components/Tryon';
 
 const ProductsPage = () => {
 
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
+
     const navitems = {
         man: "68f86b10734810ab97bb98d1",
         woman: "68f86b1c734810ab97bb9a2f"
@@ -131,10 +136,10 @@ const ProductsPage = () => {
     const [tempApiFilters, setTempApiFilters] = useState({ brand: [], category: [], type: [] });
     const [filterOptions, setFilterOptions] = useState({ brands: [], colors: [], types: [], categories: [] });
     const [openFilterSections, setOpenFilterSections] = useState({
-        brand: true,
-        color: true,
-        type: true,
-        category: true
+        brand: false,
+        color: false,
+        type: false,
+        category: false
     });
 
     const scrollRefs = useRef({});
@@ -502,12 +507,12 @@ const ProductsPage = () => {
         {
             gender: "man",
             id: "68f86b10734810ab97bb98d1",
-            description: "Explore our selection of men’s fashion and lifestyle products, where luxury and style converge with a curated offer from the world’s top brands. Whether you're dressing for a casual day out or a formal event, we have everything you need to complete your look. From tailored Alexander McQueen blazers, iconic leather Gucci belts and crisp Burberry shirts, to graphic t-shirts from Dsquared2 and Lanvin, casual polos by Dolce & Gabbana or even a stylish crossbody bag from Valencia for a trendy yet functional ensemble.Our collection also includes cozy knitwear and smart swimwear, ensuring you're prepared for any season or occasion. Elevate your daily routine with premium skincare products, elegant home décor, and stylish stationery, bringing a touch of luxury to every aspect of your life. Experience unmatched quality and craftsmanship with our range of clothing, accessories, and lifestyle products, designed to make every day a stylish one."
+            description: "Explore our selection of men's fashion and lifestyle products, where luxury and style converge with a curated offer from the world's top brands. Whether you're dressing for a casual day out or a formal event, we have everything you need to complete your look. From tailored Alexander McQueen blazers, iconic leather Gucci belts and crisp Burberry shirts, to graphic t-shirts from Dsquared2 and Lanvin, casual polos by Dolce & Gabbana or even a stylish crossbody bag from Valencia for a trendy yet functional ensemble.Our collection also includes cozy knitwear and smart swimwear, ensuring you're prepared for any season or occasion. Elevate your daily routine with premium skincare products, elegant home décor, and stylish stationery, bringing a touch of luxury to every aspect of your life. Experience unmatched quality and craftsmanship with our range of clothing, accessories, and lifestyle products, designed to make every day a stylish one."
         },
         {
             gender: "woman",
             id: "68f86b1c734810ab97bb9a2f",
-            description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs. Each piece is crafted with the utmost care and attention to detail, using the finest materials to create truly one-of-a-kind designs. Explore fashion-forward pieces from legendary fashion houses Balenciaga, Gucci opt for something edgier from contemporary labels born in the 21st century.Our collection of womenswear is a fusion of modern designs and timeless sophistication that flatters the female form and celebrates individuality. Whether you opt for a sleek, body-con dress or a pair of bootcut jeans, women's designer clothing is a testament to the transformative power of fashion and an invitation to embrace your personal style. The ultimate indulgence, designer accessories and shoes are the perfect finishing touch for a special event or to simply elevate your everyday look. A beautiful way to make a statement and feel confident and stylish, our selection of women’s designer apparel and accessories has something for every mood."
+            description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs. Each piece is crafted with the utmost care and attention to detail, using the finest materials to create truly one-of-a-kind designs. Explore fashion-forward pieces from legendary fashion houses Balenciaga, Gucci opt for something edgier from contemporary labels born in the 21st century.Our collection of womenswear is a fusion of modern designs and timeless sophistication that flatters the female form and celebrates individuality. Whether you opt for a sleek, body-con dress or a pair of bootcut jeans, women's designer clothing is a testament to the transformative power of fashion and an invitation to embrace your personal style. The ultimate indulgence, designer accessories and shoes are the perfect finishing touch for a special event or to simply elevate your everyday look. A beautiful way to make a statement and feel confident and stylish, our selection of women's designer apparel and accessories has something for every mood."
         }
     ];
 
@@ -607,7 +612,6 @@ const ProductsPage = () => {
 
     return (
         <div className="min-h-screen bg-white pt-32 md:pt-[200px] lg:pt-[180px]">
-            {/* <Breadcrumb /> */}
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
                 
@@ -642,13 +646,6 @@ const ProductsPage = () => {
                 .scroll-indicators::-webkit-scrollbar {
                     display: none;
                 }
-
-                @keyframes colorPulse {
-  0%   { background-color: white; }
-  50%  { background-color: #d4af37; } /* Gold */
-  100% { background-color: white; }
-}
-
             `}</style>
 
             {/* Header Section */}
@@ -787,8 +784,8 @@ const ProductsPage = () => {
                             <option value="newest">NEW ARRIVALS</option>
                             <option value="price-low">PRICE: LOW TO HIGH</option>
                             <option value="price-high">PRICE: HIGH TO LOW</option>
-                            <option value="a-z">NAME: A–Z</option>
-                            <option value="z-a">NAME: Z–A</option>
+                            <option value="a-z">NAME: A-Z</option>
+                            <option value="z-a">NAME: Z-A</option>
                         </select>
                         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
                     </div>
@@ -954,10 +951,24 @@ const ProductsPage = () => {
                                                             </div>
                                                         )}
 
-                                                        {/* New Badge for New Arrivals */}
+                                                        {/* Top Right - Try On Button */}
+                                                        <button
+                                                            onClick={(e) => handleTryOnClick(e, product)}
+                                                            className="absolute top-3 lg:top-4 right-3 lg:right-4 bg-black hover:bg-gray-800 px-5 py-3 md:px-6 md:py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg z-10"
+                                                        >
+                                                            <img
+                                                                src={tryLook}
+                                                                alt="Try On"
+                                                                className="h-10 md:h-12 w-auto object-contain invert brightness-0"
+                                                            />
+                                                        </button>
+
+
+
+                                                        {/* Top Left - New Badge for New Arrivals */}
                                                         {(isNewArrivalMode || product.isNewArrival) && (
                                                             <div
-                                                                className="absolute top-3 lg:top-4 left-3 lg:left-4 bg-black text-white px-2 lg:px-3 py-1 text-xs tracking-[0.2em] pointer-events-none"
+                                                                className="absolute top-3 lg:top-4 left-3 lg:left-4 bg-black text-white px-2 lg:px-3 py-1 text-xs tracking-[0.2em] pointer-events-none z-10"
                                                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                                                             >
                                                                 NEW
@@ -976,24 +987,6 @@ const ProductsPage = () => {
                                                                 ))}
                                                             </div>
                                                         )}
-
-                                                        {/* Scroll Hint - Only show on hover for desktop */}
-                                                        {/* {hoveredProduct === product.id && product.images.length > 1 && (
-                                                            <div className="absolute inset-0 bg-black/5 flex items-center justify-center pointer-events-none">
-                                                                <div className="bg-white/90 px-3 py-1 rounded text-xs tracking-wider">
-                                                                    Scroll to view images
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        {!product.inStock && (
-                                                            <div 
-                                                                className="absolute top-2 md:top-4 right-2 md:right-4 bg-white px-2 md:px-4 py-1 md:py-2 text-[10px] md:text-xs tracking-[0.2em] pointer-events-none"
-                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                            >
-                                                                OUT OF STOCK
-                                                            </div>
-                                                        )} */}
                                                     </div>
 
                                                     <div className="space-y-1 md:space-y-2 px-1 md:px-2">
@@ -1009,35 +1002,20 @@ const ProductsPage = () => {
                                                         >
                                                             {product.productName}
                                                         </p>
-<div className="flex items-center justify-between gap-3">
-    {/* Price */}
-    <div className="pt-1 md:pt-2">
-        <p
-            className="text-xs md:text-sm tracking-wider"
-            style={{ fontFamily: 'Montserrat, sans-serif' }}
-        >
-            {product.minPrice === product.maxPrice
-                ? `RS ${product.minPrice.toFixed(2)}`
-                : `RS ${product.minPrice.toFixed(2)} - ${product.maxPrice.toFixed(2)}`
-            }
-        </p>
-    </div>
-
-    {/* Try-On Button */}
-    <button
-        onClick={(e) => handleTryOnClick(e, product)}
-        className="w-50 h-12 flex items-center justify-center rounded-lg border border-gray-300 
-                   animate-[colorPulse_3s_ease-in-out_infinite] transition-all duration-300"
-    >
-        <img
-            src={tryLook}
-            alt="Try On"
-            className="w-30 h-30 object-contain"
-        />
-    </button>
-</div>
-
-
+                                                        <div className="flex items-center justify-between gap-3">
+                                                            {/* Price */}
+                                                            <div className="pt-1 md:pt-2">
+                                                                <p
+                                                                    className="text-xs md:text-sm tracking-wider"
+                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                >
+                                                                    {product.minPrice === product.maxPrice
+                                                                        ? `RS ${product.minPrice.toLocaleString('en-IN')}`
+                                                                        : `RS ${product.minPrice.toLocaleString('en-IN')} - ${product.maxPrice.toLocaleString('en-IN')}`
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
 
                                                         {product.variantCount > 1 && (
                                                             <p

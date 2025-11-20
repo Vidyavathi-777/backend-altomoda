@@ -266,13 +266,11 @@ const ProductDetailPage = () => {
 
         return String(conversion || '');
     };
-
-    const getCurrentPrice = () => {
-
-        let price = selectedVariant.minPrice || product?.base_price || 0;
-        const convertedPrice = convertPriceToINR(price)
-        return convertedPrice
-    };
+const getCurrentPrice = () => {
+    let price = selectedVariant.minPrice || product?.base_price || 0;
+    const convertedPrice = convertPriceToINR(price);
+    return convertedPrice.toLocaleString('en-IN');
+};
 
     const handleAddToCart = async () => {
         if (!selectedVariant) {
@@ -392,10 +390,7 @@ const ProductDetailPage = () => {
                     100% { transform: translateY(0px); }
                 }
 
-                @keyframes colorPulse {
-  0% { background-color: white; }
-  50% { background-color: #d4af37; } /* Gold */
-  100% { background-color: white; }
+
 }
 
 
@@ -597,7 +592,7 @@ const ProductDetailPage = () => {
                                 className="text-xl md:text-2xl tracking-wide"
                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                             >
-                                RS. {getCurrentPrice().toFixed(2)}
+                                RS. {getCurrentPrice()}
                             </span>
                             {/* <p
                                 className="text-[10px] md:text-xs text-gray-500 mt-2 tracking-wider"
