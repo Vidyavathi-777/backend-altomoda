@@ -31,6 +31,16 @@ function App({ gender: propGender }) {
     navigate(gender === 'man' ? '/man' : '/woman');
   };
 
+
+
+  const access = localStorage.getItem("altamoda_gate_access");
+
+if (!access) {
+  return <AltamodaGateLogin />;
+}
+
+
+
   return (
     <UserProvider>
       <GenderProvider>
@@ -144,5 +154,6 @@ import BoutiquesPage from './pages/Botiques';
 import SearchResultsPage from './pages/SearchResutPage';
 import VirtualTryOn from './components/Tryon';
 import MagazineDetailPage from './pages/MagazineDetailPage';
+import AltamodaGateLogin from './pages/AltomodaLogin';
 
 export default App;
