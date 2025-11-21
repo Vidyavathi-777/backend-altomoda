@@ -337,12 +337,12 @@ const ProductsPage = () => {
             });
         }
 
-        if (actualCategoryId || actualNewArrival) {
-            const baseCatId = actualCategoryId || actualNewArrival;
-            if (!categoryIds.includes(baseCatId)) {
-                categoryIds.push(baseCatId);
-            }
-        }
+        // if (actualCategoryId || actualNewArrival) {
+        //     const baseCatId = actualCategoryId || actualNewArrival;
+        //     if (!categoryIds.includes(baseCatId)) {
+        //         categoryIds.push(baseCatId);
+        //     }
+        // }
 
         if (categoryIds.length > 0) {
             payload.categoryIds = categoryIds;
@@ -350,9 +350,9 @@ const ProductsPage = () => {
 
         const brands = [];
 
-        if (actualBrandName) {
-            brands.push(actualBrandName);
-        }
+        // if (actualBrandName) {
+        //     brands.push(actualBrandName);
+        // }
 
         if (apiFilters.brand?.length > 0) {
             const filteredBrands = apiFilters.brand.filter(brand =>
@@ -952,48 +952,49 @@ const ProductsPage = () => {
                                                         )}
 
                                                         {/* Top Right - Try On Button */}
-                                                        <button
-                                                            onClick={(e) => handleTryOnClick(e, product)}
-                                                            className="absolute top-3 lg:top-4 right-3 lg:right-4 bg-white border border-gray-300 hover:bg-gray-50 
-               px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md 
-               z-10 flex items-center gap-1.5 md:gap-2"
-                                                        >
-                                                            <svg
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                strokeWidth="1.5"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0"
+                                                        <div className="absolute top-2 left-3 right-3 flex justify-between items-start z-10">
+
+                                                            {(isNewArrivalMode || product.isNewArrival) && (
+                                                                <div
+                                                                    className="bg-black text-white px-2 lg:px-3 py-1 text-xs tracking-[0.2em]"
+                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                >
+                                                                    NEW
+                                                                </div>
+                                                            )}
+
+                                                            <button
+                                                                onClick={(e) => handleTryOnClick(e, product)}
+                                                                className="bg-black border  
+                   px-2 lg:px-3 py-1
+                   transition-all duration-200 shadow-sm hover:shadow-md
+                   flex items-center gap-1"
                                                             >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 64 64"
+                                                                    className="w-3.5 h-3.5 text-white"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="3"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                >
+                                                                    <path d="M32 6c-2.5 0-4.5 2-4.5 4.5" />
+                                                                    <path d="M27.5 10.5C27.5 13.985 30.515 17 34 17c3.485 0 6.5-3.015 6.5-6.5" />
+                                                                    <path d="M8 34s10-9 24-9 24 9 24 9" />
+                                                                    <path d="M10.5 36.5s9-7 21.5-7 21.5 7 21.5 7" />
+                                                                </svg>
 
-                                                                <path d="M12 3c1.7 0 3 1.3 3 3 0 1.2-.7 2.2-1.7 2.8l-.8.5" />
-                                                                <path d="M3 14l9-5 9 5" />
-                                                                <path d="M5 19h14" />
-                                                            </svg>
+                                                                <span
+                                                                    className="text-xs tracking-[0.2em] text-white"
+                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                >
+                                                                    TRY
+                                                                </span>
+                                                            </button>
 
-                                                            <span
-                                                                className="text-[10px] md:text-xs font-medium tracking-wide whitespace-nowrap text-gray-700"
-                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                            >
-                                                                TRY THE LOOK
-                                                            </span>
-                                                        </button>
-
-
-
-
-
-                                                        {/* Top Left - New Badge for New Arrivals */}
-                                                        {(isNewArrivalMode || product.isNewArrival) && (
-                                                            <div
-                                                                className="absolute top-3 lg:top-4 left-3 lg:left-4 bg-black text-white px-2 lg:px-3 py-1 text-xs tracking-[0.2em] pointer-events-none z-10"
-                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                            >
-                                                                NEW
-                                                            </div>
-                                                        )}
+                                                        </div>
 
                                                         {/* Scroll Indicators */}
                                                         {product.images.length > 1 && (

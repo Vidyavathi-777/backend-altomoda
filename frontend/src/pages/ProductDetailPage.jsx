@@ -266,11 +266,11 @@ const ProductDetailPage = () => {
 
         return String(conversion || '');
     };
-const getCurrentPrice = () => {
-    let price = selectedVariant.minPrice || product?.base_price || 0;
-    const convertedPrice = convertPriceToINR(price);
-    return convertedPrice.toLocaleString('en-IN');
-};
+    const getCurrentPrice = () => {
+        let price = selectedVariant.minPrice || product?.base_price || 0;
+        const convertedPrice = convertPriceToINR(price);
+        return convertedPrice.toLocaleString('en-IN');
+    };
 
     const handleAddToCart = async () => {
         if (!selectedVariant) {
@@ -587,20 +587,41 @@ const getCurrentPrice = () => {
                         </div>
 
                         {/* Price */}
-                        <div className="border-t border-b border-gray-200 py-4 md:py-6">
+                        <div className="border-t border-b border-gray-200 py-4 md:py-6 flex items-center justify-between">
+
+                            {/* PRICE */}
                             <span
                                 className="text-xl md:text-2xl tracking-wide"
                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                             >
                                 RS. {getCurrentPrice()}
                             </span>
-                            {/* <p
-                                className="text-[10px] md:text-xs text-gray-500 mt-2 tracking-wider"
-                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+
+                            {/* TRY THE LOOK BUTTON */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setShowTryOn(true);
+                                }}
+                                className="h-12 md:h-14 px-3 md:px-4 
+                   flex items-center justify-center
+                   border border-[#C9A54A]
+                   transition-all duration-300
+                   hover:bg-gray-50
+                   rounded-none 
+                   w-[110px] md:w-[240px] 
+        "
                             >
-                                IMPORT DUTIES NOT INCLUDED
-                            </p> */}
+                                <img
+                                    src={tryLook}
+                                    alt="Try On"
+                                    className="h-full w-full object-cover"
+                                />
+                            </button>
+
                         </div>
+
 
                         {/* Size Selection */}
                         <div className="space-y-3 md:space-y-4">
@@ -694,23 +715,7 @@ const getCurrentPrice = () => {
                                     </div>
                                 </div> */}
                                 <div>
-                                    <div>
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setShowTryOn(true);
-                                            }}
-                                            className="w-50 h-14 flex items-center justify-center rounded-xl border border-gray-300 
-               animate-[colorPulse_3s_infinite] transition-all duration-300"
-                                        >
-                                            <img
-                                                src={tryLook}
-                                                alt="Try On"
-                                                className="w-40 h-30 object-contain"
-                                            />
-                                        </button>
-                                    </div>
+
 
                                 </div>
                             </div>
