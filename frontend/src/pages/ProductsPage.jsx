@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { ChevronDown, ChevronUp, Loader2, Filter, X } from "lucide-react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
     fetchBrands,
     fetchCategoryChildren,
@@ -15,6 +15,7 @@ import tryLook from '../assets/tryTheLook.png'
 import TryOnModal from '../components/Tryon';
 
 const ProductsPage = () => {
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -650,7 +651,14 @@ const ProductsPage = () => {
 
             {/* Header Section */}
             <div className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 border-b border-gray-200">
-                <Breadcrumb />
+                {/* <Breadcrumb /> */}
+              <p
+    className="cursor-pointer text-gray-700 hover:underline"
+    onClick={() => navigate("/")}
+>
+    Back
+</p>
+
                 <div className="max-w-[1800px] mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-6 md:mb-8">
                         <div>

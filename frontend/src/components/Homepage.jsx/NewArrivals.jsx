@@ -275,10 +275,8 @@ const NewArrivals = () => {
                           style={{ fontFamily: "Montserrat, sans-serif" }}
                         >
                           {product.minPrice === product.maxPrice
-                            ? `RS. ${product.minPrice.toFixed(2)}`
-                            : `RS. ${product.minPrice.toFixed(
-                                2
-                              )} - ${product.maxPrice.toFixed(2)}`}
+                            ? `RS. ${product.minPrice.toLocaleString('en-IN')}`
+                            : `RS. ${product.minPrice.toLocaleString('en-IN')} - ${product.maxPrice.toLocaleString('en-IN')}`}
                         </p>
                         {product.variantCount > 1 && (
                           <p className="text-2xl inline bg-black text-white text-[10px] px-2  py-3 tracking-[0.2em]" style={{ fontFamily: "Montserrat, sans-serif" }}>

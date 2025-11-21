@@ -14,11 +14,11 @@ export default function Breadcrumb() {
     let label = value;
 
     // ---------- CLEAN LABELS ----------
-    if (value === "woman") label = "Woman";
-    if (value === "man") label = "Man";
-    if (value === "products") label = "Products";
-    if (value === "product") label = "Product";
-    if (value === "new-arrivals") label = "New Arrivals";
+      // if (value === "woman") label = "Woman";
+      // if (value === "man") label = "Man";
+    // if (value === "products") label = "Products";
+    // if (value === "product") label = "Product";
+    // if (value === "new-arrivals") label = "New Arrivals";
 
     // Remove IDs from displaying
     if (value.match(/^[0-9a-fA-F]{12,}$/)) return null;

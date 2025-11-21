@@ -191,7 +191,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 </div>
 
                 {/* Boutiques */}
-                <div className="relative h-full group">
+                {/* <div className="relative h-full group">
                     <Link 
                         to={"/boutique"}
                         onClick={() => handleNavItemClick('boutiques')}
@@ -204,10 +204,10 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
                         activeNavItem === 'boutiques' ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}></div>
-                </div>
+                </div> */}
 
                 {/* Magazine */}
-                <div className="relative h-full group">
+                {/* <div className="relative h-full group">
                     <Link 
                         to={"/magazine"}
                         onClick={() => handleNavItemClick('magazine')}
@@ -220,7 +220,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
                         activeNavItem === 'magazine' ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}></div>
-                </div>
+                </div> */}
             </nav>
 
             {/* Mega Menu Dropdowns - Portal Style */}
@@ -377,7 +377,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                         )}
 
                         {/* Magazine */}
-                        {activeDesktopMenu === "magazine" && (
+                        {/* {activeDesktopMenu === "magazine" && (
                             <div className="text-center mx-auto ">
                                 <h4 className="font-bold uppercase tracking-wide text-gray-900 block mb-4 text-sm transition-all duration-300 hover:text-black hover:translate-x-1" style={{ fontFamily: cssVariables.fontHeading }} >
                                     Magazine
@@ -394,7 +394,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </div>
                 </div>
             )}
@@ -484,7 +484,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                                         </button>
                                     </div>
-
+{/* 
                                     <Link to={"/boutique"}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="block w-full text-left py-4 text-sm uppercase tracking-wider font-medium border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-2 hover:font-semibold"
@@ -503,7 +503,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             onClick={() => openMobileSubView('magazine')}
                                             className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 cursor-pointer"
                                         />
-                                    </div>
+                                    </div> */}
 
                                     {user ? (
                                         <div className="mt-8 pt-6 border-t border-gray-200">
@@ -602,19 +602,21 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                                 );
                                             })}
                                         </div>
-                                    ) : mobileSubView === 'magazine' ? (
-                                        <div className="space-y-0">
-                                            {magazineItems.map(item => (
-                                                <a
-                                                    key={item}
-                                                    href="#"
-                                                    className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
-                                                >
-                                                    {item}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    ) : (
+                                    ) 
+                                    // : mobileSubView === 'magazine' ? (
+                                    //     <div className="space-y-0">
+                                    //         {magazineItems.map(item => (
+                                    //             <a
+                                    //                 key={item}
+                                    //                 href="#"
+                                    //                 className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
+                                    //             >
+                                    //                 {item}
+                                    //             </a>
+                                    //         ))}
+                                    //     </div>
+                                    // )
+                                     : (
                                         <div className="space-y-0">
                                             {getCurrentCategories()[mobileSubView]?.subs?.map(subCategory => (
                                                 <button

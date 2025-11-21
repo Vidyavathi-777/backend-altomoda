@@ -35,7 +35,7 @@ const HomePage = ({gender:propGender}) => {
         <HeroSection  />
         <NewArrivals  />
         {/* <Newsletter /> */}
-        <ImageCarousel  />
+        {/* <ImageCarousel  /> */}
 
         
       </main>

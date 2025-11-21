@@ -269,7 +269,7 @@ const ProductDetailPage = () => {
     const getCurrentPrice = () => {
         let price = selectedVariant.minPrice || product?.base_price || 0;
         const convertedPrice = convertPriceToINR(price);
-        return convertedPrice.toLocaleString('en-IN');
+        return convertedPrice;
     };
 
     const handleAddToCart = async () => {
@@ -594,7 +594,7 @@ const ProductDetailPage = () => {
                                 className="text-xl md:text-2xl tracking-wide"
                                 style={{ fontFamily: 'Montserrat, sans-serif' }}
                             >
-                                RS. {getCurrentPrice()}
+                                RS. {getCurrentPrice().toLocaleString('en-IN')}
                             </span>
 
                             {/* TRY THE LOOK BUTTON */}
@@ -910,7 +910,7 @@ const ProductDetailPage = () => {
                                                     className="text-xs md:text-sm tracking-wider"
                                                     style={{ fontFamily: 'Montserrat, sans-serif' }}
                                                 >
-                                                    RS. {item.minPrice?.toFixed(2) || '0.00'}
+                                                    RS. {item.minPrice?.toLocaleString('en-IN') || '0.00'}
                                                 </p>
                                             </div>
                                         </Link>
