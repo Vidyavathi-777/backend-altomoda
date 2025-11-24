@@ -206,8 +206,9 @@ const Footer = () => {
 
                 {/* Lower Section */}
                 <div className="flex flex-col lg:flex-row justify-between items-center text-white gap-8">
+                     <div></div>
                     {/* Company Info */}
-                    <div className="text-center lg:text-left space-y-4">
+                    {/* <div className="text-center lg:text-left space-y-4">
                         <div className="space-y-2">
                             <div className="flex justify-center lg:justify-start space-x-6 ">
                                 <a
@@ -236,19 +237,19 @@ const Footer = () => {
                             <p>Via Carducci 32, 20123 Milano</p>
                             <p>P.Iva n. 06937930151</p>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* ALTOMODA Logo */}
                     <div className="flex-shrink-0">
                         <div className="logo-animation logo-glow">
-                            <h1 className="text-4xl font-light tracking-widest gold-gradient"
+                            <h1 className="text-4xl  font-light tracking-widest gold-gradient"
                                 style={{ fontFamily: 'Didot, serif' }}>
                                 ALTOMODA
                             </h1>
-                            <p className="text-xs tracking-[0.5em] text-gray-400 text-center mt-2 uppercase"
+                            {/* <p className="text-xs tracking-[0.5em] text-gray-400 text-center mt-2 uppercase"
                                style={{ fontFamily: 'Montserrat, sans-serif' }}>
                                 MILANO
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 </div>

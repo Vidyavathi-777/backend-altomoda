@@ -572,7 +572,7 @@ const ProductsPage = () => {
                     className="w-full flex items-center justify-between text-left"
                     style={{ fontFamily: 'Didot, serif' }}
                 >
-                    <span className="text-xs md:text-sm uppercase tracking-[0.2em] font-light">{title}</span>
+                    <span className="text-xs md:text-sm uppercase tracking-[0.25em] font-normal">{title}</span>
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
                 {isOpen && (
@@ -585,16 +585,16 @@ const ProductsPage = () => {
                                 return (
                                     <label
                                         key={optionKey}
-                                        className="flex items-center gap-2 md:gap-3 cursor-pointer group"
+                                        className="flex items-center gap-3 cursor-pointer group"
                                         style={{ fontFamily: 'Montserrat, sans-serif' }}
                                     >
                                         <input
                                             type="checkbox"
                                             checked={getCheckedValue(option)}
                                             onChange={() => handleChange(option)}
-                                            className="w-3 h-3 md:w-4 md:h-4 border-2 border-black flex-shrink-0"
+                                            className="w-4 h-4 border-2 border-black flex-shrink-0"
                                         />
-                                        <span className="text-xs md:text-sm tracking-wide group-hover:opacity-60 transition-opacity">
+                                        <span className="text-sm  tracking-wide group-hover:opacity-60 transition-opacity">
                                             {optionName}
                                         </span>
                                     </label>
@@ -612,106 +612,242 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white pt-32 md:pt-[200px] lg:pt-[180px]">
+        <div className="min-h-screen bg-white pt-10 md:pt-[20px] lg:pt-[120px]">
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
-                
-                @font-face {
-                    font-family: 'Didot';
-                    src: local('Didot'), local('Didot LT STD');
-                    font-weight: normal;
-                    font-style: normal;
+                @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+                :root {
+                    --content-max: 1200px;
                 }
 
-                .line-clamp-2 {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
+                /* Top Bar / Logo area */
+                .top-nav {
+                    border-bottom: 1px solid #e6e6e6;
+                    padding: 18px 0;
                 }
 
-                .image-scroll-container {
-                    scrollbar-width: none;
-                    -ms-overflow-style: none;
+                .top-nav .logo {
+                    font-size: 48px;
+                    letter-spacing: 6px;
+                    font-weight: 700;
+                    font-family: 'Didot', serif;
                 }
 
-                .image-scroll-container::-webkit-scrollbar {
-                    display: none;
+                /* Description block */
+                .collection-description {
+                    max-width: var(--content-max);
+                    margin: 26px auto;
+                    padding: 18px 16px;
+                    font-family: 'Cormorant Garamond', serif;
+                    color: #262626;
+                    line-height: 1.6;
                 }
 
-                .scroll-indicators {
-                    scrollbar-width: none;
-                    -ms-overflow-style: none;
+                .collection-title {
+                    font-family: 'Didot', serif;
+                    font-weight: 400;
+                    font-size: 18px;
+                    letter-spacing: 0.12em;
+                    margin-bottom: 8px;
                 }
 
-                .scroll-indicators::-webkit-scrollbar {
-                    display: none;
+                /* Main layout */
+                .collection-wrap {
+                    max-width: var(--content-max);
+                    margin: 0 auto;
+                    padding: 0 16px 60px;
                 }
+
+                .side-filters {
+                    width: 280px;
+                }
+
+                /* Product grid and card */
+                .products-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 36px;
+                }
+
+                @media(min-width:768px) {
+                    .products-grid { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+                }
+
+                @media(min-width:1200px) {
+                    .products-grid { grid-template-columns: repeat(4, 1fr); gap: 56px; }
+                }
+
+                .product-card {
+                    display: block;
+                    color: inherit;
+                    text-decoration: none;
+                }
+
+                .product-visual {
+                    background: #fff;
+                    border-radius: 2px;
+                    display:flex;
+                    align-items:flex-start;
+                    justify-content:center;
+                    overflow: visible;
+                    border: 1px solid #f0f0f0;
+                    padding: 48px 0; /* big whitespace like TheCorner */
+                    height: 520px; /* consistent large vertical space for tall product images */
+                    position: relative;
+                }
+
+                /* images inside should center and not exceed max dimensions */
+                .product-visual img {
+                    max-width: 320px;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    display:block;
+                }
+
+                /* New badge & Try button */
+                .badge-new {
+                    position: absolute;
+                    top: 12px;
+                    left: 12px;
+                    background: #000;
+                    color: #fff;
+                    padding: 6px 10px;
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 11px;
+                    letter-spacing: 0.12em;
+                }
+
+                .try-btn {
+                    position: absolute;
+                    top: 12px;
+                    right: 12px;
+                    background:#000;
+                    color:#fff;
+                    padding: 6px 10px;
+                    display:inline-flex;
+                    align-items:center;
+                    gap:8px;
+                    font-family:'Montserrat',sans-serif;
+                    font-size:12px;
+                }
+
+                .product-meta {
+                    padding: 10px 2px 0;
+                }
+
+                .product-brand {
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 12px;
+                    letter-spacing: 0.2em;
+                    text-transform:uppercase;
+                    margin-bottom:6px;
+                }
+
+                .product-title {
+                    font-family: 'Cormorant Garamond', serif;
+                    font-size: 14px;
+                    line-height: 1.25;
+                    color: #222;
+                    min-height: 44px;
+                }
+
+                .product-price {
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 14px;
+                    margin-top: 8px;
+                }
+
+                /* Pagination - center aligned */
+                .pagination-wrap {
+                    margin-top: 40px;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    gap:12px;
+                }
+
+                .pagination-wrap .page-btn {
+                    border: 1px solid #222;
+                    padding: 10px 14px;
+                    min-width: 44px;
+                    text-align:center;
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 13px;
+                    cursor:pointer;
+                }
+
+                .pagination-wrap .page-btn.active {
+                    background: #000;
+                    color: #fff;
+                }
+
+                /* Mobile overlay filters */
+                .mobile-filter-panel .sticky-actions {
+                    position: sticky;
+                    bottom: 0;
+                    background: #fff;
+                    padding: 14px;
+                    border-top: 1px solid #e6e6e6;
+                }
+
+                /* subtle scrollbar removal for image scrollers */
+                .image-scroll-container::-webkit-scrollbar { display: none; } 
             `}</style>
 
-            {/* Header Section */}
-            <div className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 border-b border-gray-200">
-                {/* <Breadcrumb /> */}
-              <p
-    className="cursor-pointer text-gray-700 hover:underline"
-    onClick={() => navigate("/")}
->
-    Back
-</p>
+<div className="w-full px-4 md:px-6 lg:px-8 pt-6 md:pt-8 pb-4 border-b border-gray-200">
+    <p
+        className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
+        onClick={() => navigate("/")}
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+    >
+        Back
+    </p>
 
-                <div className="max-w-[1800px] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-6 md:mb-8">
-                        <div>
-                            <h1
-                                className="text-3xl md:text-4xl lg:text-5xl mb-2 md:mb-4 tracking-wider font-light"
-                                style={{ fontFamily: 'Didot, serif' }}
-                            >
-                                {getDisplayTitle()}
-                            </h1>
-                            {actualBrandName && (
-                                <h2
-                                    className="text-lg md:text-xl lg:text-2xl tracking-[0.2em] md:tracking-[0.3em] font-light text-gray-700"
-                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                >
-                                    {actualBrandName.toUpperCase()}
-                                </h2>
-                            )}
-                        </div>
+    <div className="max-w-[1800px] ">
 
-                        <button
-                            onClick={() => setShowFilters(true)}
-                            className="flex items-center gap-2 md:gap-3 px-4 md:px-6 lg:px-8 py-3 md:py-4 border border-black hover:bg-black hover:text-white transition-all duration-300 w-full md:w-auto justify-center lg:hidden"
-                            style={{ fontFamily: 'Montserrat, sans-serif' }}
-                        >
-                            <Filter className="w-3 h-3 md:w-4 md:h-4" />
-                            <span className="text-xs md:text-sm tracking-[0.2em] uppercase">Filters</span>
-                            {totalActiveFilters > 0 && (
-                                <span className="bg-black text-white px-2 py-0.5 text-xs">
-                                    {totalActiveFilters}
-                                </span>
-                            )}
-                        </button>
-                    </div>
+        {/* Title + Brand */}
+        <div className="mb-4 flex flex-col">
+            <h1
+                className="text-xl md:text-2xl tracking-wider font-light mb-1"
+                style={{ fontFamily: 'Didot, serif' }}
+            >
+                {getDisplayTitle()}
+            </h1>
 
-                    {filterDescription && (
-                        <div
-                            className="text-sm md:text-base leading-relaxed "
-                            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                        >
-                            <p className={`${!showMore ? "line-clamp-2" : ""}`}>
-                                {filterDescription}
-                            </p>
-                            <button
-                                onClick={() => setShowMore(!showMore)}
-                                className="underline mt-2 text-xs md:text-sm hover:no-underline"
-                                style={{ fontFamily: 'Montserrat, sans-serif' }}
-                            >
-                                {showMore ? "SHOW LESS" : "SHOW MORE"}
-                            </button>
-                        </div>
-                    )}
-                </div>
+            {actualBrandName && (
+                <h2
+                    className="text-sm md:text-base tracking-[0.25em] font-light text-gray-700"
+                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                >
+                    {actualBrandName.toUpperCase()}
+                </h2>
+            )}
+        </div>
+
+        {/* Description */}
+        {filterDescription && (
+            <div
+                className="text-[15px] md:text-[15px] leading-relaxed max-w-[1800px]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+                <p className={`${!showMore ? "line-clamp-2" : ""}`}>
+                    {filterDescription}
+                </p>
+
+                <button
+                    onClick={() => setShowMore(!showMore)}
+                    className="underline text-xs mt-1 hover:no-underline"
+                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                >
+                    {showMore ? "SHOW LESS" : "SHOW MORE"}
+                </button>
             </div>
+        )}
+    </div>
+</div>
+
 
             {/* Active Filters */}
             {totalActiveFilters > 0 && (
@@ -771,34 +907,84 @@ const ProductsPage = () => {
 
 
             {/* Products Count and Sort */}
-            <div className="w-full px-4 md:px-6 lg:px-8 py-3 md:py-4 border-b border-gray-200">
+
+            <div className="sticky top-[70px]  md:top-[70px] lg:top-[90px]  z-40 w-full bg-white border-b border-gray-200 px-4 md:px-6 lg:px-8 py-3 md:py-4">
+
                 <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4">
+
+                    {/* PRODUCTS COUNT */}
                     <p
                         className="text-xs md:text-sm tracking-wider"
-                        style={{ fontFamily: 'Montserrat, sans-serif' }}
+                        style={{ fontFamily: "Montserrat, sans-serif" }}
                     >
                         {loading ? "Loading..." : `${filteredProducts.length} OF ${totalItems} PRODUCTS`}
                     </p>
 
-                    {/* Updated select with proper "no sorting" option */}
-                    <div className="relative w-full md:w-auto">
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="w-full md:w-64 px-4 py-2 md:py-3 border border-black bg-white text-xs tracking-wider appearance-none cursor-pointer hover:bg-gray-50 transition-colors"
-                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                    {/* RIGHT AREA */}
+                    <div className="flex items-center w-full md:w-auto gap-3 md:gap-4">
+
+                        {/* FILTER BUTTON — visible on mobile + md, hidden on desktop */}
+                        <button
+                            onClick={() => setShowFilters(true)}
+                            className="
+                    flex lg:hidden items-center justify-center 
+                    gap-2 md:gap-3 
+                    px-3 md:px-5 
+                    py-2.5 md:py-3
+                    border border-black 
+                    hover:bg-black hover:text-white 
+                    transition-all duration-300 
+                    text-xs md:text-sm tracking-[0.2em] uppercase
+                    flex-shrink-0
+                "
+                            style={{ fontFamily: "Montserrat, sans-serif" }}
                         >
-                            <option value="">SORT BY</option>
-                            <option value="newest">NEW ARRIVALS</option>
-                            <option value="price-low">PRICE: LOW TO HIGH</option>
-                            <option value="price-high">PRICE: HIGH TO LOW</option>
-                            <option value="a-z">NAME: A-Z</option>
-                            <option value="z-a">NAME: Z-A</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
+                            <Filter className="w-3 h-3 md:w-4 md:h-4" />
+                            Filters
+                            {totalActiveFilters > 0 && (
+                                <span className="bg-black text-white px-2 py-0.5 text-[10px] md:text-xs rounded-sm">
+                                    {totalActiveFilters}
+                                </span>
+                            )}
+                        </button>
+
+                        {/* SORT DROPDOWN */}
+                        <div className="relative w-full md:w-64">
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="
+                        w-full 
+                        px-4 py-2.5 md:py-3 
+                        border border-black 
+                        bg-white 
+                        text-xs md:text-sm 
+                        tracking-wider 
+                        appearance-none 
+                        cursor-pointer 
+                        hover:bg-gray-50 
+                        transition-colors
+                    "
+                                style={{ fontFamily: "Montserrat, sans-serif" }}
+                            >
+                                <option value="">SORT BY</option>
+                                <option value="newest">NEW ARRIVALS</option>
+                                <option value="price-low">PRICE: LOW TO HIGH</option>
+                                <option value="price-high">PRICE: HIGH TO LOW</option>
+                                <option value="a-z">NAME: A-Z</option>
+                                <option value="z-a">NAME: Z-A</option>
+                            </select>
+
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
+
 
             {/* Main Content - Desktop Filters + Products */}
             <div className="w-full px-4 md:px-6 lg:px-8 pb-8 md:pb-16">
@@ -808,17 +994,10 @@ const ProductsPage = () => {
                         <div className="hidden lg:block w-80 flex-shrink-0">
 
                             {/* Entire sidebar uses flex to lock footer buttons */}
-                            <div className="sticky top-32 h-[85vh] flex flex-col justify-between bg-white">
+                            <div className="sticky top-50 flex flex-col justify-between bg-white">
 
                                 {/* Scrollable filter area */}
-                                <div className="overflow-y-auto pr-2">
-
-                                    <h3
-                                        className="text-xl tracking-[0.2em] font-light mb-6 pb-4 border-b border-gray-300"
-                                        style={{ fontFamily: 'Didot, serif' }}
-                                    >
-                                        FILTERS
-                                    </h3>
+                                <div className="max-h-[70vh] overflow-y-auto pr-2 pb-4 border-b border-gray-300">
 
                                     <FilterSection title="Designers" filterKey="brand" options={filterOptions.brands} />
                                     <FilterSection title="Color" filterKey="color" options={filterOptions.colors} />
@@ -911,7 +1090,7 @@ const ProductsPage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 ">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
                                         {filteredProducts.map((product) => {
                                             const scrollPosition = scrollPositions[product.id] || 0;
                                             const scrollContainer = scrollRefs.current[product.id];
@@ -922,61 +1101,46 @@ const ProductsPage = () => {
                                                 <Link
                                                     to={`/${actualGender || 'woman'}/product/${product.sku}`}
                                                     key={product.sku}
-                                                    className="group cursor-pointer pt-[50px]"
+                                                    className="group cursor-pointer"
                                                 >
-                                                    <div
-                                                        className="relative aspect-[3/4] bg-gray-50 mb-4  md:mb-4 overflow-hidden "
-                                                        onMouseEnter={() => setHoveredProduct(product.id)}
-                                                        onMouseLeave={() => setHoveredProduct(null)}
-                                                    >
-                                                        {/* Horizontal Image Scroller */}
-                                                        {product.images.length > 0 ? (
-                                                            <div
-                                                                ref={el => scrollRefs.current[product.id] = el}
-                                                                className="w-full h-full flex overflow-x-auto image-scroll-container snap-x snap-mandatory scroll-smooth "
-                                                                onScroll={() => handleScroll(product.id)}
-                                                            >
-                                                                {product.images.map((image, index) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        className="w-full h-full flex-shrink-0 snap-start "
-                                                                    >
-                                                                        <img
-                                                                            src={image}
-                                                                            alt={`${product.productName} - Image ${index + 1}`}
-                                                                            className="w-full h-full object-cover"
-                                                                            loading="lazy"
-                                                                            onError={(e) => {
-                                                                                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+';
-                                                                            }}
-                                                                        />
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        ) : (
-                                                            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-xs">
-                                                                No Image
-                                                            </div>
-                                                        )}
+                                                    {/* ---------------- IMAGE WRAPPER ---------------- */}
+                                                    <div className="relative w-full pb-[120%] bg-white overflow-hidden">
 
-                                                        {/* Top Right - Try On Button */}
-                                                        <div className="absolute top-2 left-3 right-3 flex justify-between items-start z-10">
-
-                                                            {(isNewArrivalMode || product.isNewArrival) && (
+                                                        {/* SCROLLABLE IMAGES (same functionality, pixel-perfect UI) */}
+                                                        <div
+                                                            ref={el => (scrollRefs.current[product.id] = el)}
+                                                            className="absolute inset-0 flex overflow-x-auto snap-x snap-mandatory scroll-smooth image-scroll-container"
+                                                            onScroll={() => handleScroll(product.id)}
+                                                        >
+                                                            {product.images.map((image, index) => (
                                                                 <div
-                                                                    className="bg-black text-white px-2 lg:px-3 py-1 text-xs tracking-[0.2em]"
-                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                    key={index}
+                                                                    className="w-full h-full flex-shrink-0 snap-start"
                                                                 >
-                                                                    NEW
+                                                                    <img
+                                                                        src={image}
+                                                                        alt={product.productName}
+                                                                        className="w-full h-full object-contain transition-all duration-500"
+                                                                    />
                                                                 </div>
+                                                            ))}
+                                                        </div>
+
+                                                        {/* ---------------- New Arrival ---------------- */}
+                                                        <div className="absolute top-2 left-3 right-3 flex justify-between items-start z-10" >
+                                                            {(isNewArrivalMode || product.isNewArrival) && (
+                                                                <span
+                                                                    className="absolute top-3 left-3 bg-black text-white text-[11px] font-medium px-[10px] py-[4px] tracking-[0.5px] rounded-[3px] z-20 leading-none"
+                                                                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                                                                >
+                                                                    New
+                                                                </span>
                                                             )}
 
+                                                            {/* ---------------- TRY ON BUTTON ---------------- */}
                                                             <button
                                                                 onClick={(e) => handleTryOnClick(e, product)}
-                                                                className="bg-black border  
-                   px-2 lg:px-3 py-1
-                   transition-all duration-200 shadow-sm hover:shadow-md
-                   flex items-center gap-1"
+                                                                className="bg-black border px-2 lg:px-3 py-1 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1"
                                                             >
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -1001,57 +1165,62 @@ const ProductsPage = () => {
                                                                     TRY
                                                                 </span>
                                                             </button>
-
                                                         </div>
 
-                                                        {/* Scroll Indicators */}
+                                                        {/* ---------------- INDICATORS ---------------- */}
                                                         {product.images.length > 1 && (
-                                                            <div className="absolute bottom-3 lg:bottom-4 left-1/2 -translate-x-1/2 flex gap-1 md:gap-1.5 pointer-events-none">
+                                                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
                                                                 {product.images.map((_, idx) => (
                                                                     <div
                                                                         key={idx}
-                                                                        className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-4 md:w-6' : 'bg-white/60'
-                                                                            }`}
+                                                                        className={`
+                                        h-1.5 rounded-full transition-all
+                                        ${idx === currentImageIndex
+                                                                                ? "bg-black w-4"
+                                                                                : "bg-gray-300 w-1.5"}
+                                    `}
                                                                     />
                                                                 ))}
                                                             </div>
                                                         )}
                                                     </div>
 
-                                                    <div className="space-y-1 md:space-y-2 px-1 md:px-2">
-                                                        <h3
-                                                            className="text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase font-medium"
-                                                            style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                    {/* ---------------- PRODUCT INFO ---------------- */}
+                                                    <div className="mt-4 space-y-1.5">
+
+                                                        {/* BRAND (uppercase, exact UI) */}
+                                                        <h2
+                                                            className="text-[12px] font-medium uppercase tracking-[0.08em]"
+                                                            style={{ fontFamily: "Montserrat, sans-serif" }}
                                                         >
                                                             {product.name}
-                                                        </h3>
+                                                        </h2>
+
+                                                        {/* PRODUCT NAME (serif, exact spacing) */}
                                                         <p
-                                                            className="text-xs md:text-sm leading-relaxed line-clamp-2"
-                                                            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                                                            className="text-[14px] text-black line-clamp-2 leading-snug"
+                                                            style={{ fontFamily: "Cormorant Garamond, serif" }}
                                                         >
                                                             {product.productName}
                                                         </p>
-                                                        <div className="flex items-center justify-between gap-3">
-                                                            {/* Price */}
-                                                            <div className="pt-1 md:pt-2">
-                                                                <p
-                                                                    className="text-xs md:text-sm tracking-wider"
-                                                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                                                >
-                                                                    {product.minPrice === product.maxPrice
-                                                                        ? `RS ${product.minPrice.toLocaleString('en-IN')}`
-                                                                        : `RS ${product.minPrice.toLocaleString('en-IN')} - ${product.maxPrice.toLocaleString('en-IN')}`
-                                                                    }
-                                                                </p>
-                                                            </div>
+
+                                                        {/* PRICE — bold like TheCorner */}
+                                                        <div
+                                                            className="text-[15px] font-semibold tracking-wide mt-2"
+                                                            style={{ fontFamily: "Montserrat, sans-serif" }}
+                                                        >
+                                                            {product.minPrice === product.maxPrice
+                                                                ? `Rs ${product.minPrice.toLocaleString("en-IN")}`
+                                                                : `Rs ${product.minPrice.toLocaleString("en-IN")} - ${product.maxPrice.toLocaleString("en-IN")}`}
                                                         </div>
 
+                                                        {/* SIZES */}
                                                         {product.variantCount > 1 && (
                                                             <p
-                                                                className="text-[10px] md:text-xs text-gray-600 tracking-wider"
-                                                                style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                                                className="text-[11px] text-gray-500 tracking-wide"
+                                                                style={{ fontFamily: "Montserrat, sans-serif" }}
                                                             >
-                                                                {product.variantCount} SIZES AVAILABLE
+                                                                {product.variantCount} sizes available
                                                             </p>
                                                         )}
                                                     </div>
@@ -1059,6 +1228,7 @@ const ProductsPage = () => {
                                             );
                                         })}
                                     </div>
+
 
                                     {/* Pagination */}
                                     {totalPages > 1 && (

@@ -112,7 +112,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
 
     return (
         <>
-            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4 border-t border-gray-200 bg-white relative transition-all duration-300" style={{ fontFamily: cssVariables.fontBody }}>
+            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4   bg-white relative transition-all duration-300" style={{ fontFamily: cssVariables.fontBody }}>
                 {/* Designers */}
                 <div
                     className="relative h-full group"
@@ -226,7 +226,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
             {/* Mega Menu Dropdowns - Portal Style */}
             {activeDesktopMenu && (
                 <div
-                    className="hidden lg:block fixed left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-[60] text-gray-800 animate-fadeIn"
+                    className="hidden lg:block fixed left-0 right-0 bg-white border-t border-gray-200  z-[60] text-gray-800 animate-fadeIn"
                     style={{ fontFamily: cssVariables.fontBody }}
                     onMouseEnter={() => menuTimeout && clearTimeout(menuTimeout)}
                     onMouseLeave={handleMenuLeave}

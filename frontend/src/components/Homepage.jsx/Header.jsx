@@ -85,16 +85,16 @@ const Header = ({ currentGender, onGenderChange }) => {
 
       {/* Main header */}
       <div
-        className={`border-b border-gray-200 bg-white transition-all duration-300 ${
+        className={` border-gray-200 bg-white transition-all duration-300 ${
           isScrolled
             ? "lg:fixed lg:top-9 lg:left-0 lg:right-0 lg:z-50 lg:shadow-md"
             : ""
         }`}
       >
-        <div className="w-full bg-black text-white flex-1 text-xs font-bold py-3 px-4 lg:hidden text-center tracking-wider uppercase">
+        {/* <div className="w-full bg-black text-white flex-1 text-xs font-bold py-3 px-4 lg:hidden text-center tracking-wider uppercase">
           TAXES AND CUSTOMS DUTIES ARE NOT INCLUDED AND MAY BE CHARGED UPON
           DELIVERY
-        </div>
+        </div> */}
         <div className="max-w-7xl mx-auto px-4">
           {/* Mobile Header */}
           <div
@@ -132,7 +132,7 @@ const Header = ({ currentGender, onGenderChange }) => {
 
           {/* Desktop Logo */}
           {!isScrolled && (
-            <div className="hidden lg:flex justify-center py-8">
+            <div className="hidden lg:flex justify-center py-2">
               <a
                 href="/"
                 className="flex items-center"

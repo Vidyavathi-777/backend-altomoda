@@ -342,7 +342,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white pt-20 md:pt-28 lg:pt-32">
+        <div className="min-h-screen bg-white  md:pt-28 lg:pt-15">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
                 
@@ -451,7 +451,6 @@ const ProductDetailPage = () => {
                 </p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24">
                     {/* Product Images - Desktop */}
-                    {/* Product Images - Desktop */}
                     <div className="hidden lg:flex">
                         {/* Thumbnails */}
                         <div className="w-20 mr-4 space-y-2 flex-shrink-0">
@@ -490,7 +489,7 @@ const ProductDetailPage = () => {
                                         <img
                                             src={img.url || img}
                                             alt={`${getLocalizedText('title')} - ${idx + 1}`}
-                                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer"
+                                            className="w-full max-h-[600px] object-contain transition-transform duration-700 group-hover:scale-105 cursor-pointer"
                                             onError={(e) => {
                                                 e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDI1NiAzODQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMzg0IiBmaWxsPSIjRjNGNEY2Ii8+PC9zdmc+';
                                             }}
