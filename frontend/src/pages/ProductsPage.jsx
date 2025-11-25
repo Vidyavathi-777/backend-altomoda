@@ -612,7 +612,7 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white pt-10 md:pt-[20px] lg:pt-[120px]">
+        <div className="min-h-screen bg-white pt-12 md:pt-[20px] lg:pt-[150px]">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
@@ -991,7 +991,7 @@ const ProductsPage = () => {
                 <div className="max-w-[1800px] mx-auto">
                     <div className="flex gap-8">
                         {/* Desktop Filters Sidebar */}
-                        <div className="hidden lg:block w-80 flex-shrink-0">
+                        <div className="hidden lg:block w-60 flex-shrink-0">
 
                             {/* Entire sidebar uses flex to lock footer buttons */}
                             <div className="sticky top-50 flex flex-col justify-between bg-white">
@@ -1090,7 +1090,7 @@ const ProductsPage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
+                                    <div className="grid grid-cols-2 md:grid-cols-3   xl:max-w-[1399px]:grid-cols-2 2xl:grid-cols-4 gap-6 lg:gap-8 h">
                                         {filteredProducts.map((product) => {
                                             const scrollPosition = scrollPositions[product.id] || 0;
                                             const scrollContainer = scrollRefs.current[product.id];
@@ -1104,13 +1104,16 @@ const ProductsPage = () => {
                                                     className="group cursor-pointer"
                                                 >
                                                     {/* ---------------- IMAGE WRAPPER ---------------- */}
-                                                    <div className="relative w-full pb-[120%] bg-white overflow-hidden">
+                                                    <div className="relative w-full  aspect-[1/2] md:aspect-[3/4] bg-white overflow-hidden">
+
+
 
                                                         {/* SCROLLABLE IMAGES (same functionality, pixel-perfect UI) */}
                                                         <div
                                                             ref={el => (scrollRefs.current[product.id] = el)}
                                                             className="absolute inset-0 flex overflow-x-auto snap-x snap-mandatory scroll-smooth image-scroll-container"
                                                             onScroll={() => handleScroll(product.id)}
+                                                            style={{ overflowY: 'hidden' }}
                                                         >
                                                             {product.images.map((image, index) => (
                                                                 <div
@@ -1120,7 +1123,7 @@ const ProductsPage = () => {
                                                                     <img
                                                                         src={image}
                                                                         alt={product.productName}
-                                                                        className="w-full h-full object-contain transition-all duration-500"
+                                                                        className="w-full h-full object-contain object-center transition-all duration-500 "
                                                                     />
                                                                 </div>
                                                             ))}
