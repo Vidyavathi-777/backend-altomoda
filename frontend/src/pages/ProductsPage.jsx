@@ -1090,7 +1090,7 @@ const ProductsPage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3   xl:max-w-[1399px]:grid-cols-2 2xl:grid-cols-4 gap-6 lg:gap-8 h">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 lg:gap-8 h">
                                         {filteredProducts.map((product) => {
                                             const scrollPosition = scrollPositions[product.id] || 0;
                                             const scrollContainer = scrollRefs.current[product.id];
