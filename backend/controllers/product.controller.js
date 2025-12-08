@@ -188,7 +188,7 @@ exports.getCategoryById = catchAsync(async (req, res) => {
 
 
 
-exports.getAllProducts = catchAsync( async (req, res) => {
+exports.getAllProducts = catchAsync(async (req, res) => {
   try {
     let { page = 1, limit = 100, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
 
@@ -229,7 +229,7 @@ exports.getAllProducts = catchAsync( async (req, res) => {
   }
 });
 
-exports.getCategoryTree = catchAsync (async (req, res) => {
+exports.getCategoryTree = catchAsync(async (req, res) => {
   function buildCategoryTree(categories, parentId = null) {
     return categories
       .filter(cat => String(cat.parent_id) === String(parentId))
@@ -431,11 +431,20 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
     // Get all category IDs including children
     const categoryIds = getAllCategoryIds(categoryHierarchy);
 
-    // Base query - only products with images
-    const baseQuery = { 
+    const baseQuery = {
       cats: { $in: categoryIds },
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     };
+
+    // Base query - only products with images
+    //   const baseQuery = { 
+    //     cats: { $in: categoryIds },
+    //     imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
+    //     $or: [
+    //   { qty: { $gt: 0 } }
+    //   // { "whs.qty": { $gt: 0 } }
+    // ]
+    //   };
 
     // For newest sorting, filter products from last 3 days
     if (sortBy === 'newest') {
@@ -461,10 +470,10 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
 
     // Group products by sku_parent
     const grouped = {};
-    
+
     products.forEach((product) => {
       const skuParent = product.props.sku_parent;
-      
+
       if (!grouped[skuParent]) {
         grouped[skuParent] = createStandardizedProduct(product);
       }
@@ -486,7 +495,7 @@ exports.getProductsByCategory = catchAsync(async (req, res) => {
         totalProducts: totalGroupedProducts,
         totalPages,
         currentPage: page,
-        perPage: limit,  
+        perPage: limit,
         hasNextPage: page < totalPages,
         hasPrevPage: page > 1
       },
@@ -517,11 +526,20 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
       return res.status(400).json({ message: "Brand query is required" });
     }
 
-    // Build base query with image filter
-    const query = { 
+    const query = {
       "props.brand": brand,
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     };
+
+    // Build base query with image filter
+    //   const query = { 
+    //     "props.brand": brand,
+    //     imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
+    //           $or: [
+    //   { qty: { $gt: 0 } }
+    //   // { "whs.qty": { $gt: 0 } }
+    // ]
+    //   };
 
     // For newest sorting, filter products from last 3 days
     if (sortBy === 'newest') {
@@ -566,10 +584,10 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
 
     // Group products by sku_parent
     const grouped = {};
-    
+
     products.forEach((product) => {
       const skuParent = product.props.sku_parent;
-      
+
       if (!grouped[skuParent]) {
         grouped[skuParent] = createStandardizedProduct(product);
       }
@@ -753,8 +771,33 @@ exports.getNewProducts = catchAsync(async (req, res) => {
 
     let filter = {
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
-      createdAt: {$gte: startDate}
+      createdAt: { $gte: startDate }
     };
+
+
+    // let filter = {
+    //   imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
+
+    //   // NEW: quantity filter
+    //   $or: [
+    //     { qty: { $gt: 0 } },
+    //     { "whs.qty": { $gt: 0 } }
+    //   ],
+
+    //   // NEW: New arrivals criteria
+    //   // $and: [
+    //   //   {
+    //   //     $or: [
+    //   //       // 1. Newly added
+    //   //       // { createdAt: { $gte: startDate } },
+
+    //   //       // 2. Season SS25
+    //   //       { "props.season": { $regex: /^ss22$/i } }
+    //   //     ]
+    //   //   }
+    //   // ]
+    // };
+
 
     // Handle category hierarchy
     const categoryHierarchy = await Category.findById(categoryId).populate({
@@ -819,7 +862,7 @@ exports.getNewProducts = catchAsync(async (req, res) => {
 
       if (!grouped[skuParent]) {
         const firstProductInGroup = products.find(p => p.props?.sku_parent === skuParent);
-        
+
         grouped[skuParent] = {
           ...createStandardizedProduct(product),
           createdAt: firstProductInGroup?.createdAt || product.createdAt,
@@ -866,8 +909,8 @@ exports.getNewProducts = catchAsync(async (req, res) => {
 // Client-side sorting helper function
 const applyClientSideSorting = (products, sortBy) => {
   const sorted = [...products];
-  
-  switch(sortBy) {
+
+  switch (sortBy) {
     case 'price-low':
       return sorted.sort((a, b) => (a.minPrice || a.base_price || 0) - (b.minPrice || b.base_price || 0));
     case 'price-high':
@@ -920,7 +963,7 @@ exports.getRelatedProducts = catchAsync(async (req, res) => {
     const { sku } = req.params;
 
     // Find main product to get category
-    const mainProduct = await Product.findOne({ 
+    const mainProduct = await Product.findOne({
       "props.sku_parent": sku,
       imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
     }).populate("cats");
@@ -983,7 +1026,7 @@ exports.getRelatedProducts = catchAsync(async (req, res) => {
 
   } catch (error) {
     console.error("Error fetching related products:", error);
-    
+
     if (error instanceof ApiError) {
       return res.status(error.statusCode).json({
         success: false,

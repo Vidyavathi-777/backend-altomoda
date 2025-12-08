@@ -14,11 +14,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post(
     "/tryon",
     upload.fields([
-        { name: "userImage", maxCount: 1 }
-        // { name: "outfitImage", maxCount: 1 }
+        { name: "userImage", maxCount: 1 },
+        { name: "outfitImage", maxCount: 1 }
     ]),
     tryOn.generateTryOn
 );
+
+router.get("/proxy-image", tryOn.proxyImage);
+
 // Categories and brands (specific routes first!)
 router.get('/categories', productController.getCategories);
 router.get('/brands', productController.getBrands);

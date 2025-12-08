@@ -91,11 +91,24 @@ async getFullCatalog(pageIndex = 1, pageSize = 20) {
   return res.data;
 }
 
-  async getCatalogWithQuantities(sinceTimestamp = null, page = 1) {
-    const params = { withQuantities: true, page };
-    if (sinceTimestamp) params.since = sinceTimestamp;
-    return this.makeRequest('GET', `/shop/v1/items`, null, { params });
-  }
+async getCatalogWithQuantities(pageIndex = 0, pageSize = 100) {
+  const url = `${config.cloudstore.baseUrl}/shop/v1/items?withQuantities=true&_pageIndex=${pageIndex}&_pageSize=${pageSize}`;
+
+  const res = await this.client.get(url, {
+    headers: {
+      Authorization: `Bearer ${config.cloudstore.shopAuthToken}`,
+      Accept: "application/json",
+      "Accept-Encoding": "gzip, br",
+    },
+    decompress: true,
+    timeout: 300000,
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+  });
+
+  return res.data;
+}
+
 
   async searchByTerm(term) {
     return this.makeRequest('GET', `/shop/v1/items/listBySearchTerm`, null, { params: { term } });
