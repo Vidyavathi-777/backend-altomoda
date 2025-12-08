@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, X, ArrowRight, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Breadcrumb from '../components/BreadCrumb';
 
 const SearchPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -131,7 +132,20 @@ const SearchPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-[150px] md:pt-[160px] lg:pt-[250px]">
+        <>
+<header className="pt-[70px] md:pt-[60px] lg:pt-[180px] px-12 ">
+  <div className="flex justify-start">
+    <Breadcrumb
+      items={[
+        { name: "Home", link: "/" },
+        { name: "Signup" },
+      ]}
+      style={{ fontFamily: "Montserrat, sans-serif" }}
+    />
+  </div>
+</header>
+
+        <div className="min-h-screen bg-gray-50 ">
             {/* Search Header */}
             <div className=" sticky top-0 z-10 ">
                 <div className="container mx-auto px-4 py-6">
@@ -260,6 +274,7 @@ const SearchPage = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

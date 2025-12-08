@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Loader2, X } from "lucide-react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { fetchSearchProducts, transformProduct } from "../../src/api/productsApi";
+import Breadcrumb from "../components/BreadCrumb";
 
 const SearchResultsPage = () => {
     const [searchParams] = useSearchParams();
@@ -98,7 +99,7 @@ const SearchResultsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white pt-32 md:pt-[200px] lg:pt-[180px]">
+        <div className="min-h-screen bg-white pt-10 md:pt-[90px] lg:pt-[100px]">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
                 
@@ -128,6 +129,14 @@ const SearchResultsPage = () => {
 
             {/* Header Section */}
             <div className="w-full px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 border-b border-gray-200">
+                          <Breadcrumb
+                    className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
+                     style={{ fontFamily: "Montserrat, sans-serif" }}
+                    items={[
+                        { name: "Home", link: "/" },
+                        { name: `${searchQuery}` }
+                    ]}
+                />
                 <div className="max-w-[1800px] mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-6 md:mb-8">
                         <div className="flex-1">

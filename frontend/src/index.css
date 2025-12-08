@@ -25,7 +25,7 @@
 
 @import "tailwindcss";
 
-:root {
+/* :root {
   --font-heading: 'Cormorant Garamond', serif;
   --font-body: 'Inter', sans-serif;
   --font-accent: 'Space Grotesk', sans-serif;
@@ -37,7 +37,7 @@
 
 body {
   font-family: var(--font-heading);
-}
+} */
 
 /* h1, h2, h3 {
   font-family: var(--font-heading);
@@ -46,3 +46,13 @@ body {
 .special {
   font-family: var(--font-accent);
 } */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+@font-face {
+  font-family: 'Didot';
+  src: local('Didot'), local('Didot LT STD');
+  font-weight: normal;
+  font-style: normal;
+}

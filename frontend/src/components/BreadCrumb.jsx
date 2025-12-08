@@ -1,55 +1,36 @@
-import { Link, useLocation } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function Breadcrumb() {
-  const location = useLocation();
-
-  // /woman/68f86b.../products → ["woman", "68f8...", "products"]
-  const pathnames = location.pathname.split("/").filter(x => x);
-
-  // Construct dynamic breadcrumb items
-  const breadcrumbItems = pathnames.map((value, index) => {
-    const url = "/" + pathnames.slice(0, index + 1).join("/");
-
-    let label = value;
-
-    // ---------- CLEAN LABELS ----------
-      // if (value === "woman") label = "Woman";
-      // if (value === "man") label = "Man";
-    // if (value === "products") label = "Products";
-    // if (value === "product") label = "Product";
-    // if (value === "new-arrivals") label = "New Arrivals";
-
-    // Remove IDs from displaying
-    if (value.match(/^[0-9a-fA-F]{12,}$/)) return null;
-
-    // Capitalize normal words
-    if (!label.includes(" ") && !label.includes("-")) {
-      label = label.charAt(0).toUpperCase() + label.slice(1);
-    }
-
-    return { label, url };
-  }).filter(Boolean);
-
+const Breadcrumb = ({ items = [] }) => {
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600 my-4 px-4">
-      {/* Home Link */}
-      <Link to="/" className="hover:text-black">Home</Link>
+    <nav className="text-sm text-gray-500 my-4">
+      <ol className="flex items-center flex-wrap gap-2">
 
-      {/* Each breadcrumb */}
-      {breadcrumbItems.map((item, index) => (
-        <span className="flex items-center" key={index}>
-          <ChevronRight className="w-4 h-4 mx-1 text-gray-400" />
+        {items.map((item, index) => (
+          <li key={index} className="flex items-center">
+            
+            {/* Link or Text */}
+            {item.link ? (
+              <Link
+                to={item.link}
+                className="hover:text-black transition-colors"
+              >
+                {item.name}
+              </Link>
+            ) : (
+              <span className="text-black font-medium">{item.name}</span>
+            )}
 
-          {index === breadcrumbItems.length - 1 ? (
-            <span className="text-black font-medium">{item.label}</span>
-          ) : (
-            <Link to={item.url} className="hover:text-black">
-              {item.label}
-            </Link>
-          )}
-        </span>
-      ))}
+            {/* Separator (except last item) */}
+            {index < items.length - 1 && (
+              <span className="mx-2 text-gray-400">/</span>
+            )}
+
+          </li>
+        ))}
+
+      </ol>
     </nav>
   );
-}
+};
+
+export default Breadcrumb;

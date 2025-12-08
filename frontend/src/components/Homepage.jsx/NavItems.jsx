@@ -44,7 +44,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
         navigate(g === "man" ? "/man" : "/woman");
         setMobileMenuOpen(false);
         setMobileSubView(null);
-        setActiveNavItem(null); 
+        setActiveNavItem(null);
     };
 
     const handleMenuEnter = (menu) => {
@@ -112,24 +112,22 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
 
     return (
         <>
-            <nav className="w-full hidden lg:flex items-center justify-center gap-8 py-4   bg-white relative transition-all duration-300" style={{ fontFamily: cssVariables.fontBody }}>
+            <nav className="w-full hidden lg:flex items-center justify-center gap-10 pl-[30px] py-4   bg-white relative transition-all duration-300"   style={{ fontFamily: "Montserrat, sans-serif" }}>
                 {/* Designers */}
                 <div
                     className="relative h-full group"
                     onMouseEnter={() => handleMenuEnter('designers')}
                     onMouseLeave={handleMenuLeave}
                 >
-                    <button 
+                    <button
                         onClick={() => handleNavItemClick('designers')}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
-                            activeNavItem === 'designers' ? 'text-black font-semibold' : 'text-gray-700'
-                        }`}
+                        className={`text-xl font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${activeNavItem === 'designers' ? 'text-black font-bold' : 'text-gray-900'
+                            }`}
                     >
                         Designers
                     </button>
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
-                        activeNavItem === 'designers' ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${activeNavItem === 'designers' ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></div>
                 </div>
 
                 {/* New Arrivals */}
@@ -141,15 +139,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                     <Link
                         to={`/${gender}/${navitems[gender]}/new-arrivals/products`}
                         onClick={() => handleNavItemClick('newarrivals')}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
-                            activeNavItem === 'newarrivals' ? 'text-black font-semibold' : 'text-gray-700'
-                        }`}
+                        className={`text-xl font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${activeNavItem === 'newarrivals' ? 'text-black font-semibold' : 'text-gray-900'
+                            }`}
                     >
                         New Arrivals
                     </Link>
-                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
-                        activeNavItem === 'newarrivals' ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${activeNavItem === 'newarrivals' ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></div>
                 </div>
 
                 {/* Woman */}
@@ -160,15 +156,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 >
                     <button
                         onClick={() => handleGenderSwitch("woman")}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
-                            gender === 'woman' ? 'text-black font-semibold' : 'text-gray-700'
-                        }`}
+                        className={`text-xl font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${gender === 'woman' ? 'text-black font-semibold' : 'text-gray-900'
+                            }`}
                     >
                         Woman
                     </button>
-                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
-                        activeNavItem === 'woman' ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${activeNavItem === 'woman' ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></div>
                 </div>
 
                 {/* Man */}
@@ -179,15 +173,13 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 >
                     <button
                         onClick={() => handleGenderSwitch("man")}
-                        className={`text-lg font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${
-                            gender === 'man' ? 'text-black font-semibold' : 'text-gray-700'
-                        }`}
+                        className={`text-xl font-medium tracking-wider transition-all duration-300 h-full flex items-center group-hover:scale-105 ${gender === 'man' ? 'text-black font-semibold' : 'text-gray-900'
+                            }`}
                     >
                         Man
                     </button>
-                     <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${
-                        activeNavItem === 'man' ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}></div>
+                    <div className={`absolute bottom-0 left-0 h-0.5 bg-black transition-all duration-300 ${activeNavItem === 'man' ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></div>
                 </div>
 
                 {/* Boutiques */}
@@ -484,7 +476,7 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                             <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                                         </button>
                                     </div>
-{/* 
+                                    {/* 
                                     <Link to={"/boutique"}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="block w-full text-left py-4 text-sm uppercase tracking-wider font-medium border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-2 hover:font-semibold"
@@ -602,33 +594,33 @@ const NavItems = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                                                 );
                                             })}
                                         </div>
-                                    ) 
-                                    // : mobileSubView === 'magazine' ? (
-                                    //     <div className="space-y-0">
-                                    //         {magazineItems.map(item => (
-                                    //             <a
-                                    //                 key={item}
-                                    //                 href="#"
-                                    //                 className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
-                                    //             >
-                                    //                 {item}
-                                    //             </a>
-                                    //         ))}
-                                    //     </div>
-                                    // )
-                                     : (
-                                        <div className="space-y-0">
-                                            {getCurrentCategories()[mobileSubView]?.subs?.map(subCategory => (
-                                                <button
-                                                    key={subCategory.id}
-                                                    onClick={() => handleMobileItemClick(`/${mobileGender}/${subCategory.id}/products`)}
-                                                    className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
-                                                >
-                                                    {subCategory.name}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
+                                    )
+                                        // : mobileSubView === 'magazine' ? (
+                                        //     <div className="space-y-0">
+                                        //         {magazineItems.map(item => (
+                                        //             <a
+                                        //                 key={item}
+                                        //                 href="#"
+                                        //                 className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
+                                        //             >
+                                        //                 {item}
+                                        //             </a>
+                                        //         ))}
+                                        //     </div>
+                                        // )
+                                        : (
+                                            <div className="space-y-0">
+                                                {getCurrentCategories()[mobileSubView]?.subs?.map(subCategory => (
+                                                    <button
+                                                        key={subCategory.id}
+                                                        onClick={() => handleMobileItemClick(`/${mobileGender}/${subCategory.id}/products`)}
+                                                        className="block w-full text-left py-4 text-sm border-b border-gray-100 transition-all duration-300 hover:bg-gray-50 hover:pl-3 hover:font-medium"
+                                                    >
+                                                        {subCategory.name}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
 
                                     {user ? (
                                         <div className="mt-8 pt-6 border-t border-gray-200">

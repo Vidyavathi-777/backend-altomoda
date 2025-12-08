@@ -13,9 +13,107 @@ import {
 import Breadcrumb from "../components/BreadCrumb";
 import tryLook from '../assets/tryTheLook.png'
 import TryOnModal from '../components/Tryon';
+import categoriesData from "../json/Categories.json"
 
 const ProductsPage = () => {
     const navigate = useNavigate()
+
+
+    const getCategoryInfo = (categoryId) => {
+        const findCategory = (categories, targetId) => {
+            for (const category of categories) {
+                if (category._id === targetId) {
+                    return category;
+                }
+                if (category.children) {
+                    const found = findCategory(category.children, targetId);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+
+        return findCategory(categoriesData.categories, categoryId);
+    };
+
+    // Add this function to get display title and description
+    const getDisplayInfo = () => {
+        // if (isNewArrivalMode) {
+        //     return {
+        //         title: 'New Arrivals',
+        //         description: 'Discover the latest arrivals and newest additions to our collection'
+        //     };
+        // }
+
+        // If we have a specific category ID, use its info
+
+
+        if (actualBrandName) {
+            // Find the brand in our brands data
+            let brandInfo = null;
+
+            // Look for the brand in MAN section
+            const manBrands = categoriesData.brands?.find(b => b._id === '68f86b10734810ab97bb98d1')?.brands || [];
+            brandInfo = manBrands.find(brand =>
+                brand.name.toLowerCase() === actualBrandName.toLowerCase() ||
+                brand.title.toLowerCase().includes(actualBrandName.toLowerCase())
+            );
+
+            // If not found in MAN, look in WOMAN section
+            if (!brandInfo) {
+                const womanBrands = categoriesData.brands?.find(b => b._id === '68f86b1c734810ab97bb9a2f')?.brands || [];
+                brandInfo = womanBrands.find(brand =>
+                    brand.name.toLowerCase() === actualBrandName.toLowerCase() ||
+                    brand.title.toLowerCase().includes(actualBrandName.toLowerCase())
+                );
+            }
+
+            if (brandInfo) {
+                return {
+                    title: brandInfo.title,
+                    description: brandInfo.description
+                };
+            }
+
+            // Fallback if brand not found
+            return {
+                title: actualBrandName.charAt(0).toUpperCase() + actualBrandName.slice(1),
+                description: `Discover ${actualBrandName}'s collection of premium fashion and accessories`
+            };
+        }
+
+        // Fallback
+
+
+
+        if (actualCategoryId) {
+            const categoryInfo = getCategoryInfo(actualCategoryId);
+            if (categoryInfo) {
+                return {
+                    title: categoryInfo.title,
+                    description: categoryInfo.description
+                };
+            }
+        }
+
+        // If we have a gender but no specific category, use the main gender category
+        if (actualGender && !actualCategoryId) {
+            const genderCategoryId = actualGender === 'man' ? '68f86b10734810ab97bb98d1' : '68f86b1c734810ab97bb9a2f';
+            const categoryInfo = getCategoryInfo(genderCategoryId);
+            if (categoryInfo) {
+                return {
+                    title: categoryInfo.title,
+                    description: categoryInfo.description
+                };
+            }
+        }
+
+        return {
+            title: 'Products',
+            description: 'Explore our collection of premium fashion and accessories'
+        };
+    };
+
 
 
     useEffect(() => {
@@ -504,32 +602,32 @@ const ProductsPage = () => {
         }));
     };
 
-    const description = [
-        {
-            gender: "man",
-            id: "68f86b10734810ab97bb98d1",
-            description: "Explore our selection of men's fashion and lifestyle products, where luxury and style converge with a curated offer from the world's top brands. Whether you're dressing for a casual day out or a formal event, we have everything you need to complete your look. From tailored Alexander McQueen blazers, iconic leather Gucci belts and crisp Burberry shirts, to graphic t-shirts from Dsquared2 and Lanvin, casual polos by Dolce & Gabbana or even a stylish crossbody bag from Valencia for a trendy yet functional ensemble.Our collection also includes cozy knitwear and smart swimwear, ensuring you're prepared for any season or occasion. Elevate your daily routine with premium skincare products, elegant home décor, and stylish stationery, bringing a touch of luxury to every aspect of your life. Experience unmatched quality and craftsmanship with our range of clothing, accessories, and lifestyle products, designed to make every day a stylish one."
-        },
-        {
-            gender: "woman",
-            id: "68f86b1c734810ab97bb9a2f",
-            description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs. Each piece is crafted with the utmost care and attention to detail, using the finest materials to create truly one-of-a-kind designs. Explore fashion-forward pieces from legendary fashion houses Balenciaga, Gucci opt for something edgier from contemporary labels born in the 21st century.Our collection of womenswear is a fusion of modern designs and timeless sophistication that flatters the female form and celebrates individuality. Whether you opt for a sleek, body-con dress or a pair of bootcut jeans, women's designer clothing is a testament to the transformative power of fashion and an invitation to embrace your personal style. The ultimate indulgence, designer accessories and shoes are the perfect finishing touch for a special event or to simply elevate your everyday look. A beautiful way to make a statement and feel confident and stylish, our selection of women's designer apparel and accessories has something for every mood."
-        }
-    ];
+    // const description = [
+    //     {
+    //         gender: "man",
+    //         id: "68f86b10734810ab97bb98d1",
+    //         description: "Explore our selection of men's fashion and lifestyle products, where luxury and style converge with a curated offer from the world's top brands. Whether you're dressing for a casual day out or a formal event, we have everything you need to complete your look. From tailored Alexander McQueen blazers, iconic leather Gucci belts and crisp Burberry shirts, to graphic t-shirts from Dsquared2 and Lanvin, casual polos by Dolce & Gabbana or even a stylish crossbody bag from Valencia for a trendy yet functional ensemble.Our collection also includes cozy knitwear and smart swimwear, ensuring you're prepared for any season or occasion. Elevate your daily routine with premium skincare products, elegant home décor, and stylish stationery, bringing a touch of luxury to every aspect of your life. Experience unmatched quality and craftsmanship with our range of clothing, accessories, and lifestyle products, designed to make every day a stylish one."
+    //     },
+    //     {
+    //         gender: "woman",
+    //         id: "68f86b1c734810ab97bb9a2f",
+    //         description: "Our offer of women's designer clothing, shoes and accessories is a true expression of style and elegance, featuring a mesmerizing array of colors, textures, and designs. Each piece is crafted with the utmost care and attention to detail, using the finest materials to create truly one-of-a-kind designs. Explore fashion-forward pieces from legendary fashion houses Balenciaga, Gucci opt for something edgier from contemporary labels born in the 21st century.Our collection of womenswear is a fusion of modern designs and timeless sophistication that flatters the female form and celebrates individuality. Whether you opt for a sleek, body-con dress or a pair of bootcut jeans, women's designer clothing is a testament to the transformative power of fashion and an invitation to embrace your personal style. The ultimate indulgence, designer accessories and shoes are the perfect finishing touch for a special event or to simply elevate your everyday look. A beautiful way to make a statement and feel confident and stylish, our selection of women's designer apparel and accessories has something for every mood."
+    //     }
+    // ];
 
-    const getDisplayTitle = () => {
-        if (isNewArrivalMode) {
-            return 'New Arrivals';
-        }
-        if (actualGender) {
-            return actualGender.charAt(0).toUpperCase() + actualGender.slice(1);
-        }
-        return 'Products';
-    };
+    // const getDisplayTitle = () => {
+    //     if (isNewArrivalMode) {
+    //         return 'New Arrivals';
+    //     }
+    //     if (actualGender) {
+    //         return actualGender.charAt(0).toUpperCase() + actualGender.slice(1);
+    //     }
+    //     return 'Products';
+    // };
 
-    const filterDescription = description.find(item =>
-        item.id === actualCategoryId || item.gender === actualGender
-    )?.description || "";
+    // const filterDescription = description.find(item =>
+    //     item.id === actualCategoryId || item.gender === actualGender
+    // )?.description || "";
 
     const totalActiveFilters = [
         ...(apiFilters.brand || []),
@@ -537,6 +635,8 @@ const ProductsPage = () => {
         ...(apiFilters.type || []),
         ...clientFilters.color
     ].length;
+
+    const displayInfo = getDisplayInfo();
 
     const FilterSection = ({ title, filterKey, options }) => {
         const isOpen = openFilterSections[filterKey];
@@ -564,6 +664,8 @@ const ProductsPage = () => {
                 handleColorFilterChange(optionName);
             }
         };
+
+
 
         return (
             <div className="border-b border-gray-300 py-4 md:py-6">
@@ -796,57 +898,51 @@ const ProductsPage = () => {
                 .image-scroll-container::-webkit-scrollbar { display: none; } 
             `}</style>
 
-<div className="w-full px-4 md:px-6 lg:px-8 pt-6 md:pt-8 pb-4 border-b border-gray-200">
-    <p
-        className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
-        onClick={() => navigate("/")}
-        style={{ fontFamily: "Montserrat, sans-serif" }}
-    >
-        Back
-    </p>
+            <div className="w-full px-4 md:px-6 lg:px-8 pt-6 md:pt-8 pb-4 border-b border-gray-200">
+                <Breadcrumb
+                    className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
+                     style={{ fontFamily: "Montserrat, sans-serif" }}
+                    items={[
+                        { name: "Home", link: "/" },
+                        { name: `${displayInfo.title}` }
+                    ]}
+                />
+                <div className="max-w-[1800px] ">
 
-    <div className="max-w-[1800px] ">
+                    {/* Title + Brand */}
+                    <div className="mb-4 flex flex-col">
+                        <h1
+                            className="text-xl md:text-2xl tracking-wider font-light mb-1"
+                            style={{ fontFamily: 'Didot, serif' }}
+                        >
+                            {displayInfo.title}
+                        </h1>
 
-        {/* Title + Brand */}
-        <div className="mb-4 flex flex-col">
-            <h1
-                className="text-xl md:text-2xl tracking-wider font-light mb-1"
-                style={{ fontFamily: 'Didot, serif' }}
-            >
-                {getDisplayTitle()}
-            </h1>
+                    </div>
 
-            {actualBrandName && (
-                <h2
-                    className="text-sm md:text-base tracking-[0.25em] font-light text-gray-700"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                >
-                    {actualBrandName.toUpperCase()}
-                </h2>
-            )}
-        </div>
+                    {/* Description */}
+                    {displayInfo.description && (
+                        <div
+                            className="text-[15px] md:text-[15px] leading-relaxed max-w-[1800px]"
+                            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                        >
+                            <p className={`${!showMore ? "line-clamp-2" : ""}`}>
+                                {displayInfo.description}
+                            </p>
 
-        {/* Description */}
-        {filterDescription && (
-            <div
-                className="text-[15px] md:text-[15px] leading-relaxed max-w-[1800px]"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-                <p className={`${!showMore ? "line-clamp-2" : ""}`}>
-                    {filterDescription}
-                </p>
-
-                <button
-                    onClick={() => setShowMore(!showMore)}
-                    className="underline text-xs mt-1 hover:no-underline"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                >
-                    {showMore ? "SHOW LESS" : "SHOW MORE"}
-                </button>
+                            {displayInfo.description.length > 150 && (
+                                <button
+                                    onClick={() => setShowMore(!showMore)}
+                                    className="underline text-xs mt-1 hover:no-underline"
+                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
+                                >
+                                    {showMore ? "SHOW LESS" : "SHOW MORE"}
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
-        )}
-    </div>
-</div>
 
 
             {/* Active Filters */}
@@ -1090,7 +1186,7 @@ const ProductsPage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3   xl:max-w-[1399px]:grid-cols-2 2xl:grid-cols-4 gap-6 lg:gap-8 h">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-6 lg:gap-8 h">
                                         {filteredProducts.map((product) => {
                                             const scrollPosition = scrollPositions[product.id] || 0;
                                             const scrollContainer = scrollRefs.current[product.id];
@@ -1130,25 +1226,25 @@ const ProductsPage = () => {
                                                         </div>
 
                                                         {/* ---------------- New Arrival ---------------- */}
-                                                        <div className="absolute top-2 left-3 right-3 flex justify-between items-start z-10" >
+                                                        <div className="absolute top-3 left-3 right-3 flex justify-between items-center z-20">
+
                                                             {(isNewArrivalMode || product.isNewArrival) && (
                                                                 <span
-                                                                    className="absolute top-3 left-3 bg-black text-white text-[11px] font-medium px-[10px] py-[4px] tracking-[0.5px] rounded-[3px] z-20 leading-none"
+                                                                    className="bg-black text-white text-[11px] font-medium px-[10px] py-[4px] tracking-[0.5px] rounded-[3px]"
                                                                     style={{ fontFamily: "Montserrat, sans-serif" }}
                                                                 >
                                                                     New
                                                                 </span>
                                                             )}
 
-                                                            {/* ---------------- TRY ON BUTTON ---------------- */}
                                                             <button
                                                                 onClick={(e) => handleTryOnClick(e, product)}
-                                                                className="bg-black border px-2 lg:px-3 py-1 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1"
+                                                                className="bg-black border px-2 lg:px-3 py-1 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1 text-white"
                                                             >
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                     viewBox="0 0 64 64"
-                                                                    className="w-3.5 h-3.5 text-white"
+                                                                    className="w-3.5 h-3.5"
                                                                     fill="none"
                                                                     stroke="currentColor"
                                                                     strokeWidth="3"
@@ -1162,13 +1258,14 @@ const ProductsPage = () => {
                                                                 </svg>
 
                                                                 <span
-                                                                    className="text-xs tracking-[0.2em] text-white"
+                                                                    className="text-xs tracking-[0.2em]"
                                                                     style={{ fontFamily: 'Montserrat, sans-serif' }}
                                                                 >
                                                                     TRY
                                                                 </span>
                                                             </button>
                                                         </div>
+
 
                                                         {/* ---------------- INDICATORS ---------------- */}
                                                         {product.images.length > 1 && (

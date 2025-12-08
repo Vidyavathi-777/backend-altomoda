@@ -115,7 +115,7 @@ const Header = ({ currentGender, onGenderChange }) => {
                 fontFamily: cssVariables.fontAccent,
               }}
             >
-              <div className="text-3xl font-light tracking-wider animate-scale-down">
+              <div className="text-3xl font-light  tracking-wider animate-scale-down">
                 ALTOMODA
               </div>
             </a>
@@ -140,7 +140,7 @@ const Header = ({ currentGender, onGenderChange }) => {
                   fontFamily: cssVariables.fontAccent,
                 }}
               >
-                <div className="text-6xl font-light tracking-[0.3em] animate-scale-down-fast">
+                <div className="text-6xl font-light pl-[50px] tracking-[0.3em] animate-scale-down-fast">
                   ALTOMODA
                 </div>
               </a>

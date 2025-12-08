@@ -443,6 +443,14 @@ const ProductDetailPage = () => {
 
             {/* Main Product Section */}
             <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-12 lg:pt-[120px] py-8 md:py-12 lg:py-16 pt-[100px]">
+                <Breadcrumb
+                    className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
+                     style={{ fontFamily: "Montserrat, sans-serif" }}
+                    items={[
+                        { name: "Home", link: "/" },
+                        { name: `${getLocalizedText('title')}` }
+                    ]}
+                />
                 <p
                     onClick={() => navigate(-1)}
                     className="cursor-pointer text-gray-600 hover:text-black"

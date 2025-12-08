@@ -1,8 +1,17 @@
 import React from 'react';
+import Breadcrumb from './BreadCrumb';
 
 const SignupPage = ({ formData, onInputChange, onSubmit, onSwitchToLogin, error }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 sm:pt-[140px] md:pt-[160px] lg:pt-[180px]">
+    <div className="max-w-4xl mx-auto px-4 py-12 pt-[0px] md:pt-[10px] lg:pt-[100px]">
+      <Breadcrumb
+        className="cursor-pointer text-gray-700 hover:underline text-sm mb-3"
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+        items={[
+          { name: "Home", link: "/" },
+          { name: `Signup` }
+        ]}
+      />
       <h2 className="text-4xl text-center font-light mb-8">Subscribe</h2>
 
       {error && (

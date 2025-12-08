@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { transformProduct } from "../../api/productsApi";
+import banner from '/src/assets/newArrivals.png';
+
 
 const NewArrivals = () => {
   const { gender = "woman" } = useParams();
@@ -12,12 +14,30 @@ const NewArrivals = () => {
   const [mobileTimers, setMobileTimers] = useState({});
   const sliderRef = useRef(null);
   const observerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const navitems = {
     man: "68f86b10734810ab97bb98d1",
     woman: "68f86b1c734810ab97bb9a2f",
   };
 
+  const categoryIds = {
+    man: {
+      newArrivals: "68f86b10734810ab97bb98d1",
+      bags: "68f86b15734810ab97bb9967",
+      shoes: "68f86b15734810ab97bb997d"
+    },
+    woman: {
+      newArrivals: "68f86b1c734810ab97bb9a2f",
+      bags: "68f86b24734810ab97bb9b1f",
+      shoes: "68f86b25734810ab97bb9b37"
+    }
+  };
+
+  const getProductRoute = (targetGender, categoryType = 'newArrivals') => {
+    const categoryId = categoryIds[targetGender]?.[categoryType] || categoryIds[targetGender]?.newArrivals;
+    return `/${targetGender}/${categoryId}/new-arrivals/products`;
+  };
   // ------------------ Fetch Products ------------------
   const fetchNewArrivals = async () => {
     setIsLoading(true);
@@ -131,6 +151,42 @@ const NewArrivals = () => {
   const scrollLeft = () => scrollByCards(-4);
   const scrollRight = () => scrollByCards(4);
 
+
+
+  const randomFour = useMemo(
+    () => products.sort(() => Math.random() - 0.5).slice(0, 4),
+    [products]
+  );
+
+  const ProductCard = ({ product }) => (
+    <div className="group flex flex-col">
+
+      <div className="relative overflow-hidden rounded-md bg-gray-50 w-[300px] h-[400px]">
+        <img
+          src={product.images[0]}
+          alt={product.productName}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <span className="text-xs uppercase tracking-widest text-gray-500 mt-3">
+        {product.brand}
+      </span>
+
+      <h3
+        className="text-lg font-light uppercase tracking-wider line-clamp-2"
+        style={{ fontFamily: "Didot, serif" }}
+      >
+        {product.productName}
+      </h3>
+
+      <span className="text-sm font-medium">
+        RS. {product.minPrice.toLocaleString("en-IN")}
+      </span>
+    </div>
+  );
+
+
   // ------------------ JSX ------------------
   return (
     <div className="bg-white py-16 border-t border-gray-200 w-full">
@@ -152,7 +208,140 @@ const NewArrivals = () => {
         @media (max-width: 767px) {
           .product-card { width: 80vw; }
         }
+
+          @media (max-width: 768px) {
+    .mobile-scroll-wrapper {
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 10px;
+    }
+    .mobile-scroll-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+    .mobile-scroll-item {
+      min-width: 70%;
+      scroll-snap-align: start;
+    }
+  }
       `}</style>
+      {/* <section className="relative w-full bg-white">
+        <div className="relative w-full overflow-hidden">
+          <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-[90vh] lg:h-full overflow-hidden">
+            <img
+              src={banner}
+              alt="New Arrivals Collection"
+              className="w-full h-full object-cover object-center"
+            />
+
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white space-y-4 px-4">
+
+                <h2
+                  className="text-xl sm:text-2xl lg:text-3xl uppercase -mt-[100px] tracking-[3px] opacity-80 mb-4 hover:text-black"
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                  New Arrivals
+                </h2>
+                <p className="text-white font-light lg:leading-16  leading-10 max-w-[1000px]
+              text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] xl:text-[68px] mb-4 hover:text-black"
+                  style={{ fontFamily: 'Cormorant Garamond, Didot, serif' }}>
+                  Discover the latest additions
+                </p>
+                <Link
+                  to={getProductRoute(gender, 'newArrivals')}
+                  className="bg-white text-black px-6 py-2 text-sm uppercase 
+            hover:bg-black hover:text-white border border-white transition-all"
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                  Shop Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> */}
+
+      {randomFour.length >= 4 && (
+        <section className="w-full bg-white py-12 md:py-20 px-4 sm:px-6 lg:px-8 xl:px-20 section-pattern">
+          <div className="max-w-8xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+
+              {/* LEFT SIDE TEXT - Enhanced */}
+              <div className="lg:w-1/3 space-y-6 md:space-y-8">
+                <div>
+                  <span className="text-xs uppercase tracking-widest text-gray-500 mb-2 block">
+                    Latest Collection
+                  </span>
+                  <h2
+                    className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide uppercase mb-4"
+                    style={{ fontFamily: "Didot, serif" }}
+                  >
+                    Just Landed
+                  </h2>
+                  <div className="w-16 h-px bg-black mb-6"></div>
+                </div>
+
+                <p className="text-gray-600 leading-relaxed text-base md:text-lg max-w-lg">
+                  Discover the latest additions to our newest collections.
+                  Explore premium arrivals and exclusive launches curated just for you.
+                </p>
+
+                <div className="pt-4">
+                  <Link
+                    to={getProductRoute(gender, "newArrivals")}
+                    className="inline-flex items-center px-8 py-4 bg-black text-white text-sm uppercase tracking-widest hover:bg-gray-800 transition-all duration-300 group"
+                  >
+                    Shop Now
+                    <ChevronRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+
+                {/* Indicators for mobile */}
+                {isMobile && (
+                  <div className="flex items-center gap-2 pt-4">
+                    {randomFour.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className="w-2 h-2 rounded-full bg-gray-300"
+                      ></div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* RIGHT SIDE PRODUCT CARDS - Enhanced */}
+              <div className="lg:w-2/3">
+
+                {/* DESKTOP GRID (≥1024px) */}
+                <div className="hidden lg:grid grid-cols-4 gap-8">
+                  {randomFour.map((product) => (
+                    <Link key={product.id} to={`/${gender}/product/${product.sku}`}>
+                      <ProductCard product={product} />
+                    </Link>
+                  ))}
+                </div>
+
+                {/* TABLET & MOBILE HORIZONTAL SCROLLER (<1024px) */}
+                <div className="flex lg:hidden overflow-x-auto gap-6 px-2 pb-4 snap-x snap-mandatory scrollbar-hide">
+                  {randomFour.map((product) => (
+                    <Link
+                      key={product.id}
+                      to={`/${gender}/product/${product.sku}`}
+                      className="flex-shrink-0 w-[80%] sm:w-[60%] md:w-[45%] snap-start"
+                    >
+                      <ProductCard product={product} />
+                    </Link>
+                  ))}
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="w-full">
         {/* Header */}
@@ -227,7 +416,7 @@ const NewArrivals = () => {
                       className="product-card flex-shrink-0"
                     >
                       {/* Image */}
-                      <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-3">
+                      <div className="relative w-[300px] h-[400px] bg-gray-50 overflow-hidden mb-3">
                         {displayImage ? (
                           <img
                             src={displayImage}
@@ -257,32 +446,30 @@ const NewArrivals = () => {
                       </div>
 
                       {/* Info */}
-                      <div className="space-y-1 px-1">
+                      <div className="product-details px-1 md:px-2">
+                        <div className="mb-2">
+                          <span className="text-xs uppercase tracking-widest text-gray-500">
+                            {product.brand}
+                          </span>
+                        </div>
                         <h3
-                          className="text-xs tracking-[0.3em] uppercase"
-                          style={{ fontFamily: "Montserrat, sans-serif" }}
-                        >
-                          {product.brand}
-                        </h3>
-                        <p
-                          className="text-sm leading-snug line-clamp-2"
-                          style={{ fontFamily: "Cormorant Garamond, serif" }}
+                          className="text-lg md:text-xl font-light uppercase tracking-wider mb-2 md:mb-3 line-clamp-2"
+                          style={{ fontFamily: "Didot, serif" }}
                         >
                           {product.productName}
-                        </p>
-                        <p
-                          className="text-sm tracking-wide"
-                          style={{ fontFamily: "Montserrat, sans-serif" }}
-                        >
-                          {product.minPrice === product.maxPrice
-                            ? `RS. ${product.minPrice.toLocaleString('en-IN')}`
-                            : `RS. ${product.minPrice.toLocaleString('en-IN')} - ${product.maxPrice.toLocaleString('en-IN')}`}
-                        </p>
-                        {product.variantCount > 1 && (
-                          <p className="text-2xl inline bg-black text-white text-[10px] px-2  py-3 tracking-[0.2em]" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                            {product.variantCount} SIZES
-                          </p>
-                        )}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm md:text-base font-medium">
+                            {product.minPrice === product.maxPrice
+                              ? `RS. ${product.minPrice.toLocaleString('en-IN')}`
+                              : `RS. ${product.minPrice.toLocaleString('en-IN')}`}
+                          </span>
+                          {product.variantCount > 1 && (
+                            <span className="text-xs text-gray-600">
+                              {product.variantCount} sizes
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </Link>
                   );

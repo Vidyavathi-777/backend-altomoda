@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 const BrandsSection = () => {
     const { gender = 'woman' } = useParams();
     const [hoveredBrand, setHoveredBrand] = useState(null);
-    
+
     const navitems = {
         man: "68f86b10734810ab97bb98d1",
         woman: "68f86b1c734810ab97bb9a2f"
@@ -39,7 +39,7 @@ const BrandsSection = () => {
     ];
 
     return (
-        <section className="w-full bg-white py-20 border-t border-gray-200">
+        <section className="w-full bg-white py-15 border-t border-gray-200">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
                 
@@ -77,33 +77,58 @@ const BrandsSection = () => {
                     </h2>
                     <div className="w-24 h-px bg-gray-300 mx-auto mb-6"></div>
                     <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed"
-                       style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                        style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                         Discover the world's most esteemed fashion houses and luxury designers
                     </p>
                 </div>
-                
+
                 {/* Brands List */}
-                <div className="text-center">
-                    <div className="inline-flex flex-wrap justify-center gap-x-8 gap-y-4 max-w-4xl mx-auto">
+                <div className="text-center w-full px-2 sm:px-4">
+                    <div
+                        className="
+      inline-flex flex-wrap justify-center
+      gap-x-4 gap-y-3 
+      xs:gap-x-6 xs:gap-y-3
+      ss:gap-x-8 ss:gap-y-4
+      sm:gap-x-10 sm:gap-y-4
+      max-w-8xl mx-auto
+    "
+                    >
                         {brands.map((brand, index) => (
-                            <div key={brand} className="inline-flex items-center">
-                                <Link 
+                            <div
+                                key={brand}
+                                className="inline-flex items-center"
+                            >
+                                <Link
                                     to={`/${gender}/${navitems[gender]}/${brand}/products`}
                                     className="group"
                                     onMouseEnter={() => setHoveredBrand(brand)}
                                     onMouseLeave={() => setHoveredBrand(null)}
                                 >
-                                    <span className="text-sm tracking-wider uppercase brand-hover relative"
-                                          style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                                    <span
+                                        className="
+              tracking-wide uppercase relative brand-hover 
+              text-[12px] xs:text-[16px] ss:text-sm sm:text-base text-black
+            "
+                                        style={{ fontFamily: "Cormorant Garamond, serif" }}
+                                    >
                                         {brand}
-                                        {/* Animated underline */}
+
+                                        {/* underline animation */}
                                         <span className="absolute bottom-0 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full"></span>
                                     </span>
                                 </Link>
+
+                                {/* separator dot */}
                                 {index < brands.length - 1 && (
-                                    <span className="separator text-gray-400 mx-4 text-sm"
-                                          style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                                        •
+                                    <span
+                                        className="
+              text-amber-400 mx-2 xs:mx-3 ss:mx-4
+              text-[10px] xs:text-[11px] ss:text-sm
+            "
+                                        style={{ fontFamily: "Montserrat, sans-serif" }}
+                                    >
+                                        -
                                     </span>
                                 )}
                             </div>
@@ -111,8 +136,9 @@ const BrandsSection = () => {
                     </div>
                 </div>
 
+
                 {/* Hover Effect Display */}
-                {hoveredBrand && (
+                {/* {hoveredBrand && (
                     <div className="text-center mt-12 opacity-0 animate-fadeIn">
                         <p className="text-xs tracking-[0.3em] uppercase text-gray-500 mb-2"
                            style={{ fontFamily: 'Montserrat, sans-serif' }}>
@@ -123,11 +149,11 @@ const BrandsSection = () => {
                             {hoveredBrand}
                         </p>
                     </div>
-                )}
+                )} */}
 
                 {/* CTA Button */}
                 <div className="text-center mt-16">
-                    <Link 
+                    <Link
                         to={`/${gender}/designers`}
                         className="inline-block border border-black text-black px-12 py-4 text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300"
                         style={{ fontFamily: 'Montserrat, sans-serif' }}

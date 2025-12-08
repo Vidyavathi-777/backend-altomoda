@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import banner from '/src/assets/newArrivals.png';
+
 
 const HeroSection = () => {
     const { gender = 'woman' } = useParams();
@@ -207,37 +207,7 @@ const HeroSection = () => {
 
 
             {/* Full Width Bottom Banner */}
-            <section className="relative w-full bg-white">
-                <div className="relative w-full overflow-hidden">
-                    <div className="w-full h-[60vh] min-h-[500px] max-h-[700px]">
-                        <img
-                            src={banner}
-                            alt="New Arrivals Collection"
-                            className="w-full h-full object-cover"
-                        />
-                        {/* Optional Overlay Content */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center text-white space-y-4 px-4">
-                                <h2 className="text-3xl md:text-5xl font-light tracking-wide uppercase"
-                                    style={{ fontFamily: 'Didot, serif' }}>
-                                    New Arrivals
-                                </h2>
-                                <p className="text-lg md:text-xl tracking-widest uppercase"
-                                    style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                                    Discover the latest additions
-                                </p>
-                                <Link
-                                    to={getProductRoute(gender, 'newArrivals')}
-                                    className="inline-block px-10 py-3 bg-white text-black text-sm font-medium uppercase tracking-widest hover:bg-gray-100 transition-all duration-300 mt-4"
-                                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                                >
-                                    Shop Now
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
 
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
