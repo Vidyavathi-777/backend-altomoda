@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import women from "../../assets/womens-collection.jpg";
 import men from "../../assets/mens-collections.jpg";
+import { Link } from "react-router-dom";
 
 
 const fadeVariants = {
@@ -58,7 +59,7 @@ const CategoryPage = ({ sliders }) => {
     }
   }, [categories, selectedCategory]);
 
-    const handleCategoryClick = (cat) => {
+  const handleCategoryClick = (cat) => {
     setSelectedCategory(cat);
     // Smooth scroll to subcategories section
     setTimeout(() => {
@@ -110,7 +111,7 @@ const CategoryPage = ({ sliders }) => {
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
- 
+
         />
 
         {/* Overlay */}
@@ -120,8 +121,8 @@ const CategoryPage = ({ sliders }) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-white font-light lg:leading-16  leading-10
               text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] xl:text-[68px]"style={{
-            fontFamily: "Cormorant Garamond, Didot, serif",
-          }}>
+              fontFamily: "Cormorant Garamond, Didot, serif",
+            }}>
             {gender === "woman" ? "Women's Collection" : gender === "man" ? "Men's Collection" : "Kids' Collection"}
           </h1>
 
@@ -167,7 +168,7 @@ const CategoryPage = ({ sliders }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-xl md:text-3xl font-light tracking-wider text-neutral-700 text-center"  style={{ fontFamily: 'Didot, serif' }}
+              className="text-xl md:text-3xl font-light tracking-wider text-neutral-700 text-center" style={{ fontFamily: 'Didot, serif' }}
             >
               {selectedCategory.title}
             </motion.h2>
@@ -178,44 +179,40 @@ const CategoryPage = ({ sliders }) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
               {selectedCategory.children && selectedCategory.children.length > 0 ? (
                 selectedCategory.children.map((item, index) => (
-                  <motion.div
-                    key={`${gender}-${selectedCategory._id}-${item._id}`}
-                    initial="hidden"
-                    animate="visible"
-                    variants={scaleVariants}
-                    transition={{ delay: index * 0.05, duration: 0.4 }}
-                    className="group relative w-full"
+                  <Link
+                    to={`/${gender}/${item._id}/products`}
+                    className="block"
                   >
-                    {/* Image Container with Luxury Effects */}
-                    <div className="relative w-full overflow-hidden bg-transparent rounded-none">
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                    <motion.div
+                      key={`${gender}-${selectedCategory._id}-${item._id}`}
+                      initial="hidden"
+                      animate="visible"
+                      variants={scaleVariants}
+                      transition={{ delay: index * 0.05, duration: 0.4 }}
+                      className="group relative w-full"
+                    >
+                      <div className="relative w-full overflow-hidden bg-transparent rounded-none">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
 
-                      {/* Image with Enhanced Animation */}
-                      <motion.div
-                        whileHover={{ scale: 1.03 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="w-full"
-                      >
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-auto object-cover aspect-[3/4]"
-                          loading="lazy"
-                        />
-                      </motion.div>
+                        <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-auto object-cover aspect-[3/4]"
+                            loading="lazy"
+                          />
+                        </motion.div>
+                      </div>
 
-                    </div>
+                      <div className="mt-4 text-center" style={{ fontFamily: 'Didot, serif' }}>
+                        <p className="text-sm md:text-base font-light tracking-widest text-neutral-700 uppercase">
+                          {item.title}
+                        </p>
+                        <div className="h-px w-12 bg-neutral-300 mx-auto mt-2 group-hover:w-24 transition-all duration-500" />
+                      </div>
+                    </motion.div>
+                  </Link>
 
-                    {/* Title with Luxury Typography */}
-                    <div className="mt-4 text-center"  style={{ fontFamily: 'Didot, serif' }}>
-                      <p className="text-sm md:text-base font-light tracking-widest text-neutral-700 uppercase"
-                      >
-                        {item.title}
-                      </p>
-                      <div className="h-px w-12 bg-neutral-300 mx-auto mt-2 group-hover:w-24 transition-all duration-500" />
-                    </div>
-                  </motion.div>
                 ))
               ) : (
                 <div className="col-span-full py-20">
