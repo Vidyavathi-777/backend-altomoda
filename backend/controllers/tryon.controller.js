@@ -9,15 +9,15 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const REGION = "ap-south-1";
 const BUCKET = "altomoda-s3bucket";
 
-// const s3 = new S3Client({ region: REGION });
+const s3 = new S3Client({ region: REGION });
 
-const s3 = new S3Client({
-  region: REGION,
-  credentials: {
-    accessKeyId: "AKIAWOAVSUAB4OEWDM6L",
-    secretAccessKey: "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",
-  }
-});
+// const s3 = new S3Client({
+//   region: REGION,
+//   credentials: {
+//     accessKeyId: "AKIAWOAVSUAB4OEWDM6L",
+//     secretAccessKey: "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",
+//   }
+// });
 
 exports.generateTryOn = catchAsync(async (req, res) => {
   const { parentSku } = req.body;
