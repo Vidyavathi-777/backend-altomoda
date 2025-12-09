@@ -70,7 +70,7 @@ const TryOnModal = ({ open, onClose, productImage, sku }) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          timeout: 90000,
+          timeout: 180000,
         }
       );
 
