@@ -72,16 +72,37 @@ exports.generateTryOn = catchAsync(async (req, res) => {
     model: "gemini-2.5-flash-image",
   });
 
-    const prompt = 
-    "Perform a precise virtual try-on using EXACTLY the outfit/accessory provided in the second image. " +
-    "Do NOT invent, change, or replace any clothing item. " +
-    "Apply ONLY the item from the second image onto the person in the first image, preserving its real design, colors, shape, proportions, and texture. " +
-    "Keep the person's original face, body, pose, skin tone, hairstyle, and lighting unchanged. " +
-    "For full outfits (like dresses or jumpsuits), apply the entire outfit exactly as shown. " +
-    "For single items (jackets, shirts, skirts, pants, shorts), overlay only that item naturally in the correct position. " +
-    "For accessories (watches, belts, sunglasses, hats, bags, jewelry), place the accessory accurately where it belongs without altering the person. " +
-    "Blend smoothly but DO NOT redesign, simplify, stylize, or modify the clothing or accessory. " +
-    "Use the second image strictly as the exact item to apply.";
+  const prompt =
+    `Perform a highly accurate virtual try-on using EXACTLY the outfit or item shown in the second image.
+Apply the clothing or accessory from the second image onto the person in the first image WITHOUT changing:
+- the person's face, skin tone, or body shape
+- hairstyle, pose, or lighting
+- background or environment
+Use the second image strictly as the real item to overlay, with NO redesigning or artistic interpretation.
+IMPORTANT CLOTHING RULES:
+1. For full outfits (dresses, jumpsuits, gowns, lehengas, sarees, kurta-sets): Apply the entire outfit exactly as shown, covering the complete body appropriately.
+2. For tops (shirts, t-shirts, blouses, hoodies, jackets, sweaters): Overlay only the upper-body garment naturally aligned to the person's torso.
+3. For bottoms (pants, jeans, leggings, skirts, shorts): Apply the exact bottom garment proportionally from waist to ankles.
+4. For shoes/footwear (heels, sandals, sneakers, boots, flats):
+   - Replace BOTH shoes completely when the second image shows a pair
+   - Apply the EXACT same shoe to BOTH feet with proper symmetry
+   - Ensure accurate alignment with both feet/ankles
+   - If only one shoe is shown in the reference, apply that same design to both feet
+5. For one-sided accessories (single earring, one glove):
+   - Apply only to the correct side as shown
+   - Do NOT mirror or duplicate to the other side
+6. For symmetrical accessories (pairs):
+   - Apply to both sides equally and symmetrically
+7. Maintain EXACT colors, patterns, textures, embroidery, shine, and fabric structure from the second image.
+STRICT RULES:
+- NEVER invent, change, or replace any garments or accessories
+- NEVER modify colors, shapes, proportions, logos, or prints
+- NEVER generate new backgrounds or poses
+- NEVER stylize or simplify the item
+- ALWAYS use the second image as the exact product to apply
+- For footwear: ALWAYS ensure both shoes match exactly as shown in the reference
+- Blend realistically with high detail and clean edges
+`;
 
   const aiResponse = await model.generateContent([
     { text: prompt },
