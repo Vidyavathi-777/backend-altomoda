@@ -2,22 +2,22 @@ const axios = require("axios");
 const Product = require("../models/Product.js");
 const ApiError = require("../utils/apiError.js");
 const catchAsync = require("../utils/catchAsync.js");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // AWS CONFIG
 const REGION = "ap-south-1";
 const BUCKET = "altomoda-s3bucket";
 
-const s3 = new S3Client({ region: REGION });
+// const s3 = new S3Client({ region: REGION });
 
-// const s3 = new S3Client({
-//   region: REGION,
-//   credentials: {
-//     accessKeyId: "AKIAWOAVSUAB4OEWDM6L",
-//     secretAccessKey: "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",
-//   }
-// });
+const s3 = new S3Client({
+  region: REGION,
+  credentials: {
+    accessKeyId: "AKIAWOAVSUAB4OEWDM6L",
+    secretAccessKey: "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",
+  }
+});
 
 exports.generateTryOn = catchAsync(async (req, res) => {
   const { parentSku } = req.body;
@@ -32,6 +32,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
 
   const productImageUrl = product.imgs?.[0]?.url;
   if (!productImageUrl) throw new ApiError(400, "No product image found");
+  const fileName = `tryon/${parentSku}.jpg`;
 
   let s3Url = product.tryonImageUrl;
 
@@ -39,7 +40,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
     const imgResponse = await axios.get(productImageUrl, { responseType: "arraybuffer" });
     const imgBuffer = Buffer.from(imgResponse.data);
 
-    const fileName = `tryon/${parentSku}.jpg`;
+    
 
     await s3.send(
       new PutObjectCommand({
@@ -60,10 +61,23 @@ exports.generateTryOn = catchAsync(async (req, res) => {
 
   const userB64 = req.file.buffer.toString("base64");
 
-  const outfitResponse = await axios.get(productImageUrl, {
-    responseType: "arraybuffer"
-  });
-  const outfitB64 = Buffer.from(outfitResponse.data).toString("base64");
+  const s3Object = await s3.send(
+    new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: fileName,
+    })
+  );
+
+  const chunks = [];
+  for await (const chunk of s3Object.Body) chunks.push(chunk);
+
+  const outfitBuffer = Buffer.concat(chunks);
+  const outfitB64 = outfitBuffer.toString("base64");
+
+  // const outfitResponse = await axios.get(productImageUrl, {
+  //   responseType: "arraybuffer"
+  // });
+  // const outfitB64 = Buffer.from(outfitResponse.data).toString("base64");
 
   // GEMINI AI
   const genAI = new GoogleGenerativeAI(process.env.GEMINIAI_API_KEY);
