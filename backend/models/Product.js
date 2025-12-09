@@ -145,6 +145,7 @@ const productSchema = new mongoose.Schema(
       size_of_picture: String,
       po: String,
     },
+    tryonImageUrl: { type: String, default: null }, 
 
     lst_info_update_dt: Date,
     pb: mongoose.Schema.Types.Mixed,

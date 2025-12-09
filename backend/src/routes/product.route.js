@@ -3,24 +3,20 @@ const router = express.Router();
 const productController = require('../../controllers/product.controller');
 const { optionalAuth } = require('../../middlewares/auth.middleware');
 const searchController = require("../../controllers/search.controller")
-const tryOn = require('../../controllers/tryon.controller')
 const multer = require('multer')
+const tryon = require('../../controllers/tryon.controller')
+
+
 
 
 router.get('/search', searchController.searchProducts)
 const upload = multer({ storage: multer.memoryStorage() });
 
-
 router.post(
-    "/tryon",
-    upload.fields([
-        { name: "userImage", maxCount: 1 },
-        { name: "outfitImage", maxCount: 1 }
-    ]),
-    tryOn.generateTryOn
+  "/tryon",
+  upload.single("userImage"),
+  tryon.generateTryOn
 );
-
-router.get("/proxy-image", tryOn.proxyImage);
 
 // Categories and brands (specific routes first!)
 router.get('/categories', productController.getCategories);
