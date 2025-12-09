@@ -932,6 +932,7 @@ const ProductDetailPage = () => {
                 open={showTryOn}
                 onClose={() => setShowTryOn(false)}
                 productImage={product.images?.[0]}
+                sku={product.sku_parent}
             />
 
         </div>

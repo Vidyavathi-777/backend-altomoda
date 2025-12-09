@@ -269,7 +269,9 @@ const ProductsPage = () => {
     const handleTryOnClick = (e, product) => {
         e.preventDefault();
         e.stopPropagation();
-        setSelectedProductForTryOn(product); // Set the selected product
+        // console.log(product)
+        setSelectedProductForTryOn(product); 
+       
         setShowTryOn(true);
     };
 
@@ -1460,7 +1462,8 @@ const ProductsPage = () => {
             <TryOnModal
                 open={showTryOn}
                 onClose={handleTryOnClose}
-                productImage={selectedProductForTryOn?.images?.[0]} // Use the selected product's first image
+                productImage={selectedProductForTryOn?.images?.[0]} 
+                sku={selectedProductForTryOn?.sku}
 
             />
         </div>
