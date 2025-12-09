@@ -160,3 +160,5 @@
 {"level":"error","message":"AI timeout (5s exceeded)","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-09 14:49:30"}
 {"level":"error","message":"Could not load credentials from any providers","name":"CredentialsProviderError","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-09 14:59:16","tryNextLink":false}
 {"level":"error","message":"Could not load credentials from any providers","name":"CredentialsProviderError","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-09 15:05:39","tryNextLink":false}
+{"level":"error","message":"fileName is not defined","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-09 17:16:08"}
+{"level":"error","message":"fileName is not defined","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-09 17:16:33"}
