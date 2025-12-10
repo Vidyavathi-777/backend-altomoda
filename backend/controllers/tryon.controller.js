@@ -4,77 +4,72 @@ const ApiError = require("../utils/apiError.js");
 const catchAsync = require("../utils/catchAsync.js");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-
 exports.generateTryOn = catchAsync(async (req, res) => {
   console.log("Incoming try-on request received…");
-  //  addLog("Incoming try-on request received…");
+
   const { parentSku } = req.body;
   console.log("Validating request inputs…");
+
   if (!req.file) throw new ApiError(400, "userImage file is required");
   if (!parentSku) throw new ApiError(400, "parentSku is required");
+
   console.log(`Fetching products from database for parentSku: ${parentSku}`);
   const products = await Product.find({ "props.sku_parent": parentSku });
   if (!products.length) throw new ApiError(404, "Product not found");
+
   console.log(`Database returned ${products.length} matching products`);
-
-
   const product = products[0];
   console.log(`Using product SKU: ${product.sku} for try-on processing`);
 
   const productImageUrl = product.imgs?.[0]?.url;
   console.log(`Resolved product main image: ${productImageUrl}`);
-
   if (!productImageUrl) throw new ApiError(400, "No product image found");
 
-  let base64ProductImage = null;
+  console.log("Calling Lambda to download product image…");
+  const lambdaUrl = `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
+  
+  const lambdaResponse = await axios.get(lambdaUrl, { timeout: 8000 }).catch(err => {
+    console.log("Lambda fetch failed:", err.message);
+    return null;
+  });
 
-  // if (product.tryonImageUrl && !product.tryonImageUrl.startsWith("http")) {
-  //   console.log("Valid Base64 found in DB for try-on image");
-  //   base64ProductImage = product.tryonImageUrl;
-  //   console.log(base64ProductImage)
-  // } else {
-    console.log("No valid Base64 in DB. Calling Lambda to download product image…");
+  if (!lambdaResponse?.data?.base64) {
+    throw new ApiError(500, "Failed fetching product image");
+  }
 
-    const lambdaUrl =
-      `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
+  console.log("Lambda returned Base64 successfully");
 
-    const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
-    // console.log("lambda Response :" , lambdaResponse)
-    // console.log("1",lambdaResponse.data)
-    // // console.log("2",lambdaResponse.data.base64)
+  let outfitB64 = lambdaResponse.data.base64
+    .replace(/(\r\n|\n|\r)/gm, "")
+    .replace(/"/g, "")
+    .trim();
 
-    // if (!lambdaResponse || !lambdaResponse.data?.base64) {
-    //   console.log("Lambda failed — using axios fallback…");
-
-    //   const img = await axios.get(productImageUrl, { responseType: "arraybuffer" });
-    //   base64ProductImage = Buffer.from(img.data).toString("base64");
-    // } else {
-      base64ProductImage = lambdaResponse.data.base64;
-      // console.log("product image", base64ProductImage)
-    // }
-
-    // base64ProductImage = lambdaResponse.data.base64;
-
-    console.log("Lambda returned Base64 successfully")
-
-    // console.log("Updating product variants with tryonImageUrl .... ")
-    // await Product.updateMany(
-    //   { "props.sku_parent": parentSku },
-    //   { $set: { tryonImageUrl: base64ProductImage } }
-    // )
-
-    // console.log("Database updated successfully")
-  // }
+  console.log("Outfit Base64 length:", outfitB64.length);
+  console.log("Outfit Base64 preview:", outfitB64.slice(0, 50), "...");
 
   console.log("Converting user image to Base64 format for Gemini API…");
-  const userB64 = req.file.buffer.toString("base64");
 
+  let userB64 = req.file.buffer.toString();
 
+  // Detect if it is already clean base64 (e.g. starts with JPEG/PNG signatures)
+  if (/^\/9j\//.test(userB64) || /^iVBORw0/.test(userB64)) {
+    console.log("User image is already base64 — using directly");
+  } else {
+    console.log("User image is NOT raw base64 — converting once");
+    userB64 = Buffer.from(req.file.buffer).toString("base64");
+  }
 
-  console.log("Product image for gemiai")
+  console.log("Final User Base64 length:", userB64.length);
+  console.log("User Base64 preview:", userB64.slice(0, 50), "...");
 
-  const outfitB64 = base64ProductImage
+  let userMime = req.file.mimetype || "image/jpeg";
+  let outfitMime = lambdaResponse.data.contentType || "image/jpeg";
 
+  if (userMime === "image/jpg") userMime = "image/jpeg";
+  if (outfitMime === "image/jpg") outfitMime = "image/jpeg";
+
+  console.log("User MIME:", userMime);
+  console.log("Outfit MIME:", outfitMime);
 
   console.log("Initializing Gemini AI client…");
   const genAI = new GoogleGenerativeAI(process.env.GEMINIAI_API_KEY);
@@ -83,46 +78,45 @@ exports.generateTryOn = catchAsync(async (req, res) => {
     model: "gemini-2.5-flash-image",
   });
 
-  const prompt =
-    `Perform a highly accurate virtual try-on using EXACTLY the outfit or item shown in the second image.
+  const prompt = `Perform a highly accurate virtual try-on using EXACTLY the outfit or item shown in the second image.
 Apply the clothing or accessory from the second image onto the person in the first image WITHOUT changing:
 - the person's face, skin tone, or body shape
 - hairstyle, pose, or lighting
 - background or environment
+
 Use the second image strictly as the real item to overlay, with NO redesigning or artistic interpretation.
+
 IMPORTANT CLOTHING RULES:
-1. For full outfits (dresses, jumpsuits, gowns, lehengas, sarees, kurta-sets): Apply the entire outfit exactly as shown, covering the complete body appropriately.
-2. For tops (shirts, t-shirts, blouses, hoodies, jackets, sweaters): Overlay only the upper-body garment naturally aligned to the person's torso.
-3. For bottoms (pants, jeans, leggings, skirts, shorts): Apply the exact bottom garment proportionally from waist to ankles.
-4. For shoes/footwear (heels, sandals, sneakers, boots, flats):
-   - Replace BOTH shoes completely when the second image shows a pair
-   - Apply the EXACT same shoe to BOTH feet with proper symmetry
-   - Ensure accurate alignment with both feet/ankles
-   - If only one shoe is shown in the reference, apply that same design to both feet
-5. For one-sided accessories (single earring, one glove):
-   - Apply only to the correct side as shown
-   - Do NOT mirror or duplicate to the other side
-6. For symmetrical accessories (pairs):
-   - Apply to both sides equally and symmetrically
-7. Maintain EXACT colors, patterns, textures, embroidery, shine, and fabric structure from the second image.
+1. For full outfits (dresses, jumpsuits, gowns, lehengas, sarees, kurta-sets): Apply the entire outfit exactly as shown.
+2. For tops (shirts, t-shirts, blouses, hoodies, jackets, sweaters): Overlay only the upper-body garment.
+3. For bottoms (pants, jeans, leggings, skirts, shorts): Apply only waist-to-ankles area realistically.
+4. For footwear:
+   - If pair shown → apply to both feet
+   - If one shoe shown → duplicate correctly
+   - Ensure alignment and perspective accuracy
+5. For one-sided accessories → apply only to that side.
+6. For symmetrical accessories → apply to both sides equally.
+
+Maintain EXACT:
+- colors, shades, prints, logos
+- texture, stitching, fabric folds
+- shine, lighting reflection
+
 STRICT RULES:
-- NEVER invent, change, or replace any garments or accessories
-- NEVER modify colors, shapes, proportions, logos, or prints
-- NEVER generate new backgrounds or poses
-- NEVER stylize or simplify the item
-- ALWAYS use the second image as the exact product to apply
-- For footwear: ALWAYS ensure both shoes match exactly as shown in the reference
-- Blend realistically with high detail and clean edges
-`;
+- Do NOT invent or modify any garment
+- Do NOT change facial features or body shape
+- Do NOT alter background or add elements
+- Do NOT stylize, simplify, or redesign item
+
+Goal: A highly realistic virtual try-on — as if the person actually wore the outfit in the original photo.`;
 
   console.log("Gemini AI model initialized successfully");
-
-  console.log("Sending user image + outfit image to Gemini AI for try-on generation…");
+  console.log("Sending images to Gemini for try-on generation…");
 
   const aiResponse = await model.generateContent([
     { text: prompt },
-    { inlineData: { data: userB64, mimeType: "image/jpeg" } },
-    { inlineData: { data: outfitB64, mimeType: "image/jpeg" } }
+    { inlineData: { data: userB64, mimeType: userMime } },
+    { inlineData: { data: outfitB64, mimeType: outfitMime } }
   ]);
 
   let outputImage = null;
@@ -131,19 +125,17 @@ STRICT RULES:
     for (const part of cand.content.parts || []) {
       if (part.inlineData?.data) {
         outputImage = part.inlineData.data;
-        console.log("Try-on output image extracted successfully from AI response");
       }
     }
-
   }
 
   if (!outputImage) {
-    console.log("Gemini response did not contain an output image");
+    console.log("Gemini response did not contain an image");
     throw new ApiError(500, "Gemini AI did not return an image");
   }
 
-  console.log("Sending try-on repsonse")
-
+  console.log("Try-on output extracted successfully");
+  console.log("Sending try-on response…");
 
   res.status(200).json({
     success: true,
@@ -153,5 +145,4 @@ STRICT RULES:
   });
 
   console.log("Try-on response sent successfully");
-
 });
