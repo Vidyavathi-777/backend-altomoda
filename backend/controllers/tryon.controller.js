@@ -2,31 +2,11 @@ const axios = require("axios");
 const Product = require("../models/Product.js");
 const ApiError = require("../utils/apiError.js");
 const catchAsync = require("../utils/catchAsync.js");
-// const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// const logs = [];
-// const addLog = (msg) => {
-//   logs.push(msg);
-//   console.log(msg); // still prints in backend terminal
-// };
-
-// AWS CONFIG
-// const REGION = "ap-south-1";
-// const BUCKET = "altomoda-s3bucket";
-
-// // const s3 = new S3Client({ region: REGION });
-
-// const s3 = new S3Client({
-//   region: REGION,
-//   credentials: {
-//     accessKeyId: "AKIAWOAVSUAB4OEWDM6L",
-//     secretAccessKey: "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",
-//   }
-// });
 
 exports.generateTryOn = catchAsync(async (req, res) => {
-   console.log("Incoming try-on request received…");
+  console.log("Incoming try-on request received…");
   //  addLog("Incoming try-on request received…");
   const { parentSku } = req.body;
   console.log("Validating request inputs…");
@@ -38,7 +18,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
   console.log(`Database returned ${products.length} matching products`);
 
 
- const product = products[0];
+  const product = products[0];
   console.log(`Using product SKU: ${product.sku} for try-on processing`);
 
   const productImageUrl = product.imgs?.[0]?.url;
@@ -46,113 +26,55 @@ exports.generateTryOn = catchAsync(async (req, res) => {
 
   if (!productImageUrl) throw new ApiError(400, "No product image found");
 
-  // const fileName = `tryon/${parentSku}.jpg`;
-
-  // let s3Url = product.tryonImageUrl;
-  // console.log("Checking if try-on base image already exists in S3:", s3Url);
-
-  // if (!s3Url) {
-  //   console.log("No S3 try-on image found — downloading product image from remote server…");
-
-  //   const imgResponse = await axios.get(productImageUrl, { responseType: "arraybuffer" });
-  //   console.log("Product image downloaded successfully");
-
-  //   const imgBuffer = Buffer.from(imgResponse.data);
-
-  //   console.log(`Uploading product image to S3 bucket '${BUCKET}' at key '${fileName}' …`);
-
-  //   await s3.send(
-  //     new PutObjectCommand({
-  //       Bucket: BUCKET,
-  //       Key: fileName,
-  //       Body: imgBuffer,
-  //       ContentType: "image/jpeg",
-  //     })
-  //   );
-
-  //   console.log("S3 upload completed successfully");
-
-  //   s3Url = `https://${BUCKET}.s3.${REGION}.amazonaws.com/${fileName}`;
-  //   console.log("Generated S3 public URL:", s3Url);
-
-  //   console.log("Updating all product variants in DB with tryonImageUrl…");
-  //   await Product.updateMany(
-  //     { "props.sku_parent": parentSku },
-  //     { $set: { tryonImageUrl: s3Url } }
-  //   );
-
-  //   console.log("Database updated successfully");
-  // }
   let base64ProductImage = null;
 
-  if (product.tryonImageUrl && !product.tryonImageUrl.startsWith("http")) {
-    console.log("Valid Base64 found in DB for try-on image");
-    base64ProductImage = product.tryonImageUrl;
-  } else {
+  // if (product.tryonImageUrl && !product.tryonImageUrl.startsWith("http")) {
+  //   console.log("Valid Base64 found in DB for try-on image");
+  //   base64ProductImage = product.tryonImageUrl;
+  //   console.log(base64ProductImage)
+  // } else {
     console.log("No valid Base64 in DB. Calling Lambda to download product image…");
 
     const lambdaUrl =
       `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
 
-const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
+    const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
+    console.log("lambda Response :" , lambdaResponse)
+    console.log("1",lambdaResponse.data)
+    console.log("2",lambdaResponse.data.base64)
 
-if (!lambdaResponse || !lambdaResponse.data?.base64) {
-  console.log("Lambda failed — using axios fallback…");
+    // if (!lambdaResponse || !lambdaResponse.data?.base64) {
+    //   console.log("Lambda failed — using axios fallback…");
 
-  const img = await axios.get(productImageUrl, { responseType: "arraybuffer" });
-  base64ProductImage = Buffer.from(img.data).toString("base64");
-} else {
-  base64ProductImage = lambdaResponse.data.base64;
-}
+    //   const img = await axios.get(productImageUrl, { responseType: "arraybuffer" });
+    //   base64ProductImage = Buffer.from(img.data).toString("base64");
+    // } else {
+      base64ProductImage = lambdaResponse.data.base64;
+      console.log("product image", base64ProductImage)
+    // }
 
+    // base64ProductImage = lambdaResponse.data.base64;
 
     console.log("Lambda returned Base64 successfully")
 
-    console.log("Updating product variants with tryonImageUrl .... ")
-    await Product.updateMany(
-      {"props.sku_parent": parentSku},
-      {$set:{tryonImageUrl: base64ProductImage}}
-    )
+    // console.log("Updating product variants with tryonImageUrl .... ")
+    // await Product.updateMany(
+    //   { "props.sku_parent": parentSku },
+    //   { $set: { tryonImageUrl: base64ProductImage } }
+    // )
 
-    console.log("Database updated successfully")
-  }
+    // console.log("Database updated successfully")
+  // }
 
   console.log("Converting user image to Base64 format for Gemini API…");
   const userB64 = req.file.buffer.toString("base64");
 
-  // console.log("Fetching try-on base product image FROM S3 for AI processing…");
 
-  // const s3Object = await s3.send(
-  //   new GetObjectCommand({
-  //     Bucket: BUCKET,
-  //     Key: fileName,
-  //   })
-  // );
-
-  // console.log("Reading S3 image stream…");
-
-
-  // const chunks = [];
-  // for await (const chunk of s3Object.Body) chunks.push(chunk);
-
-  // console.log("Combining S3 image chunks into final binary buffer…");
-
-  // const outfitBuffer = Buffer.concat(chunks);
-  // const outfitB64 = outfitBuffer.toString("base64");
 
   console.log("Product image for gemiai")
 
   const outfitB64 = base64ProductImage
 
-  // console.log("Product outfit image converted to Base64 successfully");
-
-
-  // const outfitResponse = await axios.get(productImageUrl, {
-  //   responseType: "arraybuffer"
-  // });
-  // const outfitB64 = Buffer.from(outfitResponse.data).toString("base64");
-
-  // GEMINI AI
 
   console.log("Initializing Gemini AI client…");
   const genAI = new GoogleGenerativeAI(process.env.GEMINIAI_API_KEY);
@@ -215,7 +137,7 @@ STRICT RULES:
 
   }
 
-    if (!outputImage) {
+  if (!outputImage) {
     console.log("Gemini response did not contain an output image");
     throw new ApiError(500, "Gemini AI did not return an image");
   }
