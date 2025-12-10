@@ -39,9 +39,9 @@ exports.generateTryOn = catchAsync(async (req, res) => {
       `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
 
     const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
-    console.log("lambda Response :" , lambdaResponse)
-    console.log("1",lambdaResponse.data)
-    console.log("2",lambdaResponse.data.base64)
+    // console.log("lambda Response :" , lambdaResponse)
+    // console.log("1",lambdaResponse.data)
+    // // console.log("2",lambdaResponse.data.base64)
 
     // if (!lambdaResponse || !lambdaResponse.data?.base64) {
     //   console.log("Lambda failed — using axios fallback…");
@@ -50,7 +50,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
     //   base64ProductImage = Buffer.from(img.data).toString("base64");
     // } else {
       base64ProductImage = lambdaResponse.data.base64;
-      console.log("product image", base64ProductImage)
+      // console.log("product image", base64ProductImage)
     // }
 
     // base64ProductImage = lambdaResponse.data.base64;
