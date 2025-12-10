@@ -2,14 +2,20 @@ const axios = require("axios");
 const Product = require("../models/Product.js");
 const ApiError = require("../utils/apiError.js");
 const catchAsync = require("../utils/catchAsync.js");
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+// const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// AWS CONFIG
-const REGION = "ap-south-1";
-const BUCKET = "altomoda-s3bucket";
+// const logs = [];
+// const addLog = (msg) => {
+//   logs.push(msg);
+//   console.log(msg); // still prints in backend terminal
+// };
 
-const s3 = new S3Client({ region: REGION });
+// AWS CONFIG
+// const REGION = "ap-south-1";
+// const BUCKET = "altomoda-s3bucket";
+
+// // const s3 = new S3Client({ region: REGION });
 
 // const s3 = new S3Client({
 //   region: REGION,
@@ -20,59 +26,126 @@ const s3 = new S3Client({ region: REGION });
 // });
 
 exports.generateTryOn = catchAsync(async (req, res) => {
+   console.log("Incoming try-on request received…");
+  //  addLog("Incoming try-on request received…");
   const { parentSku } = req.body;
-
+  console.log("Validating request inputs…");
   if (!req.file) throw new ApiError(400, "userImage file is required");
   if (!parentSku) throw new ApiError(400, "parentSku is required");
-
+  console.log(`Fetching products from database for parentSku: ${parentSku}`);
   const products = await Product.find({ "props.sku_parent": parentSku });
   if (!products.length) throw new ApiError(404, "Product not found");
+  console.log(`Database returned ${products.length} matching products`);
 
-  const product = products[0];
+
+ const product = products[0];
+  console.log(`Using product SKU: ${product.sku} for try-on processing`);
 
   const productImageUrl = product.imgs?.[0]?.url;
+  console.log(`Resolved product main image: ${productImageUrl}`);
+
   if (!productImageUrl) throw new ApiError(400, "No product image found");
-  const fileName = `tryon/${parentSku}.jpg`;
 
-  let s3Url = product.tryonImageUrl;
+  // const fileName = `tryon/${parentSku}.jpg`;
 
-  if (!s3Url) {
-    const imgResponse = await axios.get(productImageUrl, { responseType: "arraybuffer" });
-    const imgBuffer = Buffer.from(imgResponse.data);
+  // let s3Url = product.tryonImageUrl;
+  // console.log("Checking if try-on base image already exists in S3:", s3Url);
 
-    
+  // if (!s3Url) {
+  //   console.log("No S3 try-on image found — downloading product image from remote server…");
 
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: fileName,
-        Body: imgBuffer,
-        ContentType: "image/jpeg",
-      })
-    );
+  //   const imgResponse = await axios.get(productImageUrl, { responseType: "arraybuffer" });
+  //   console.log("Product image downloaded successfully");
 
-    s3Url = `https://${BUCKET}.s3.${REGION}.amazonaws.com/${fileName}`;
+  //   const imgBuffer = Buffer.from(imgResponse.data);
 
+  //   console.log(`Uploading product image to S3 bucket '${BUCKET}' at key '${fileName}' …`);
+
+  //   await s3.send(
+  //     new PutObjectCommand({
+  //       Bucket: BUCKET,
+  //       Key: fileName,
+  //       Body: imgBuffer,
+  //       ContentType: "image/jpeg",
+  //     })
+  //   );
+
+  //   console.log("S3 upload completed successfully");
+
+  //   s3Url = `https://${BUCKET}.s3.${REGION}.amazonaws.com/${fileName}`;
+  //   console.log("Generated S3 public URL:", s3Url);
+
+  //   console.log("Updating all product variants in DB with tryonImageUrl…");
+  //   await Product.updateMany(
+  //     { "props.sku_parent": parentSku },
+  //     { $set: { tryonImageUrl: s3Url } }
+  //   );
+
+  //   console.log("Database updated successfully");
+  // }
+  let base64ProductImage = null;
+
+  if (product.tryonImageUrl && !product.tryonImageUrl.startsWith("http")) {
+    console.log("Valid Base64 found in DB for try-on image");
+    base64ProductImage = product.tryonImageUrl;
+  } else {
+    console.log("No valid Base64 in DB. Calling Lambda to download product image…");
+
+    const lambdaUrl =
+      `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
+
+const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
+
+if (!lambdaResponse || !lambdaResponse.data?.base64) {
+  console.log("Lambda failed — using axios fallback…");
+
+  const img = await axios.get(productImageUrl, { responseType: "arraybuffer" });
+  base64ProductImage = Buffer.from(img.data).toString("base64");
+} else {
+  base64ProductImage = lambdaResponse.data.base64;
+}
+
+
+    console.log("Lambda returned Base64 successfully")
+
+    console.log("Updating product variants with tryonImageUrl .... ")
     await Product.updateMany(
-      { "props.sku_parent": parentSku },
-      { $set: { tryonImageUrl: s3Url } }
-    );
+      {"props.sku_parent": parentSku},
+      {$set:{tryonImageUrl: base64ProductImage}}
+    )
+
+    console.log("Database updated successfully")
   }
 
+  console.log("Converting user image to Base64 format for Gemini API…");
   const userB64 = req.file.buffer.toString("base64");
 
-  const s3Object = await s3.send(
-    new GetObjectCommand({
-      Bucket: BUCKET,
-      Key: fileName,
-    })
-  );
+  // console.log("Fetching try-on base product image FROM S3 for AI processing…");
 
-  const chunks = [];
-  for await (const chunk of s3Object.Body) chunks.push(chunk);
+  // const s3Object = await s3.send(
+  //   new GetObjectCommand({
+  //     Bucket: BUCKET,
+  //     Key: fileName,
+  //   })
+  // );
 
-  const outfitBuffer = Buffer.concat(chunks);
-  const outfitB64 = outfitBuffer.toString("base64");
+  // console.log("Reading S3 image stream…");
+
+
+  // const chunks = [];
+  // for await (const chunk of s3Object.Body) chunks.push(chunk);
+
+  // console.log("Combining S3 image chunks into final binary buffer…");
+
+  // const outfitBuffer = Buffer.concat(chunks);
+  // const outfitB64 = outfitBuffer.toString("base64");
+
+  console.log("Product image for gemiai")
+
+  const outfitB64 = base64ProductImage
+
+  // console.log("Product outfit image converted to Base64 successfully");
+
 
   // const outfitResponse = await axios.get(productImageUrl, {
   //   responseType: "arraybuffer"
@@ -80,6 +153,8 @@ exports.generateTryOn = catchAsync(async (req, res) => {
   // const outfitB64 = Buffer.from(outfitResponse.data).toString("base64");
 
   // GEMINI AI
+
+  console.log("Initializing Gemini AI client…");
   const genAI = new GoogleGenerativeAI(process.env.GEMINIAI_API_KEY);
 
   const model = genAI.getGenerativeModel({
@@ -118,30 +193,43 @@ STRICT RULES:
 - Blend realistically with high detail and clean edges
 `;
 
+  console.log("Gemini AI model initialized successfully");
+
+  console.log("Sending user image + outfit image to Gemini AI for try-on generation…");
+
   const aiResponse = await model.generateContent([
     { text: prompt },
-    {
-      inlineData: { data: userB64, mimeType: "image/jpeg" }
-    },
-    {
-      inlineData: { data: outfitB64, mimeType: "image/jpeg" }
-    }
+    { inlineData: { data: userB64, mimeType: "image/jpeg" } },
+    { inlineData: { data: outfitB64, mimeType: "image/jpeg" } }
   ]);
 
   let outputImage = null;
 
   for (const cand of aiResponse.response.candidates || []) {
     for (const part of cand.content.parts || []) {
-      if (part.inlineData?.data) outputImage = part.inlineData.data;
+      if (part.inlineData?.data) {
+        outputImage = part.inlineData.data;
+        console.log("Try-on output image extracted successfully from AI response");
+      }
     }
+
   }
 
-  if (!outputImage) throw new ApiError(500, "Gemini AI did not return an image");
+    if (!outputImage) {
+    console.log("Gemini response did not contain an output image");
+    throw new ApiError(500, "Gemini AI did not return an image");
+  }
+
+  console.log("Sending try-on repsonse")
+
 
   res.status(200).json({
     success: true,
-    tryonImage: ("data:image/png;base64," + outputImage).trim(),
+    tryonImage: "data:image/png;base64," + outputImage,
     productImageUsed: productImageUrl,
-    tryonS3Url: s3Url,
+    storedBase64: !!product.tryonImageUrl,
   });
+
+  console.log("Try-on response sent successfully");
+
 });

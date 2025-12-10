@@ -124,6 +124,7 @@ exports.searchProducts = async (req, res) => {
                 // Brand search
                 { "props.brand": { $regex: searchTerms, $options: "i" } },
                 
+                
                 // Color search
                 { "locs.singles.color.en": { $regex: searchTerms, $options: "i" } },
                 { "locs.singles.color.it": { $regex: searchTerms, $options: "i" } },

@@ -1,4 +1,5 @@
 const express = require('express');
+const Product = require('../../models/Product');
 const router = express.Router();
 const productController = require('../../controllers/product.controller');
 const { optionalAuth } = require('../../middlewares/auth.middleware');
@@ -17,6 +18,8 @@ router.post(
   upload.single("userImage"),
   tryon.generateTryOn
 );
+
+router.get('/notbrand', productController.getBrandsWithoutProducts)
 
 // Categories and brands (specific routes first!)
 router.get('/categories', productController.getCategories);

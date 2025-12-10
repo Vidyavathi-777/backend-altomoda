@@ -120,6 +120,33 @@ exports.getCategories = catchAsync(async (req, res) => {
   });
 });
 
+exports.getBrandsWithoutProducts = catchAsync(async (req, res) => {
+  // 1. Fetch master brands from CloudStore
+  const cloudBrandsResponse = await this.getBrands();  
+  const cloudBrands = cloudBrandsResponse?.content || [];  // e.g. ["Nike", "Zara", ...]
+  
+  // Normalize list to plain strings
+  const allBrands = cloudBrands.map(b => b.name || b);     
+
+  // 2. Fetch brands that exist in your products
+  const existingBrands = await Product.distinct("props.brand");
+
+  // 3. Get brands you do NOT have products for
+  const missingBrands = allBrands.filter(
+    brand => !existingBrands.includes(brand)
+  );
+
+  res.json({
+    status: "success",
+    totalBrandsInCloudStore: allBrands.length,
+    brandsInProducts: existingBrands.length,
+    brandsWithoutProducts: missingBrands.length,
+    data: { missingBrands }
+  });
+});
+
+
+
 // Get unique brands from products
 exports.getBrands = catchAsync(async (req, res) => {
   const brands = await Product.distinct('props.brand');
@@ -187,7 +214,6 @@ exports.getCategoryById = catchAsync(async (req, res) => {
 
 
 
-
 exports.getAllProducts = catchAsync(async (req, res) => {
   try {
     let { page = 1, limit = 100, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
@@ -199,14 +225,22 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     const sortConfig = {};
     sortConfig[sortBy] = sortOrder === 'asc' ? 1 : -1;
 
+    // Filter: only products with quantity > 0
+    const filter = {
+      $or: [
+        { qty: { $gt: 0 } },
+        { "whs.qty": { $gt: 0 } }
+      ]
+    };
+
     const [products, totalItems] = await Promise.all([
-      Product.find()
+      Product.find(filter)
         .populate('cats', 'name locs')
         .sort(sortConfig)
         .skip(skip)
         .limit(limit)
         .lean(),
-      Product.countDocuments()
+      Product.countDocuments(filter)
     ]);
 
     const totalPages = Math.ceil(totalItems / limit);
@@ -526,20 +560,20 @@ exports.getProductsByBrand = catchAsync(async (req, res) => {
       return res.status(400).json({ message: "Brand query is required" });
     }
 
-    const query = {
-      "props.brand": brand,
-      imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
-    };
+    // const query = {
+    //   "props.brand": brand,
+    //   imgs: { $exists: true, $ne: [], $not: { $size: 0 } }
+    // };
 
     // Build base query with image filter
-    //   const query = { 
-    //     "props.brand": brand,
-    //     imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
-    //           $or: [
-    //   { qty: { $gt: 0 } }
-    //   // { "whs.qty": { $gt: 0 } }
-    // ]
-    //   };
+      const query = { 
+        "props.brand": brand,
+        imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
+              $or: [
+      { qty: { $gt: 0 } },
+      { "whs.qty": { $gt: 0 } }
+    ]
+      };
 
     // For newest sorting, filter products from last 3 days
     if (sortBy === 'newest') {
