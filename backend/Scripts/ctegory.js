@@ -203,7 +203,7 @@ class ProductImporter {
     const totalPages = first._metadata?.total_pages || 1;
     logger.info(`🚀 Total pages: ${totalPages}`);
 
-    let page = 1531;
+    let page = 2476;
 
 
     while (page <= totalPages) {

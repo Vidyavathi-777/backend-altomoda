@@ -28,43 +28,19 @@ exports.generateTryOn = catchAsync(async (req, res) => {
 
   let base64ProductImage = null;
 
-  // if (product.tryonImageUrl && !product.tryonImageUrl.startsWith("http")) {
-  //   console.log("Valid Base64 found in DB for try-on image");
-  //   base64ProductImage = product.tryonImageUrl;
-  //   console.log(base64ProductImage)
-  // } else {
-    console.log("No valid Base64 in DB. Calling Lambda to download product image…");
 
-    const lambdaUrl =
-      `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
+  console.log("No valid Base64 in DB. Calling Lambda to download product image…");
 
-    const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
-    // console.log("lambda Response :" , lambdaResponse)
-    // console.log("1",lambdaResponse.data)
-    // // console.log("2",lambdaResponse.data.base64)
+  const lambdaUrl =
+    `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
 
-    // if (!lambdaResponse || !lambdaResponse.data?.base64) {
-    //   console.log("Lambda failed — using axios fallback…");
+  const lambdaResponse = await axios.get(lambdaUrl, { timeout: 5000 }).catch(() => null);
 
-    //   const img = await axios.get(productImageUrl, { responseType: "arraybuffer" });
-    //   base64ProductImage = Buffer.from(img.data).toString("base64");
-    // } else {
-      base64ProductImage = lambdaResponse.data.base64;
-      // console.log("product image", base64ProductImage)
-    // }
+  base64ProductImage = lambdaResponse.data.base64;
 
-    // base64ProductImage = lambdaResponse.data.base64;
+  // console.log("EC2 TEST first 100:", base64ProductImage.slice(0, 100));
+  console.log("Lambda returned Base64 successfully")
 
-    console.log("Lambda returned Base64 successfully")
-
-    // console.log("Updating product variants with tryonImageUrl .... ")
-    // await Product.updateMany(
-    //   { "props.sku_parent": parentSku },
-    //   { $set: { tryonImageUrl: base64ProductImage } }
-    // )
-
-    // console.log("Database updated successfully")
-  // }
 
   console.log("Converting user image to Base64 format for Gemini API…");
   const userB64 = req.file.buffer.toString("base64");
@@ -73,7 +49,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
 
   console.log("Product image for gemiai")
 
-  const outfitB64 = base64ProductImage
+  // const outfitB64 = base64ProductImage
 
 
   console.log("Initializing Gemini AI client…");
