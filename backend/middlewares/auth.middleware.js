@@ -42,7 +42,7 @@ exports.optionalAuth = catchAsync(async (req, res, next) => {
       const decoded = jwt.verify(token, config.jwt.secret);
       req.user = await Customer.findById(decoded.id);
     } catch (error) {
-      // Token invalid, continue without user
+      throw new ApiError(404, ' Token invalid, continue without user')
     }
   }
 

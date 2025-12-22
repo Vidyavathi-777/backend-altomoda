@@ -1,8 +1,15 @@
-import React from 'react';
+import { useEffect } from 'react';
 import MagazineArticle from '../components/MagazineArticle';
 import articles from "../json/Magazine.json";
+import { Link } from "react-router-dom";
+
 
 const MagazinePage = () => {
+
+    useEffect(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
+
   return (
     <div className="min-h-screen bg-white pt-[120px] sm:pt-[140px] md:pt-[160px] lg:pt-[200px]">
       {/* Hero Section */}
@@ -23,16 +30,19 @@ const MagazinePage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {articles.map((article) => (
-            <MagazineArticle key={article.id} article={article} />
+            <Link key={article.id} to={`/magazine/${article.id}`}>
+              <MagazineArticle article={article} />
+            </Link>
           ))}
         </div>
 
+
         {/* Load More Button */}
-        <div className="text-center mt-12">
+        {/* <div className="text-center mt-12">
           <button className="px-8 py-3 border border-gray-800 text-gray-800 font-medium hover:bg-gray-800 hover:text-white transition-colors">
             Load more articles
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

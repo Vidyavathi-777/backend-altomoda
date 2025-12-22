@@ -54,17 +54,22 @@ const customerSchema = new mongoose.Schema({
     default: 'active',
   },
   lastLogin: Date,
+  tryonimage: {
+    type: String,
+    default: null,
+  },
+
 }, {
   timestamps: true,
 });
 
-customerSchema.pre('save', async function(next) {
+customerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-customerSchema.methods.comparePassword = async function(candidatePassword) {
+customerSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
