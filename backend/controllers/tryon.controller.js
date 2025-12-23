@@ -31,7 +31,7 @@ exports.generateTryOn = catchAsync(async (req, res) => {
     if (!productImageUrl) throw new ApiError(400, "No product image found");
 
     console.log("Calling Lambda to download product image…");
-    const lambdaUrl = `https://6q6d5o99qa.execute-api.ap-south-1.amazonaws.com/prod/download?url=${encodeURIComponent(productImageUrl)}`;
+    const lambdaUrl = `${process.env.LAMBDA_URL}?url=${encodeURIComponent(productImageUrl)}`;
 
     const lambdaResponse = await axios.get(lambdaUrl, { timeout: 8000 }).catch(err => {
         console.log("Lambda fetch failed:", err.message);
@@ -158,7 +158,8 @@ const TryOnJob = require("../models/TryOnJob");
 const TryOnSession = require("../models/TryOnSession");
 const Customer = require("../models/Customer");
 const mongoose = require("mongoose");
-const { activeQueues } = require("../queue/inMemoryQueue.js");
+const { activeQueues } = require("../queue/inMemoryQueue.js");  
+const {resolveTryOnProductImage} = require("../utils/resolveTryOnProductImage.js")
 
 function fileToBase64(file) {
     if (!file || !file.buffer) return null;
@@ -229,80 +230,95 @@ exports.saveUserImage = async (req, res) => {
     }
 };
 
+/* CREATE QUEUE */
 exports.createTryOnQueue = async (req, res) => {
   try {
-    let productImageUrls =
-      req.body?.productImageUrls ||
-      req.body?.["productImageUrls[]"];
+    let { parentSku } = req.body;
 
-    if (!productImageUrls) {
-      return res.status(400).json({ success: false, message: "productImageUrls is required" });
+     if (Array.isArray(parentSku)) {
+      parentSku = parentSku[0];
     }
 
-    if (!Array.isArray(productImageUrls)) {
-      productImageUrls = [productImageUrls];
+    if (!parentSku) {
+      return res.status(400).json({
+        success: false,
+        message: "parentSku is required"
+      });
     }
 
-    const tryOnSession = req.tryOnSession;
-    const customer = await Customer.findById(tryOnSession.userId);
+    const session = req.tryOnSession;
+    if (!session) {
+      return res.status(401).json({
+        success: false,
+        message: "Session missing"
+      });
+    }
 
+    const customer = await Customer.findById(session.userId);
     if (!customer?.tryonimage) {
-      return res.status(400).json({ success: false, message: "User try-on image missing" });
+      return res.status(400).json({
+        success: false,
+        message: "User image missing"
+      });
     }
 
-    // 🔑 ONE QUEUE PER SESSION
-    const queueId = tryOnSession.queueId || `queue_${crypto.randomUUID()}`;
+    // 🔑 Resolve product image on backend
+    const productImageUrl = await resolveTryOnProductImage(parentSku);
 
-    if (!tryOnSession.queueId) {
-      tryOnSession.queueId = queueId;
-      await tryOnSession.save();
+    await TryOnJob.updateOne(
+      { queueId: session.queueId, productImageUrl },
+      {
+        $setOnInsert: {
+          queueId: session.queueId,
+          sessionId: session.sessionId,
+          userId: session.userId,
+          tryonSessionId: session._id,
+          parentSku,
+          productImageUrl,
+          userB64: customer.tryonimage,
+          status: "pending"
+        }
+      },
+      { upsert: true }
+    );
+
+    // 🔁 Start worker if not running
+    if (!activeQueues[session.queueId]) {
+      activeQueues[session.queueId] = { isProcessing: false };
     }
 
-    // 🔑 Create jobs (dedupe)
-    for (const url of productImageUrls) {
-      await TryOnJob.updateOne(
-        { queueId, productImageUrl: url },
-        {
-          $setOnInsert: {
-            queueId,
-            userId: tryOnSession.userId,
-            tryonSessionId: tryOnSession._id,
-            productImageUrl: url,
-            userB64: customer.tryonimage,
-            status: "pending"
-          }
-        },
-        { upsert: true }
-      );
+    if (!activeQueues[session.queueId].isProcessing) {
+      activeQueues[session.queueId].isProcessing = true;
+      processTryOnQueue(session.queueId);
     }
 
-    // 🔑 Rehydrate memory queue
-    if (!activeQueues[queueId]) {
-      activeQueues[queueId] = { isProcessing: false };
-    }
-
-    // 🔥 Start worker ONCE
-    if (!activeQueues[queueId].isProcessing) {
-      activeQueues[queueId].isProcessing = true;
-      processTryOnQueue(queueId);
-    }
-
-    return res.json({ success: true, queueId });
+    res.json({
+      success: true,
+      queueId: session.queueId,
+      productImageUrl:productImageUrl,
+      parentSku:parentSku
+    });
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Queue creation failed" });
+    console.error("Create queue error:", err);
+    res.status(500).json({
+      success: false,
+      message: err.message || "Queue failed"
+    });
   }
 };
 
+
+/* QUEUE STATUS */
 exports.getQueueStatus = async (req, res) => {
   const jobs = await TryOnJob.find({ queueId: req.params.queueId });
 
-  return res.json({
+  res.json({
     queueId: req.params.queueId,
     completed: jobs
       .filter(j => j.status === "completed")
       .map(j => ({
+        parentSku: j.parentSku,
         productImageUrl: j.productImageUrl,
         resultImage: j.result?.image || null
       })),
@@ -312,6 +328,25 @@ exports.getQueueStatus = async (req, res) => {
     ).length
   });
 };
+
+exports.getTryOnSession = async (req, res) => {
+  const session = await TryOnSession.findOne({
+    userId: req.user._id,
+    expiresAt: { $gt: new Date() }
+  });
+
+  if (!session) {
+    return res.json({ success: true, session: null });
+  }
+
+  res.json({
+    success: true,
+    session: {
+      queueId: session.queueId
+    }
+  });
+};
+
 
 
 
@@ -393,222 +428,6 @@ exports.cleanupSessions = async (req, res) => {
     }
 };
 
-
-
-
-// exports.addToTryOnQueue = async (req, res) => {
-//     try {
-//         const userId = req.user._id;
-//         const tryOnSession = req.tryOnSession;
-
-//         if (!tryOnSession) {
-//             return res.status(400).json({ 
-//                 success: false,
-//                 msg: "Try-on session not active or expired. Please refresh the page." 
-//             });
-//         }
-
-//         const { productImageUrls } = req.body;
-
-//         let urls;
-//         try {
-//             urls = Array.isArray(productImageUrls)
-//                 ? productImageUrls
-//                 : JSON.parse(productImageUrls);
-//         } catch {
-//             return res.status(400).json({ 
-//                 success: false, 
-//                 msg: "Invalid productImageUrls format" 
-//             });
-//         }
-
-//         // Get user image
-//         const user = await Customer.findById(userId).select("tryonimage");
-//         if (!user?.tryonimage) {
-//             return res.status(400).json({ 
-//                 success: false, 
-//                 msg: "Please save your photo first" 
-//             });
-//         }
-
-//         // Extract base64
-//         const userB64 = user.tryonimage.replace(/^data:image\/\w+;base64,/, "");
-
-//         // Create jobs
-//         const jobs = urls.map(url => ({
-//             queueId: tryOnSession.queueId,
-//             sessionId: tryOnSession.sessionId,
-//             userId,
-//             tryonSessionId: tryOnSession._id,
-//             productImageUrl: url,
-//             userB64,
-//             status: "pending"
-//         }));
-
-//         await TryOnJob.insertMany(jobs);
-
-//         // Start processing async (optional - can be handled by worker)
-//         // processQueueAsync(tryOnSession.queueId);
-
-//         res.json({
-//             success: true,
-//             queueId: tryOnSession.queueId,
-//             sessionId: tryOnSession._id,
-//             added: jobs.length,
-//             message: `${jobs.length} product(s) added to try-on queue`
-//         });
-
-//     } catch (err) {
-//         console.error("Add to queue error:", err);
-//         res.status(500).json({ 
-//             success: false, 
-//             msg: "Server error" 
-//         });
-//     }
-// };
-
-// exports.getQueueStatus = async (req, res) => {
-//     try {
-//         const { queueId } = req.params;
-//         const tryOnSession = req.tryOnSession;
-
-//         if (!tryOnSession || tryOnSession.queueId !== queueId) {
-//             return res.status(403).json({ 
-//                 success: false,
-//                 msg: "Access denied or session expired" 
-//             });
-//         }
-
-//         // Get all jobs for this session
-//         const jobs = await TryOnJob.find({ 
-//             queueId,
-//             tryonSessionId: tryOnSession._id 
-//         }).sort({ createdAt: 1 }).lean();
-
-//         if (!jobs.length) {
-//             return res.json({
-//                 success: true,
-//                 queueId,
-//                 status: "empty",
-//                 message: "No products in queue"
-//             });
-//         }
-
-//         // Check for any pending jobs and process them
-//         const pendingJobs = jobs.filter(j => j.status === "pending");
-
-//         if (pendingJobs.length > 0) {
-//             console.log(`Processing ${pendingJobs.length} pending jobs...`);
-
-//             for (const job of pendingJobs) {
-//                 try {
-//                     await processSingleJob(job);
-//                 } catch (err) {
-//                     console.error(`Job ${job._id} failed:`, err.message);
-//                 }
-//             }
-
-//             // Refresh jobs data
-//             const updatedJobs = await TryOnJob.find({ 
-//                 queueId,
-//                 tryonSessionId: tryOnSession._id 
-//             }).sort({ createdAt: 1 }).lean();
-
-//             return formatQueueResponse(updatedJobs, queueId, res);
-//         }
-
-//         // If no pending jobs, return current status
-//         formatQueueResponse(jobs, queueId, res);
-
-//     } catch (err) {
-//         console.error("Get queue status error:", err);
-//         res.status(500).json({ 
-//             success: false, 
-//             msg: "Server error" 
-//         });
-//     }
-// };
-
-async function formatQueueResponse(jobs, queueId, res) {
-    const pending = jobs.filter(j =>
-        ["pending", "processing"].includes(j.status)
-    );
-    const completed = jobs.filter(j => j.status === "completed");
-    const failed = jobs.filter(j => j.status === "failed");
-
-    res.json({
-        success: true,
-        queueId,
-        status: pending.length === 0 ? "completed" : "processing",
-        total: jobs.length,
-        pending: pending.length,
-        completed: completed.length,
-        failed: failed.length,
-        results: {
-            completed: completed.map(j => ({
-                jobId: j._id,
-                productImageUrl: j.productImageUrl,
-                tryOnImage: j.result?.tryOnImage,
-                createdAt: j.createdAt
-            })),
-            failed: failed.map(j => ({
-                jobId: j._id,
-                productImageUrl: j.productImageUrl,
-                error: j.error,
-                createdAt: j.createdAt
-            })),
-            pending: pending.map(j => ({
-                jobId: j._id,
-                productImageUrl: j.productImageUrl,
-                status: j.status,
-                createdAt: j.createdAt
-            }))
-        },
-        message: pending.length > 0
-            ? `Processing... ${pending.length} remaining`
-            : "All jobs completed"
-    });
-}
-
-
-async function processSingleJob(jobData) {
-    try {
-        // Update job status to processing
-        await TryOnJob.findByIdAndUpdate(jobData._id, {
-            status: "processing",
-            lockedAt: new Date()
-        });
-
-        console.log(`Processing job ${jobData._id}`);
-
-        // Call your AI processing function
-        const result = await processTryOn({
-            userB64: jobData.userB64,
-            productImageUrl: jobData.productImageUrl
-        });
-
-        // Update job as completed
-        await TryOnJob.findByIdAndUpdate(jobData._id, {
-            status: "completed",
-            result: result,
-            lockedAt: null
-        });
-
-        console.log(`Job ${jobData._id} completed`);
-        return { success: true };
-
-    } catch (err) {
-        console.error(`Job ${jobData._id} failed:`, err.message);
-
-        await TryOnJob.findByIdAndUpdate(jobData._id, {
-            status: "failed",
-            error: err.message,
-            lockedAt: null
-        });
-
-        return { success: false, error: err.message };
-    }
-}
 
 
 

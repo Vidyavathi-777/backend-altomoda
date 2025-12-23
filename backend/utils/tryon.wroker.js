@@ -1,7 +1,7 @@
 const TryOnJob = require("../models/TryOnJob");
 const { activeQueues } = require("../queue/inMemoryQueue");
 const { fetchProductImageBase64 } = require("../services/lambda.service");
-const { generateTryOnImage } = require("./geminiAi");
+const { generateTryOnImage } = require("../utils/geminiAi");
 
 exports.processTryOnQueue = async (queueId) => {
   const queue = activeQueues[queueId];
@@ -10,7 +10,7 @@ exports.processTryOnQueue = async (queueId) => {
   while (true) {
     const job = await TryOnJob.findOneAndUpdate(
       { queueId, status: "pending" },
-      { status: "processing" },
+      { status: "processing", lockedAt: new Date() },
       { new: true }
     );
 
@@ -21,20 +21,12 @@ exports.processTryOnQueue = async (queueId) => {
 
     try {
       const productB64 = await fetchProductImageBase64(job.productImageUrl);
-
-      const resultImage = await generateTryOnImage(
-        job.userB64,
-        productB64
-      );
+      const result = await generateTryOnImage(job.userB64, productB64);
 
       await TryOnJob.updateOne(
         { _id: job._id },
-        {
-          status: "completed",
-          result: { image: resultImage }
-        }
+        { status: "completed", result: { image: result } }
       );
-
     } catch (err) {
       await TryOnJob.updateOne(
         { _id: job._id },

@@ -26,6 +26,12 @@ const tryOnJobSchema = new mongoose.Schema(
       index: true
     },
 
+
+    parentSku: {
+      type: String,
+      index: true
+    },
+
     productImageUrl: {
       type: String,
       required: true
@@ -43,13 +49,26 @@ const tryOnJobSchema = new mongoose.Schema(
       index: true
     },
 
-    result: Object,
-    error: String,
+    result: {
+      type: Object
+    },
 
-    lockedAt: Date,
-    retryCount: { type: Number, default: 0 }
+    error: {
+      type: String
+    },
+
+    lockedAt: {
+      type: Date
+    },
+
+    retryCount: {
+      type: Number,
+      default: 0
+    }
   },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 );
 
 module.exports = mongoose.model("TryOnJob", tryOnJobSchema);

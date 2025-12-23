@@ -47,6 +47,9 @@ router.get(
   tryon.getQueueStatus
 );
 
+router.get("/tryon/session", protect,attachTryOnSession, tryon.getTryOnSession)
+router.get("/tryon-generated", productController.getTryOnProducts)
+
 // router.post("/tryon/queue/append", protect, tryon.appendToQueue)
 router.post("/tryon/save-image", protect, upload.single("userImage"), tryon.saveUserImage);
 router.delete("/tryon/delete-image", protect, tryon.deleteUserImage);

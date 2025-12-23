@@ -1077,4 +1077,172 @@ exports.getRelatedProducts = catchAsync(async (req, res) => {
 
 
 
+// Get TRY-ON generated products with filters
+exports.getTryOnProducts = catchAsync(async (req, res) => {
+  const {
+    categoryIds,
+    brands,
+    colors,
+    sortBy = '',
+  } = req.body;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+
+  /* --------------------------------------------------
+     1. Get all sku_parents that have a completed try-on
+  -------------------------------------------------- */
+  const tryOnSkuParents = await mongoose
+    .model("TryOnJob")
+    .distinct("parentSku", { status: "completed" });
+
+  if (!tryOnSkuParents.length) {
+    return res.json({
+      success: true,
+      pagination: {
+        totalProducts: 0,
+        totalPages: 0,
+        currentPage: page,
+        perPage: limit,
+      },
+      data: { products: [] },
+    });
+  }
+
+  /* --------------------------------------------------
+     2. Build base product filter
+  -------------------------------------------------- */
+  let filter = {
+    "props.sku_parent": { $in: tryOnSkuParents },
+    imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
+  };
+
+  // Category filter (with hierarchy)
+  if (Array.isArray(categoryIds) && categoryIds.length > 0) {
+    let allCategoryIds = [];
+
+    for (const id of categoryIds) {
+      if (!mongoose.Types.ObjectId.isValid(id)) continue;
+
+      const tree = await Category.findById(id).populate({
+        path: "children",
+        populate: { path: "children", populate: { path: "children" } },
+      }).lean();
+
+      if (tree) {
+        allCategoryIds.push(...getAllCategoryIds(tree));
+      }
+    }
+
+    if (allCategoryIds.length) {
+      filter.cats = { $in: allCategoryIds };
+    }
+  }
+
+  // Brand filter
+  if (Array.isArray(brands) && brands.length > 0) {
+    filter["props.brand"] = { $in: brands };
+  }
+
+  // Color filter
+  if (Array.isArray(colors) && colors.length > 0) {
+    filter["locs.singles.color.en"] = { $in: colors };
+  }
+
+  /* --------------------------------------------------
+     3. Pagination by sku_parent (important)
+  -------------------------------------------------- */
+  const distinctSkuParents = await Product.distinct(
+    "props.sku_parent",
+    filter
+  );
+
+  const totalGroupedProducts = distinctSkuParents.length;
+  const totalPages = Math.ceil(totalGroupedProducts / limit);
+
+  const paginatedSkuParents = distinctSkuParents.slice(
+    (page - 1) * limit,
+    page * limit
+  );
+
+  /* --------------------------------------------------
+     4. Fetch products
+  -------------------------------------------------- */
+  const products = await Product.find({
+    ...filter,
+    "props.sku_parent": { $in: paginatedSkuParents },
+  })
+    .populate("cats", "name locs")
+    .sort(buildSortConfig(sortBy))
+    .lean();
+
+  /* --------------------------------------------------
+     5. Fetch generated images
+  -------------------------------------------------- */
+  const tryOnJobs = await mongoose
+    .model("TryOnJob")
+    .find({
+      parentSku: { $in: paginatedSkuParents },
+      status: "completed",
+    })
+    .lean();
+
+  const tryOnMap = new Map();
+  tryOnJobs.forEach(j => {
+    if (j.parentSku && j.resultImage) {
+      tryOnMap.set(
+        j.parentSku,
+        `data:image/png;base64,${j.resultImage}`
+      );
+    }
+  });
+
+  /* --------------------------------------------------
+     6. Group products + inject generated image
+  -------------------------------------------------- */
+  const grouped = {};
+
+  products.forEach(product => {
+    const skuParent = product.props.sku_parent;
+
+    if (!grouped[skuParent]) {
+      grouped[skuParent] = {
+        ...createStandardizedProduct(product),
+        tryOnImage: tryOnMap.get(skuParent) || null,
+      };
+    }
+
+    grouped[skuParent].variants.push(
+      createStandardizedVariant(product)
+    );
+  });
+
+  const groupedArray = paginatedSkuParents
+    .map(sku => grouped[sku])
+    .filter(Boolean);
+
+  const sortedArray = applyClientSideSorting(groupedArray, sortBy);
+
+  /* --------------------------------------------------
+     7. Response
+  -------------------------------------------------- */
+  res.json({
+    success: true,
+    pagination: {
+      totalProducts: totalGroupedProducts,
+      totalPages,
+      currentPage: page,
+      perPage: limit,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    },
+    data: {
+      products: sortedArray,
+    },
+  });
+});
+
+
+
+
 module.exports = exports;

@@ -192,3 +192,5 @@
 {"0":"T","1":"r","10":"s","11":" ","12":"n","13":"o","14":"t","15":" ","16":"d","17":"e","18":"f","19":"i","2":"y","20":"n","21":"e","22":"d","3":"O","4":"n","5":"J","6":"o","7":"b","8":" ","9":"i","level":"error","message":"ReferenceError","service":"alto-moda-backend","timestamp":"2025-12-22 16:08:39"}
 {"level":"error","message":"UNHANDLED REJECTION! 💥 Shutting down...","service":"alto-moda-backend","timestamp":"2025-12-22 16:10:36"}
 {"level":"error","message":"UNHANDLED REJECTION! 💥 Shutting down...","service":"alto-moda-backend","timestamp":"2025-12-22 16:16:57"}
+{"level":"error","message":"Cannot destructure property 'categoryIds' of 'req.body' as it is undefined.","service":"alto-moda-backend","status":"error","statusCode":500,"timestamp":"2025-12-23 14:10:13"}
+{"code":"LIMIT_UNEXPECTED_FILE","field":"file","level":"error","message":"Unexpected field","name":"MulterError","service":"alto-moda-backend","status":"error","statusCode":500,"storageErrors":[],"timestamp":"2025-12-23 16:05:16"}
