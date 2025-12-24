@@ -37,7 +37,7 @@ router.post(
   upload.single("userImage"),
   tryon.generateTryOn
 );
-
+router.get("/tryon-generated",protect,attachTryOnSession, productController.getTryOnProducts)
 router.post("/tryon/queue", protect, attachTryOnSession, tryon.createTryOnQueue);
 
 router.get(
@@ -48,7 +48,7 @@ router.get(
 );
 
 router.get("/tryon/session", protect,attachTryOnSession, tryon.getTryOnSession)
-router.get("/tryon-generated", productController.getTryOnProducts)
+
 
 // router.post("/tryon/queue/append", protect, tryon.appendToQueue)
 router.post("/tryon/save-image", protect, upload.single("userImage"), tryon.saveUserImage);

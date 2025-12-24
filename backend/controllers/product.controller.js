@@ -1078,25 +1078,48 @@ exports.getRelatedProducts = catchAsync(async (req, res) => {
 
 
 // Get TRY-ON generated products with filters
+// Get TRY-ON generated products for CURRENT SESSION only
 exports.getTryOnProducts = catchAsync(async (req, res) => {
-  const {
-    categoryIds,
-    brands,
-    colors,
-    sortBy = '',
-  } = req.body;
+  const userId = req.user?._id;
+  const { queueId } = req.query; // Get queueId from query params
 
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
+  if (!userId) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  if (!queueId) {
+    return res.status(400).json({
+      success: false,
+      message: "queueId is required",
+    });
+  }
+
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 20;
 
   /* --------------------------------------------------
-     1. Get all sku_parents that have a completed try-on
+     1. Get CURRENT SESSION'S try-on jobs only
   -------------------------------------------------- */
-  const tryOnSkuParents = await mongoose
+  const tryOnJobs = await mongoose
     .model("TryOnJob")
-    .distinct("parentSku", { status: "completed" });
+    .find({
+      userId,
+      queueId, // Only get jobs from current session's queue
+      status: "completed",
+      parentSku: { $exists: true, $ne: null },
+      "result.image": { $exists: true, $ne: null },
+    })
+    .sort({ createdAt: -1 })
+    .select("parentSku result")
+    .lean();
 
-  if (!tryOnSkuParents.length) {
+  console.log("Found try-on jobs for current session:", tryOnJobs.length);
+  console.log("Session queueId:", queueId);
+
+  if (!tryOnJobs.length) {
     return res.json({
       success: true,
       pagination: {
@@ -1104,132 +1127,143 @@ exports.getTryOnProducts = catchAsync(async (req, res) => {
         totalPages: 0,
         currentPage: page,
         perPage: limit,
+        hasNextPage: false,
+        hasPrevPage: false,
       },
       data: { products: [] },
     });
   }
 
   /* --------------------------------------------------
-     2. Build base product filter
+     2. Deduplicate by parentSku (latest wins)
   -------------------------------------------------- */
-  let filter = {
-    "props.sku_parent": { $in: tryOnSkuParents },
-    imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
-  };
+  const tryOnMap = new Map();
 
-  // Category filter (with hierarchy)
-  if (Array.isArray(categoryIds) && categoryIds.length > 0) {
-    let allCategoryIds = [];
-
-    for (const id of categoryIds) {
-      if (!mongoose.Types.ObjectId.isValid(id)) continue;
-
-      const tree = await Category.findById(id).populate({
-        path: "children",
-        populate: { path: "children", populate: { path: "children" } },
-      }).lean();
-
-      if (tree) {
-        allCategoryIds.push(...getAllCategoryIds(tree));
-      }
-    }
-
-    if (allCategoryIds.length) {
-      filter.cats = { $in: allCategoryIds };
+  for (const job of tryOnJobs) {
+    if (!tryOnMap.has(job.parentSku) && job.result?.image) {
+      tryOnMap.set(job.parentSku, job.result.image);
     }
   }
 
-  // Brand filter
-  if (Array.isArray(brands) && brands.length > 0) {
-    filter["props.brand"] = { $in: brands };
+  console.log("Unique parent SKUs in current session:", tryOnMap.size);
+  console.log("Session SKUs:", Array.from(tryOnMap.keys()));
+
+  // If no valid try-on images found
+  if (tryOnMap.size === 0) {
+    return res.json({
+      success: true,
+      pagination: {
+        totalProducts: 0,
+        totalPages: 0,
+        currentPage: page,
+        perPage: limit,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+      data: { products: [] },
+    });
   }
 
-  // Color filter
-  if (Array.isArray(colors) && colors.length > 0) {
-    filter["locs.singles.color.en"] = { $in: colors };
-  }
+  const allSkuParents = Array.from(tryOnMap.keys());
 
   /* --------------------------------------------------
-     3. Pagination by sku_parent (important)
+     3. Pagination by sku_parent
   -------------------------------------------------- */
-  const distinctSkuParents = await Product.distinct(
-    "props.sku_parent",
-    filter
-  );
+  const totalProducts = allSkuParents.length;
+  const totalPages = Math.ceil(totalProducts / limit);
 
-  const totalGroupedProducts = distinctSkuParents.length;
-  const totalPages = Math.ceil(totalGroupedProducts / limit);
-
-  const paginatedSkuParents = distinctSkuParents.slice(
+  const paginatedSkuParents = allSkuParents.slice(
     (page - 1) * limit,
     page * limit
   );
 
+  console.log("Paginated skuParents for current session:", paginatedSkuParents);
+
   /* --------------------------------------------------
-     4. Fetch products
+     4. Fetch products ONLY for current session's sku_parents
   -------------------------------------------------- */
   const products = await Product.find({
-    ...filter,
     "props.sku_parent": { $in: paginatedSkuParents },
+    imgs: { $exists: true, $ne: [], $not: { $size: 0 } },
   })
     .populate("cats", "name locs")
-    .sort(buildSortConfig(sortBy))
     .lean();
 
-  /* --------------------------------------------------
-     5. Fetch generated images
-  -------------------------------------------------- */
-  const tryOnJobs = await mongoose
-    .model("TryOnJob")
-    .find({
-      parentSku: { $in: paginatedSkuParents },
-      status: "completed",
-    })
-    .lean();
-
-  const tryOnMap = new Map();
-  tryOnJobs.forEach(j => {
-    if (j.parentSku && j.resultImage) {
-      tryOnMap.set(
-        j.parentSku,
-        `data:image/png;base64,${j.resultImage}`
-      );
+  console.log("Found products for current session:", products.length);
+  
+  // Debug: Check if all session SKUs have matching products
+  if (products.length > 0) {
+    const foundSkuParents = [...new Set(products.map(p => p.props?.sku_parent).filter(Boolean))];
+    const missingSkuParents = paginatedSkuParents.filter(sku => !foundSkuParents.includes(sku));
+    
+    if (missingSkuParents.length > 0) {
+      console.log("SKUs in session but not found in products:", missingSkuParents);
     }
-  });
+  }
 
   /* --------------------------------------------------
-     6. Group products + inject generated image
+     5. Group variants + inject try-on image as first image
   -------------------------------------------------- */
   const grouped = {};
 
-  products.forEach(product => {
-    const skuParent = product.props.sku_parent;
+  for (const product of products) {
+    const skuParent = product.props?.sku_parent;
+    
+    if (!skuParent) {
+      continue;
+    }
+    
+    const tryOnImage = tryOnMap.get(skuParent);
+    
+    if (!tryOnImage) {
+      continue; // Skip if no try-on image for this SKU
+    }
+    
+    // Get original product images
+    const originalImages = product.imgs || [];
+    
+    // Create images array with try-on image first, then original images
+    const images = [
+      { 
+        url: tryOnImage, 
+        isTryOnImage: true,
+        alt: "Try-on Generated Image"
+      },
+      ...originalImages.map(img => ({ 
+        ...img, 
+        isTryOnImage: false 
+      }))
+    ];
 
     if (!grouped[skuParent]) {
       grouped[skuParent] = {
         ...createStandardizedProduct(product),
-        tryOnImage: tryOnMap.get(skuParent) || null,
+        // Replace images array with new ordering
+        images: images,
+        variants: [],
+        sessionQueueId: queueId, // Add session info
       };
     }
 
     grouped[skuParent].variants.push(
       createStandardizedVariant(product)
     );
-  });
+  }
 
-  const groupedArray = paginatedSkuParents
+  const result = paginatedSkuParents
     .map(sku => grouped[sku])
     .filter(Boolean);
 
-  const sortedArray = applyClientSideSorting(groupedArray, sortBy);
+  console.log("Final grouped products for current session:", result.length);
 
   /* --------------------------------------------------
-     7. Response
+     6. Response
   -------------------------------------------------- */
   res.json({
     success: true,
+    sessionQueueId: queueId,
     pagination: {
-      totalProducts: totalGroupedProducts,
+      totalProducts,
       totalPages,
       currentPage: page,
       perPage: limit,
@@ -1237,7 +1271,7 @@ exports.getTryOnProducts = catchAsync(async (req, res) => {
       hasPrevPage: page > 1,
     },
     data: {
-      products: sortedArray,
+      products: result,
     },
   });
 });

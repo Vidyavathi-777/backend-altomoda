@@ -2,7 +2,7 @@ const axios = require("axios");
 
 exports.fetchProductImageBase64 = async (imageUrl) => {
   const response = await axios.post(
-    `${process.env.LAMBDA_URL}?url=${encodeURIComponent(productImageUrl)}`
+    `${process.env.LAMBDA_URL}?url=${encodeURIComponent(imageUrl)}`
   );
 
   if (!response.data?.base64) {
