@@ -312,27 +312,38 @@ exports.createTryOnQueue = async (req, res) => {
 /* QUEUE STATUS */
 exports.getQueueStatus = async (req, res) => {
   try {
-    const jobs = await TryOnJob.find({ queueId: req.params.queueId });
-    console.log("QueueId", jobs)
-  
-    res.json({
+    const jobs = await TryOnJob.find({
+      queueId: req.params.queueId
+    }).lean();
+
+    const completed = jobs
+      .filter(j => j.status === "completed")
+      .map(j => ({
+        parentSku: j.parentSku ?? null,
+        productImageUrl: j.productImageUrl ?? null,
+        resultImage:
+          typeof j.result?.image === "string" && j.result.image.length > 0
+            ? j.result.image
+            : null
+      }));
+
+    return res.json({
       queueId: req.params.queueId,
-      completed: jobs
-        .filter(j => j.status === "completed")
-        .map(j => ({
-          parentSku: j.parentSku,
-          productImageUrl: j.productImageUrl,
-          resultImage: j.result?.image || null
-        })),
+      completed,
       failed: jobs.filter(j => j.status === "failed"),
       pendingCount: jobs.filter(j =>
         ["pending", "processing"].includes(j.status)
       ).length
     });
   } catch (error) {
-    console.log(error)
+    console.error("getQueueStatus error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
+
 
 exports.getTryOnSession = async (req, res) => {
   const session = await TryOnSession.findOne({
