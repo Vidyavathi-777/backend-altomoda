@@ -51,7 +51,7 @@ router.get("/tryon/session", protect,attachTryOnSession, tryon.getTryOnSession)
 
 
 // router.post("/tryon/queue/append", protect, tryon.appendToQueue)
-router.post("/tryon/save-image", protect, upload.single("userImage"), tryon.saveUserImage);
+router.post("/tryon/save-image", protect, upload.single("file"), tryon.saveUserImage);
 router.delete("/tryon/delete-image", protect, tryon.deleteUserImage);
 router.get("/tryon/check-image", protect, tryon.checkUserImage);
 
