@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const routes =  require('./routes');
+const routes = require('./routes');
 const errorMiddleware = require("../middlewares/error.middleware");
 const { apiLimiter } = require('../middlewares/rateLimit.middleware');
 const logger = require('../utils/logger');
@@ -9,10 +9,31 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+const cors = require("cors");
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://backend-altomoda-nhj08k4m9-vidyavathi-digadaris-projects.vercel.app"
+];
+
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  origin: function (origin, callback) {
+    // Allow Postman / server-to-server
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
+
+app.options("*", cors());
+
+
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
