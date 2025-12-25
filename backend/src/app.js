@@ -71,6 +71,11 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api', routes);
 
+// Health check route
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'success', message: 'AltoModa Backend Running', timestamp: new Date() });
+});
+
 // 404 handler
 app.use((req, res, next) => {
   res.status(404).json({
