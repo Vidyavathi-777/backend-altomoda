@@ -48,7 +48,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
 }));
 
-app.options("*", cors());
+app.options("(.*)", cors());
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
