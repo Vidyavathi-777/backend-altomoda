@@ -57,14 +57,14 @@ router.get("/tryon/check-image", protect, tryon.checkUserImage);
 
 router.get('/notbrand', productController.getBrandsWithoutProducts)
 
-// Categories and brands (specific routes first!)
+// Categories and brands (specific routes first!)   
 router.get('/categories', productController.getCategories);
 router.get('/brands', productController.getBrands);
 router.get("/new-arrivals/:categoryId", productController.getNewProducts)
 router.get("/related/:sku", productController.getRelatedProducts)
 // Product listing and details
 router.get('/', productController.getAllProducts);
-router.get("/:id", productController.getProductById)
+// moved getProductById to bottom
 // router.get('/:sku', productController.getProduct);
 router.get('/:sku/availability', optionalAuth, productController.getProductAvailability);
 
@@ -77,4 +77,5 @@ router.get("/productsbyBrand/:categoryId/:brand", productController.getProductsB
 router.get("/productBySku/:sku", productController.getProductBySkuParent)
 
 
+router.get("/:id", productController.getProductById);
 module.exports = router;
