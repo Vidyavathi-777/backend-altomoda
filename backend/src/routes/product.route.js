@@ -33,21 +33,21 @@ router.get('/search', searchController.searchProducts)
 // const upload = multer({ storage: multer.memoryStorage() });
 
 router.post(
-  "/tryon",
-  upload.single("userImage"),
-  tryon.generateTryOn
+    "/tryon",
+    upload.single("userImage"),
+    tryon.generateTryOn
 );
-router.get("/tryon-generated",protect,attachTryOnSession, productController.getTryOnProducts)
+router.get("/tryon-generated", protect, attachTryOnSession, productController.getTryOnProducts)
 router.post("/tryon/queue", protect, attachTryOnSession, tryon.createTryOnQueue);
 
 router.get(
-  "/tryon/queue/:queueId",
-  protect,
-  attachTryOnSession,
-  tryon.getQueueStatus
+    "/tryon/queue/:queueId",
+    protect,
+    attachTryOnSession,
+    tryon.getQueueStatus
 );
 
-router.get("/tryon/session", protect,attachTryOnSession, tryon.getTryOnSession)
+router.get("/tryon/session", protect, attachTryOnSession, tryon.getTryOnSession)
 
 
 // router.post("/tryon/queue/append", protect, tryon.appendToQueue)
@@ -64,17 +64,18 @@ router.get("/new-arrivals/:categoryId", productController.getNewProducts)
 router.get("/related/:sku", productController.getRelatedProducts)
 // Product listing and details
 router.get('/', productController.getAllProducts);
-router.get("/:id",productController.getProductById)
+// moved getProductById to bottom
 // router.get('/:sku', productController.getProduct);
 router.get('/:sku/availability', optionalAuth, productController.getProductAvailability);
 
-router.get('/categories/tree',productController.getCategoryTree)
-router.post('/filter',productController.getProductsWithFilters)
-router.get('/categoryChildren/:categoryId',productController.getChildCategories)
-router.get("/categroyLevels/:id",productController.getCategoryLevelsById)
-router.get("/productbyCategroy/:id",productController.getProductsByCategory)
+router.get('/categories/tree', productController.getCategoryTree)
+router.post('/filter', productController.getProductsWithFilters)
+router.get('/categoryChildren/:categoryId', productController.getChildCategories)
+router.get("/categroyLevels/:id", productController.getCategoryLevelsById)
+router.get("/productbyCategroy/:id", productController.getProductsByCategory)
 router.get("/productsbyBrand/:categoryId/:brand", productController.getProductsByBrand)
-router.get("/productBySku/:sku",productController.getProductBySkuParent)
+router.get("/productBySku/:sku", productController.getProductBySkuParent)
 
 
+router.get("/:id", productController.getProductById);
 module.exports = router;
