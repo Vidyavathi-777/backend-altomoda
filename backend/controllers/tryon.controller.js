@@ -315,8 +315,8 @@ exports.getQueueStatus = async (req, res) => {
     const jobs = await TryOnJob.find({
       queueId: req.params.queueId
     })
-    .select("-userB64")
-    .lean();
+      .select("-userB64")
+      .lean();
 
     const completed = jobs
       .filter(j => j.status === "completed")
