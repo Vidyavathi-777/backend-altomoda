@@ -64,7 +64,7 @@ router.get("/new-arrivals/:categoryId", productController.getNewProducts)
 router.get("/related/:sku", productController.getRelatedProducts)
 // Product listing and details
 router.get('/', productController.getAllProducts);
-// moved getProductById to bottom
+router.get("/:id", productController.getProductById)
 // router.get('/:sku', productController.getProduct);
 router.get('/:sku/availability', optionalAuth, productController.getProductAvailability);
 
@@ -77,5 +77,4 @@ router.get("/productsbyBrand/:categoryId/:brand", productController.getProductsB
 router.get("/productBySku/:sku", productController.getProductBySkuParent)
 
 
-router.get("/:id", productController.getProductById);
 module.exports = router;
