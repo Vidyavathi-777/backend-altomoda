@@ -9,7 +9,15 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
-const cors = require("cors");
+
+// Content Security Policy
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "connect-src 'self' https://sentry.phonepe.com https://dgq88cldibal5.cloudfront.net https://api-preprod.phonepe.com https://d32dgd8o7pwmnt.cloudfront.net https://mercurystatic.phonepe.com https://imgstatic.phonepe.com https://mercury-uat.phonepe.com https://stg-sentry.phonepe.com https://wa-uat.phonepe.com https://stg-linchpin.phonepe.com"
+  );
+  next();
+});
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -25,6 +33,11 @@ app.use(cors({
       return callback(null, true);
     }
 
+    // Allow all Vercel deployments (preview & production)
+    if (/\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
@@ -33,20 +46,12 @@ app.use(cors({
 
 app.options("*", cors());
 
-
-
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-
-
-
 // Rate limiting
 app.use('/api', apiLimiter);
-
-// Routes
-app.use('/api', routes);
 
 app.use((req, res, next) => {
   console.log('🔵 INCOMING REQUEST:', {
@@ -59,10 +64,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
+// Routes
+app.use('/api', routes);
 
 // 404 handler
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).json({
     status: 'error',
     message: 'Route not found',
@@ -71,15 +77,7 @@ app.use((req, res) => {
 
 // Global error handler
 app.use(errorMiddleware);
+
 app.set('trust proxy', 1);
-
-
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "connect-src 'self' https://sentry.phonepe.com https://dgq88cldibal5.cloudfront.net https://api-preprod.phonepe.com https://d32dgd8o7pwmnt.cloudfront.net https://mercurystatic.phonepe.com https://imgstatic.phonepe.com https://mercury-uat.phonepe.com https://stg-sentry.phonepe.com https://wa-uat.phonepe.com https://stg-linchpin.phonepe.com"
-  );
-  next();
-});
 
 module.exports = app;
