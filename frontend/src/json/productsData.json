@@ -1,0 +1,866 @@
+{
+  "productSlider": {
+    "products": [
+      
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439011"
+    },
+    "sku": "BLZ-DRIESVAN-001",
+    "title": "Blazer in wool",
+    "brand": "Dries Van Noten",
+    "category": "Clothing",
+    "subcategory": "Blazers & Suits",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 1995,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-1_200x.jpg?v=1759150430",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520104402193_509-2_650x.jpg?v=1759150430",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Wool" },
+        "perc": 75,
+        "part": "outer"
+      },
+      {
+        "material": { "en": "Silk" },
+        "perc": 15,
+        "part": "lining"
+      },
+      {
+        "material": { "en": "Cashmere" },
+        "perc": 10,
+        "part": "blend"
+      }
+    ],
+    "stock_price": 1200,
+    "sale_price": 1995,
+    "qty": 45,
+    "created_dt": { "$date": "2024-01-15T10:30:00.000Z" },
+    "updated_dt": { "$date": "2024-01-20T14:45:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439012"
+    },
+    "sku": "SKT-FABIANA-001",
+    "title": "Gonna pareo in Platinum",
+    "brand": "Fabiana Filippi",
+    "category": "Clothing",
+    "subcategory": "Skirts",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 590,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-1_650x.jpg?v=1759322364",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/GND225F801D910_8070-2_650x.jpg?v=1759322364",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Wool" },
+        "perc": 75,
+        "part": "outer"
+      },
+      {
+        "material": { "en": "Silk" },
+        "perc": 15,
+        "part": "lining"
+      },
+      {
+        "material": { "en": "Cashmere" },
+        "perc": 10,
+        "part": "blend"
+      }
+    ],
+    "stock_price": 350,
+    "sale_price": 590,
+    "qty": 30,
+    "created_dt": { "$date": "2024-01-16T09:15:00.000Z" },
+    "updated_dt": { "$date": "2024-01-21T11:20:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439013"
+    },
+    "sku": "BOT-ALEVI-001",
+    "title": "Iman boots in leather",
+    "brand": "Alevì",
+    "category": "Shoes",
+    "subcategory": "Boots",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 950,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-1_200x.jpg?v=1758797999",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/L26W7007N10443011044301_BORDEAUX-2_200x.jpg?v=1758797999",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Leather" },
+        "perc": 100,
+        "part": "upper"
+      }
+    ],
+    "stock_price": 600,
+    "sale_price": 950,
+    "qty": 25,
+    "created_dt": { "$date": "2024-01-17T14:20:00.000Z" },
+    "updated_dt": { "$date": "2024-01-22T16:30:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439014"
+    },
+    "sku": "BAG-GUCCI-001",
+    "title": "Shoulder bag Gucci Diana size small",
+    "brand": "Gucci",
+    "category": "Bags",
+    "subcategory": "Shoulder Bags",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 2200,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-1_200x.jpg?v=1759322578",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/799865AAE3W_3125-2_200x.jpg?v=1759322578",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Leather" },
+        "perc": 100,
+        "part": "outer"
+      }
+    ],
+    "stock_price": 1500,
+    "sale_price": 2200,
+    "qty": 15,
+    "created_dt": { "$date": "2024-01-18T11:45:00.000Z" },
+    "updated_dt": { "$date": "2024-01-23T13:15:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439015"
+    },
+    "sku": "SWT-FENDI-001",
+    "title": "Sweater in wool and mohair",
+    "brand": "Fendi",
+    "category": "Clothing",
+    "subcategory": "Knitwear",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 1200,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-1_200x.jpg?v=1759231692",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FS8287AQ3H_F1T6G-2_200x.jpg?v=1759231692",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Wool" },
+        "perc": 75,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Mohair" },
+        "perc": 25,
+        "part": "blend"
+      }
+    ],
+    "stock_price": 800,
+    "sale_price": 1200,
+    "qty": 35,
+    "created_dt": { "$date": "2024-01-19T08:30:00.000Z" },
+    "updated_dt": { "$date": "2024-01-24T10:45:00.000Z" }
+  },
+  
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439016"
+    },
+    "sku": "TRS-FENDI-001",
+    "title": "Wool and mohair trousers",
+    "brand": "Fendi",
+    "category": "Clothing",
+    "subcategory": "Pants",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 1200,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-1_200x.jpg?v=1759231956",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/FR6658AQ3H_F1T6G-2_200x.jpg?v=1759231956",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Wool" },
+        "perc": 75,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Mohair" },
+        "perc": 25,
+        "part": "blend"
+      }
+    ],
+    "stock_price": 800,
+    "sale_price": 1200,
+    "qty": 28,
+    "created_dt": { "$date": "2024-01-20T12:15:00.000Z" },
+    "updated_dt": { "$date": "2024-01-25T14:30:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439017"
+    },
+    "sku": "HLS-GUCCI-001",
+    "title": "Décolleté slingback with Clip",
+    "brand": "Gucci",
+    "category": "Shoes",
+    "subcategory": "Heels",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 870,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-1_200x.jpg?v=1758707800",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/835976FAETG_5042-2_200x.jpg?v=1758707800",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Leather" },
+        "perc": 100,
+        "part": "upper"
+      }
+    ],
+    "stock_price": 550,
+    "sale_price": 870,
+    "qty": 22,
+    "created_dt": { "$date": "2024-01-21T10:45:00.000Z" },
+    "updated_dt": { "$date": "2024-01-26T12:15:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439018"
+    },
+    "sku": "BAG-JACQUEMUS-001",
+    "title": "Borsa Le Petit Turismo in scamosciato leather",
+    "brand": "Jacquemus",
+    "category": "Bags",
+    "subcategory": "Shoulder Bags",
+    "description": "The midi dress in gray fabric, characterized by a silhouette suitable for various occasions. It features a refined gathering on the side, adding a touch of elegance and movement to the design. The waist is high, ensuring a comfortable and versatile fit. Perfect to pair with tops and shoes of various styles, it is a must-have in the women's wardrobe. 75% Wool, 15% Silk, 10% Cashmere",
+    "price": {
+      "amount": 950,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-1_200x.jpg?v=1759150404",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/25EBAW00416AC07A09_120-2_200x.jpg?v=1759150404",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new season",
+    "care": "Refer to the manufacturer's instructions",
+    "madeIn": "Italy",
+    "sizes": ["40 - IT", "42 - IT", "44 - IT"],
+    "composition": [
+      {
+        "material": { "en": "Suede Leather" },
+        "perc": 100,
+        "part": "outer"
+      }
+    ],
+    "stock_price": 650,
+    "sale_price": 950,
+    "qty": 18,
+    "created_dt": { "$date": "2024-01-22T14:20:00.000Z" },
+    "updated_dt": { "$date": "2024-01-27T16:45:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439019"
+    },
+    "sku": "SWT-DRIESVAN-002",
+    "title": "Crew neck sweater in mixed wool",
+    "brand": "Dries Van Noten",
+    "category": "Clothing",
+    "subcategory": "Sweaters",
+    "description": "Crew neck sweater crafted from premium mixed wool blend. Features a classic crew neckline and comfortable fit, perfect for layering or wearing on its own. The high-quality wool blend provides warmth and durability while maintaining a soft hand feel.",
+    "price": {
+      "amount": 895,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-1_200x.jpg?v=1758560123",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/2520212222729_103-2_350x.jpg?v=1758560123",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Dry clean only",
+    "madeIn": "Italy",
+    "sizes": ["S", "M", "L", "XL"],
+    "composition": [
+      {
+        "material": { "en": "Wool" },
+        "perc": 80,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Cashmere" },
+        "perc": 20,
+        "part": "blend"
+      }
+    ],
+    "stock_price": 600,
+    "sale_price": 895,
+    "qty": 40,
+    "created_dt": { "$date": "2024-01-23T09:30:00.000Z" },
+    "updated_dt": { "$date": "2024-01-28T11:45:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439020"
+    },
+    "sku": "JNS-SLOWEAR-001",
+    "title": "Jeans regolare fit",
+    "brand": "Slowear",
+    "category": "Clothing",
+    "subcategory": "Jeans",
+    "description": "Regular fit jeans offering classic styling with modern comfort. Features a straight leg design and mid-rise waist. Crafted from premium denim for durability and comfort.",
+    "price": {
+      "amount": 325,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_200x.jpg?v=1759150979",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/S003LJ0003_001-0_350x.jpg?v=1759150979",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "newarrival",
+    "care": "Machine wash cold",
+    "madeIn": "Italy",
+    "sizes": ["30", "32", "34", "36", "38"],
+    "composition": [
+      {
+        "material": { "en": "Cotton" },
+        "perc": 98,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Elastane" },
+        "perc": 2,
+        "part": "stretch"
+      }
+    ],
+    "stock_price": 200,
+    "sale_price": 325,
+    "qty": 65,
+    "created_dt": { "$date": "2024-01-24T13:15:00.000Z" },
+    "updated_dt": { "$date": "2024-01-29T15:30:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439021"
+    },
+    "sku": "SNK-BALENCIAGA-001",
+    "title": "Sneakers low-top 3XL",
+    "brand": "Balenciaga",
+    "category": "Shoes",
+    "subcategory": "Sneakers",
+    "description": "3XL low-top sneakers featuring an exaggerated, chunky silhouette. Made from premium materials with distinctive branding details. Combines comfort with avant-garde design.",
+    "price": {
+      "amount": 990,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_200x.jpg?v=1759150115",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_350x.jpg?v=1759150115",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/734734W3XL1_1010-1_450x.jpg?v=1759150115",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Wipe clean with damp cloth",
+    "madeIn": "Italy",
+    "sizes": ["40", "41", "42", "43", "44", "45"],
+    "composition": [
+      {
+        "material": { "en": "Leather" },
+        "perc": 70,
+        "part": "upper"
+      },
+      {
+        "material": { "en": "Rubber" },
+        "perc": 30,
+        "part": "sole"
+      }
+    ],
+    "stock_price": 650,
+    "sale_price": 990,
+    "qty": 35,
+    "created_dt": { "$date": "2024-01-25T11:20:00.000Z" },
+    "updated_dt": { "$date": "2024-01-30T13:45:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439022"
+    },
+    "sku": "BAG-MONCLER-001",
+    "title": "Tech Technical fabric backpack",
+    "brand": "Moncler",
+    "category": "Accessories",
+    "subcategory": "Bags",
+    "description": "Technical fabric backpack designed for modern urban life. Features multiple compartments, durable construction, and water-resistant materials. Combines functionality with luxury aesthetics.",
+    "price": {
+      "amount": 1250,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_200x.jpg?v=1756461659",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_350x.jpg?v=1756461659",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/K209A5A00010M7835_999-1_450x.jpg?v=1756461659",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Wipe clean with damp cloth",
+    "madeIn": "Italy",
+    "sizes": ["One Size"],
+    "composition": [
+      {
+        "material": { "en": "Nylon" },
+        "perc": 85,
+        "part": "outer"
+      },
+      {
+        "material": { "en": "Polyester" },
+        "perc": 15,
+        "part": "lining"
+      }
+    ],
+    "stock_price": 850,
+    "sale_price": 1250,
+    "qty": 20,
+    "created_dt": { "$date": "2024-01-26T15:45:00.000Z" },
+    "updated_dt": { "$date": "2024-01-31T17:20:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439023"
+    },
+    "sku": "TOP-RICKOWENS-001",
+    "title": "Tank top in cotton",
+    "brand": "Rick Owens",
+    "category": "Clothing",
+    "subcategory": "Tops",
+    "description": "Classic cotton tank top with relaxed fit, designed for layering or casual wear. Soft, breathable fabric ensures comfort while maintaining a modern, minimalist look.",
+    "price": {
+      "amount": 355,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_200x.jpg?v=1759231913",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_350x.jpg?v=1759231913",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/RR02E1108RIG_09-1_450x.jpg?v=1759231913",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Machine wash cold, gentle cycle",
+    "madeIn": "Italy",
+    "sizes": ["S", "M", "L", "XL"],
+    "composition": [
+      {
+        "material": { "en": "Cotton" },
+        "perc": 100,
+        "part": "main"
+      }
+    ],
+    "stock_price": 220,
+    "sale_price": 355,
+    "qty": 50,
+    "created_dt": { "$date": "2024-01-27T10:30:00.000Z" },
+    "updated_dt": { "$date": "2024-02-01T12:45:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439024"
+    },
+    "sku": "DRS-MAGDA-001",
+    "title": "Jersey dress",
+    "brand": "Magda Butrym",
+    "category": "Clothing",
+    "subcategory": "Dresses",
+    "description": "Elegant jersey dress crafted with luxurious stretch fabric. Features a flattering silhouette, rich purple tone, and minimalist design perfect for evening occasions.",
+    "price": {
+      "amount": 847,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_200x.jpg?v=1756467678",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_350x.jpg?v=1756467678",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/120525_PURPLE-0_450x.jpg?v=1756467678",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Dry clean only",
+    "madeIn": "Italy",
+    "sizes": ["XS", "S", "M", "L"],
+    "composition": [
+      {
+        "material": { "en": "Jersey" },
+        "perc": 95,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Elastane" },
+        "perc": 5,
+        "part": "stretch"
+      }
+    ],
+    "stock_price": 450,
+    "sale_price": 847,
+    "original_price": 1695,
+    "discount_percent": 50,
+    "qty": 25,
+    "created_dt": { "$date": "2024-01-28T14:15:00.000Z" },
+    "updated_dt": { "$date": "2024-02-02T16:30:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439025"
+    },
+    "sku": "LGG-MAGDA-001",
+    "title": "Technical fabric leggings",
+    "brand": "Magda Butrym",
+    "category": "Clothing",
+    "subcategory": "Leggings",
+    "description": "High-performance technical leggings designed with breathable fabric. Offers superior comfort, perfect for casual wear or workouts.",
+    "price": {
+      "amount": 350,
+      "currency": "EUR"
+    },
+    "gender": "woman",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_200x.jpg?v=1756467630",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_350x.jpg?v=1756467630",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/208724_BLACK-1_450x.jpg?v=1756467630",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Machine wash cold, gentle cycle",
+    "madeIn": "Poland",
+    "sizes": ["XS", "S", "M", "L"],
+    "composition": [
+      {
+        "material": { "en": "Polyester" },
+        "perc": 85,
+        "part": "main"
+      },
+      {
+        "material": { "en": "Spandex" },
+        "perc": 15,
+        "part": "stretch"
+      }
+    ],
+    "stock_price": 180,
+    "sale_price": 350,
+    "original_price": 700,
+    "discount_percent": 50,
+    "qty": 40,
+    "created_dt": { "$date": "2024-01-29T11:45:00.000Z" },
+    "updated_dt": { "$date": "2024-02-03T13:15:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439026"
+    },
+    "sku": "TSH-MAISON-001",
+    "title": "Cotton crew-neck T-shirt",
+    "brand": "Maison Kitsuné",
+    "category": "Clothing",
+    "subcategory": "T-Shirts",
+    "description": "Soft cotton crew-neck T-shirt featuring Maison Kitsuné's signature minimalist design. Perfect for casual everyday wear.",
+    "price": {
+      "amount": 78,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_200x.jpg?v=1753951078",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_350x.jpg?v=1753951078",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/OM00121KJ0118_0074-0_450x.jpg?v=1753951078",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Machine wash cold, gentle cycle",
+    "madeIn": "Portugal",
+    "sizes": ["S", "M", "L", "XL"],
+    "composition": [
+      {
+        "material": { "en": "Cotton" },
+        "perc": 100,
+        "part": "main"
+      }
+    ],
+    "stock_price": 50,
+    "sale_price": 78,
+    "original_price": 130,
+    "discount_percent": 40,
+    "qty": 75,
+    "created_dt": { "$date": "2024-01-30T09:20:00.000Z" },
+    "updated_dt": { "$date": "2024-02-04T11:30:00.000Z" }
+  },
+  {
+    "_id": {
+      "$oid": "507f1f77bcf86cd799439027"
+    },
+    "sku": "JKT-MARANT-001",
+    "title": "Donny padded bomber jacket",
+    "brand": "Marant",
+    "category": "Clothing",
+    "subcategory": "Jackets",
+    "description": "Stylish padded bomber jacket from Marant, crafted for both comfort and warmth. A modern classic perfect for layering.",
+    "price": {
+      "amount": 297,
+      "currency": "EUR"
+    },
+    "gender": "man",
+    "imgs": [
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_200x.jpg?v=1751898169",
+        "pos": 1,
+        "placement": ["DETAIL", "FEED"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_350x.jpg?v=1751898169",
+        "pos": 2,
+        "placement": ["DETAIL"]
+      },
+      {
+        "url": "https://cdn.shopify.com/s/files/1/0614/1929/0798/files/23AMA0148HAA3C41H_90BE-1_450x.jpg?v=1751898169",
+        "pos": 3,
+        "placement": ["DETAIL"]
+      }
+    ],
+    "tag": "new arrival",
+    "care": "Dry clean only",
+    "madeIn": "France",
+    "sizes": ["S", "M", "L", "XL"],
+    "composition": [
+      {
+        "material": { "en": "Nylon" },
+        "perc": 80,
+        "part": "outer"
+      },
+      {
+        "material": { "en": "Polyester" },
+        "perc": 20,
+        "part": "filling"
+      }
+    ],
+    "stock_price": 200,
+    "sale_price": 297,
+    "original_price": 495,
+    "discount_percent": 40,
+    "qty": 30,
+    "created_dt": { "$date": "2024-01-31T13:30:00.000Z" },
+    "updated_dt": { "$date": "2024-02-05T15:45:00.000Z" }
+  }
+
+
+    ]
+  }
+}
